@@ -248,7 +248,7 @@ export default class DashboardGroups extends Component{
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: 'rgba(176,207,227,34)',
+        backgroundColor: '#d4e8e5'
     },
     personList:{
     },
