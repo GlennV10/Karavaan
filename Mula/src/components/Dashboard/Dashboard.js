@@ -10,18 +10,20 @@ export default class Dashboard extends React.Component {
     render() {
       const nav = this.props.navigation;
       return (
-        <ScrollableTabView>
-          <DashboardBills tabLabel="Bills" navigator={nav} />
-          <DashboardPersons tabLabel="Persons" navigator={nav} />
-          <DashboardGroups tabLabel="Groups" navigator={nav} />
+        <ScrollableTabView
+          tabBarUnderlineStyle={{backgroundColor:'#edc14f'}}
+          tabBarBackgroundColor={'#e2e8e5'}
+          tabBarActiveTextColor={'#303030'}
+          tabBarInactiveTextColor={'#303030'}>
+            <DashboardBills tabLabel="Trips" navigator={nav} />
+            <DashboardPersons tabLabel="Balance" navigator={nav} />
         </ScrollableTabView>
       );
     }
   }
 
-
 const styles = StyleSheet.create({
    container:{
-       flex: 1
+     flex: 1
    }
 });

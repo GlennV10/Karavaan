@@ -84,14 +84,14 @@ export default class DashboardBills extends Component {
             } else {
                 image = <Image style={styles.way} source={require('../../images/out.png')}/>;
             }
-    
+
             return(
                 <TouchableOpacity style={styles.eventItem} onPress={() => this.props.navigator.navigate('DetailEvent', { event: event })} key={ event.id }>
                     <View style={styles.splitRow}>
                         <View style={[styles.half, styles.wayContainer]}>
                             { image }
                         </View>
-    
+
                         <Text style={[styles.eventAmount, styles.half]}>{ this.getCurrencySymbol(event) }{ event.total_price.toFixed(2) }</Text>
                     </View>
                     <Text style={styles.eventName}>{ event.event }</Text>
@@ -159,13 +159,14 @@ function barStyle(paid, total){
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: 'rgba(176,207,227,34)',
+        backgroundColor: '#d4e8e5'
+        //backgroundColor: 'rgba(176,207,227,34)',
     },eventList:{
         //flex:1,
         marginLeft: 10,
         marginRight: 10
     },eventItem:{
-        backgroundColor: '#EFF2F7',
+        backgroundColor: '#f7f7f7',
         paddingBottom:10,
         paddingLeft:10,
         paddingRight:10,

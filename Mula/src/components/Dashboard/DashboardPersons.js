@@ -20,7 +20,7 @@ export default class DashboardPersons extends Component{
     // }
     constructor(props) {
         super(props);
-    
+
         // Assign state itself, and a default value for items
         this.state = {
             isLoading: true,
@@ -139,7 +139,7 @@ export default class DashboardPersons extends Component{
         for(let i=0; i<toAddToOffline.length; i++){
             this.state.offlineFriends.friends.push(toAddToOffline[i]);
         }
-    
+
         // Add to device
         AsyncStorage.setItem('friends', JSON.stringify(this.state.offlineFriends)).then(()=>{
             console.log("offline friends updated");
@@ -203,7 +203,7 @@ export default class DashboardPersons extends Component{
                         }
                         this.compareOfflineWithOnline();
                         this.compareOnlineWithOffline();
-                        
+
                         AsyncStorage.getItem('friends').then((result)=>{
                             console.log("RESULT:")
                             console.log(result);
@@ -226,7 +226,7 @@ export default class DashboardPersons extends Component{
         })
         //console.log("Setting loadJSON to false #9");
         //this.setState({loadJSON: false});
-        
+
         // this.setState({isLoading: false, loadJSON: false, loadMainFetch: false});
     }
 
@@ -410,7 +410,7 @@ export default class DashboardPersons extends Component{
                 });
             }
         })
-        
+
         // return fetch('http://193.191.177.169:8080/mula/Controller?action=addFriend',{
         //     method: 'POST',
         //     headers: {
@@ -495,7 +495,7 @@ export default class DashboardPersons extends Component{
     componentDidMount(){
         if(this.state.loadJSON){
             console.log("EXECUTING COMPONENWILLMOUNT");
-            this.mainFetch();    
+            this.mainFetch();
         }
     }
 
@@ -508,7 +508,7 @@ export default class DashboardPersons extends Component{
                 </View>
             )
         }
-        
+
         return(
           <View style={styles.container}>
             <ScrollView style={styles.personList}>
@@ -543,7 +543,7 @@ export default class DashboardPersons extends Component{
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: 'rgba(176,207,227,34)',
+        backgroundColor: '#d4e8e5'
     },
     personList:{
     },

@@ -26,7 +26,7 @@ export default class Login extends Component{
     getChallenge(usernameField){
         console.log(usernameField + "USERNAME GETCHALLENGE")
         return fetch('http://193.191.177.169:8080/mula/Controller?action=login',{
-            method: 'POST', 
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -41,14 +41,14 @@ export default class Login extends Component{
             if(responseJson.challenge != null){
                 this.sendLoginRequest(responseJson.challenge);
             }
-            
+
         }).catch((error)=> console.log("ERROR: " + error));
     }
 
     sendLoginRequest(salt){
         var hashedPwd = sha1(sha1(this.state.password)+salt);
         return fetch('http://193.191.177.169:8080/mula/Controller?action=login',{
-            method: 'POST', 
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ export default class Login extends Component{
             //========================================================================
             //AsyncStorage.clear().then(()=>console.log("cleared"));
             //========================================================================
-            
+
         }catch(error){
             console.log(error);
         }
@@ -125,13 +125,13 @@ export default class Login extends Component{
         // }catch(error){
         //     console.log(error);
         // }
-        
+
     }
 
-    
+
     render(){
         if(this.state.loadConnection){
-            this.connectionMode(); 
+            this.connectionMode();
         }
 
         if(this.state.checkLogin){
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         color: '#000',
         borderBottomWidth: 0,
-        borderRadius:5
+        borderRadius: 5
     },
     buttonContainer:{
         marginLeft: 50,
