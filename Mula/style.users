@@ -1,0 +1,25 @@
+<TouchableOpacity style={[styles.person, styles.odd]}>
+    <View style={styles.personImage}></View>
+    <View style={styles.personName}>
+        <Text style={styles.right}>Naam gebruiker</Text>
+    </View>
+    <View style={styles.goto}>
+        <Image
+        style={styles.logo}
+        source={require('../../images/chevron_right.png')}
+        />
+    </View>
+</TouchableOpacity>
+
+<TouchableOpacity style={[styles.person, styles.even]}>
+    <View style={styles.personImage}></View>
+    <View style={styles.personName}>
+        <Text style={styles.right}>Naam gebruiker</Text>
+    </View>
+    <View style={styles.goto}>
+        <Image
+        style={styles.logo}
+        source={require('../../images/chevron_right.png')}
+        />
+    </View>
+</TouchableOpacity>

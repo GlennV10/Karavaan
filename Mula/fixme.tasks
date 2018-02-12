@@ -1,0 +1,74 @@
+✔ DashboardBills container vult niet helemaal @done (10/29/2017, 7:26:28 PM)
+✔ DashboardBills + DashboardUsers inhoud wordt niet automatisch getoond @done (11/21/2017, 3:58:37 PM)
+✔ Login Systeem @done (12/25/2017, 10:17:02 AM)
+✔ Register Systeem @done (1/16/2018, 12:07:21 PM)
+✔ DashboardUsers toont teveel users per klik @done (10/29/2017, 7:26:39 PM)
+✔ Images van ingaand en uitgaand tonen @done (10/29/2017, 7:58:45 PM)
+✔ clean up code van het inladen van JSON (parseEvents en parseUsers) @done (11/7/2017, 3:18:16 PM)
+✔ Maak bills TouchableOpacity @done (10/29/2017, 7:58:13 PM)
+✔ Images uitgaand en inkomend juist tonen (if statement) @done (11/5/2017, 7:35:59 PM)
+☐ Datum van de Bills formateren
+✘ Modal toevoegen Bills afwerken @cancelled (11/7/2017, 3:18:11 PM)
+✔ [MODAL BILLS] Datum selecteren veranderd niets @done (11/21/2017, 3:58:45 PM)
+☐ [BILLS] Locatie nog defig weergeven
+✔ [BILLS] Switch werkende krijgen @done (11/21/2017, 3:59:02 PM)
+☐ [OVERALL] Mottige warnings wegwerken
+☐ [STYLE] Styling van AddEvent
+☐ [STYLE] Add item Modal
+☐ [STYLE] add person Modal
+☐ AddEvent title veranderen
+✔ [ADD EVENT] item per person add to total cost @done (12/12/2017, 8:27:08 PM)
+✔ [ADD EVENT] item per person add to perosnal cost @done (12/12/2017, 8:53:07 PM)
+☐ [ADD EVENT] betaler pas tonen als groep gekozen is
+✔ [ADD EVENT] Shared item prijs wordt niet corrext verrekend persoonlijk + totalCost @done (12/13/2017, 10:57:25 AM)
+☐ [ADD EVENT] shared item toevoegen, shared price moet geupdate worden naar persoon.
+✔ [ADD EVENT] Save Knop toevoegen @done (1/16/2018, 11:41:48 AM)
+✔ [ADD EVENT] Modals stylen @done (1/16/2018, 11:41:53 AM)
+☐ [ADD EVENT] Als product shared is (zodra checkbox aangevinkt wordt), een lijst getoond worden van alle members in een groep met checkboxes ernaast
+✔ [DASHBOARD-PERSONS] Add button moet naar een ander scherm verwijzen -> Modal? @done (12/16/2017, 5:17:42 PM)
+☐ [DASHBOARD-GROUPS] Add button moet naar een ander scherm verwijzen -> nieuw scherm?
+☐ [DASHBOARD-PERSONS] persoon toevoegen -> API Call naar backend
+☐ [ADD EVENT] Shared item nog een juiste plaats geven
+☐ [DASHBOARD-PERSONS] op Person klikken naar detail overzicht gaan?
+
+============================================================================================
+                                            FINAL TODOS
+============================================================================================
+☐ Check forms voor inputs
+☐ Vriend toevoegen, meteen tonen
+
+
+============================================================================================
+                                    MINIMUM REQUIREMENTS
+============================================================================================
+☐ A trip consis of a number of participants and a series of expenses
+    ☐ Ability to associate a number of currencies with a certain trip (all expenses will be register in one of these)
+        ✔ Currency list and rates must be fetched from rest web service @done (12/23/2017, 12:50:30 PM)
+        ✔ User van select which currencies are relevant for the trip @done (12/23/2017, 12:50:37 PM)
+        ☐ User can override the rates
+☐ An "expens" is charachterized by:
+    ☐ The trip it is associated with
+    ✔ Who ownes what amount @done (12/16/2017, 5:46:31 PM)
+    ☐ Who paid (Can be multiple people)
+    ✔ Category @done (12/22/2017, 9:59:33 PM)
+    ✔ Date @done (12/16/2017, 5:46:27 PM)
+    ☐ Currency
+☐ Ability to register money transfers
+✔ Registering a new expense: due amounts can be split multiple ways @done (12/16/2017, 5:46:24 PM)
+    ✔ Each pays his own share (e.g. each pays for his own meal). First you enter the total amount due, then you can assign subamounts to participants. After each assignment of an amount A to a participant P, the total amount must decrease by A, so that it is easy to verify that no mistakes were made. @done (12/16/2017, 5:46:24 PM)
+    ✔ Amount is divided evenly (e.g. taxi) @done (12/16/2017, 5:46:23 PM)
+    ✔ By way of a bill. Say you went to a restaurantl. You enter the different items of the bill, after which you assign each item to one or more participants. A meal will probably be assigned to a single participant, but the tip or a bottle of wine can be shared. @done (12/16/2017, 5:46:23 PM)
+
+☐ Summaries
+    ☐ Types of Summaries
+        ☐ Table by expenses
+        ✔ Table by trip @done (12/16/2017, 5:49:18 PM)
+        ☐ Expenses by Category
+        ☐ Total expenses per perosn per Category
+        ☐ Expenses per person per day
+        ☐ List of all transactions
+        ☐ List of all transactions per person
+    ☐ Summaries are shown using the trip's default currency, bu can be changed
+☐ Focus on the offline mode! Online functionality is only for eindproject people. Don't overcomplicate your life.
+
+    

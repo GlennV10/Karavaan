@@ -1,0 +1,71 @@
+<View style={styles.eventItem}>
+    <Text style={styles.eventAmount}>0/80</Text>
+    <Text style={styles.eventName}>Naam evenement</Text>
+    < View style={styles.splitRow}>
+        <Text style={styles.eventDate}>30/12/2017</Text>
+        <Text style={styles.eventAmountUsers}>{betaald}/{totaal}</Text>
+    </View>
+    <View style={styles.progressBarContainer}>
+        <View style={styles.progressBar}></View>
+    </View>
+</View>
+
+<View style={styles.eventItem}>
+    <Text style={styles.eventAmount}>0/80</Text>
+    <Text style={styles.eventName}>Naam evenement</Text>
+    < View style={styles.splitRow}>
+        <Text style={styles.eventDate}>30/12/2017</Text>
+        <Text style={styles.eventAmountUsers}>{betaald}/{totaal}</Text>
+    </View>
+    <View style={styles.progressBarContainer}>
+        <View style={styles.progressBar}></View>
+    </View>
+</View>
+
+<View style={styles.eventItem}>
+    <Text style={styles.eventAmount}>0/80</Text>
+    <Text style={styles.eventName}>Naam evenement</Text>
+    < View style={styles.splitRow}>
+        <Text style={styles.eventDate}>30/12/2017</Text>
+        <Text style={styles.eventAmountUsers}>{betaald}/{totaal}</Text>
+    </View>
+    <View style={styles.progressBarContainer}>
+        <View style={styles.progressBar}></View>
+    </View>
+</View>
+
+<View style={styles.eventItem}>
+    <Text style={styles.eventAmount}>0/80</Text>
+    <Text style={styles.eventName}>Naam evenement</Text>
+    < View style={styles.splitRow}>
+        <Text style={styles.eventDate}>30/12/2017</Text>
+        <Text style={styles.eventAmountUsers}>{betaald}/{totaal}</Text>
+    </View>
+    <View style={styles.progressBarContainer}>
+        <View style={styles.progressBar}></View>
+    </View>
+</View>
+
+<View style={styles.eventItem}>
+    <Text style={styles.eventAmount}>0/80</Text>
+    <Text style={styles.eventName}>Naam evenement</Text>
+    < View style={styles.splitRow}>
+        <Text style={styles.eventDate}>30/12/2017</Text>
+        <Text style={styles.eventAmountUsers}>{betaald}/{totaal}</Text>
+    </View>
+    <View style={styles.progressBarContainer}>
+        <View style={styles.progressBar}></View>
+    </View>
+</View>
+
+<View style={styles.eventItem}>
+    <Text style={styles.eventAmount}>0/80</Text>
+    <Text style={styles.eventName}>Naam evenement</Text>
+    < View style={styles.splitRow}>
+        <Text style={styles.eventDate}>30/12/2017</Text>
+        <Text style={styles.eventAmountUsers}>{betaald}/{totaal}</Text>
+    </View>
+    <View style={styles.progressBarContainer}>
+        <View style={styles.progressBar}></View>
+    </View>
+</View>

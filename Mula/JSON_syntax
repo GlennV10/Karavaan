@@ -1,0 +1,34 @@
+#Add user
+controlleR?action=addUser
+body:
+{
+	"email": "email@email.com",
+	"psw": "password",
+	"userName": "username"
+}
+
+#Login 
+## Retrieve salt POST
+Controller?action=login
+body:
+{
+	"email": "email@email.com"
+}
+
+## encrypt pwd
+sha1(sha1(pass)+challange)
+
+## sent pwd POST
+Controller?action=login
+body:
+{
+	"email":"email@email.com",
+	"pwd": "QSD89981q8efq819..."
+}
+
+Returnt TRUE of FALSE
+
+
+# DB connection
+user: postgres
+pwd: lolo1700
