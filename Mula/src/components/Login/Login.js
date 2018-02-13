@@ -1,17 +1,13 @@
 import React, {Component} from 'react';
 import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
+
 import sha1 from 'sha1'
 
-export default class Login extends Component{
-    // constructor(props){
-    //     super(props);
 
-    //     this.state = {
-    //         username: "",
-    //         password: ""
-    //     };
-    // }
+
+
+export default class Login extends Component{
 
     state = {
         fetchedChallenge: false,
@@ -23,17 +19,23 @@ export default class Login extends Component{
         loadConnection: true
     }
 
-    componentDidMount() {
-        alert("wat")
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+   componentDidMount() {
+        
+        //alert("wat")
+        //BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
     }
 
-    componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+   /* componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton);
     }
 
+<<<<<<< HEAD
+    _handleBackButton = () => {         
+       Alert.alert(
+=======
     handleBackButton = () => {
         Alert.alert(
+>>>>>>> ab2f28dcc6c1c452b4fc65a612043fc1fd5bde4d
             'Exit App',
             'Exiting the application?', [{
                 text: 'Cancel',
@@ -45,9 +47,10 @@ export default class Login extends Component{
             }, ], {
                 cancelable: false
             }
-         )
+        )
+         
          return true;
-    }
+    }*/
 
     getChallenge(usernameField){
         console.log(usernameField + "USERNAME GETCHALLENGE")
