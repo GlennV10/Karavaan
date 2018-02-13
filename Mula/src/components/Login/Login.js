@@ -2,10 +2,7 @@ import React, {Component} from 'react';
 import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 
-import sha1 from 'sha1'
-
-
-
+import sha1 from 'sha1';
 
 export default class Login extends Component{
 
@@ -19,23 +16,17 @@ export default class Login extends Component{
         loadConnection: true
     }
 
-   componentDidMount() {
-        
-        //alert("wat")
-        //BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
+    componentDidMount() {
+        this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
+        this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton))
     }
 
-   /* componentWillUnmount() {
+    componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton);
     }
 
-<<<<<<< HEAD
     _handleBackButton = () => {         
        Alert.alert(
-=======
-    handleBackButton = () => {
-        Alert.alert(
->>>>>>> ab2f28dcc6c1c452b4fc65a612043fc1fd5bde4d
             'Exit App',
             'Exiting the application?', [{
                 text: 'Cancel',
@@ -50,7 +41,7 @@ export default class Login extends Component{
         )
          
          return true;
-    }*/
+    }
 
     getChallenge(usernameField){
         console.log(usernameField + "USERNAME GETCHALLENGE")

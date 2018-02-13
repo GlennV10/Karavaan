@@ -6,14 +6,14 @@ import { NavigationActions } from 'react-navigation';
 export default class Splashscreen extends React.Component {
 
     componentWillMount() {
-       const resetAction = NavigationActions.reset({
+       /*const resetAction = NavigationActions.reset({
             index: 0,
             actions: [
               
               NavigationActions.navigate({ routeName: 'Login'}),
             ]
           })
-          this.props.navigation.dispatch(resetAction)
+          this.props.navigation.dispatch(resetAction)*/
 
         setTimeout(() => this.props.navigation.navigate('Login'), 3000);
         
