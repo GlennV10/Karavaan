@@ -48,15 +48,8 @@ export default class DetailEvent extends Component{
     }
 
     payUserDebts() {
-      /*
-        GEEN FLAUW IDEE WIE, WAT, WAAR, WANNEER, en al helemaal niet HOE
-      */
-    }
 
-    /*
-      Uitvoeren en berekenen van User Debts wanneer splitMethod === 'bybill'
-      (Nog) geen nieuws over het paid veld
-    */
+    }
 
     calculateUserDebts() {
       console.log(this.props.navigation.state.params.event.users);
@@ -106,10 +99,6 @@ export default class DetailEvent extends Component{
     //     return this.renderItems(userDebt);
     //   }
     // }
-
-    /* NIET GETEST
-      Zou enkel uitgevoerd mogen worden wanneer er geen items in this.state.items zitten
-    */
 
     renderItems(userDebt) {
       if(userDebt.items.length > 0) {
