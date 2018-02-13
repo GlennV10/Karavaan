@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity} from 'react-native';
+import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackAndroid, BackHandler, ToastAndroid} from 'react-native';
 import {StackNavigator} from 'react-navigation';
+import {RNExitApp} from 'react-native-exit-app';
 import sha1 from 'sha1'
 
 export default class Login extends Component{
@@ -21,6 +22,17 @@ export default class Login extends Component{
         alreadyLoggedIn: false,
         checkLogin: true,
         loadConnection: true
+    }
+
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+        alert('ok');
+    }
+
+    handleBackButton() {
+        alert('okok');
+       BackHandler.exitApp();
+        return true;
     }
 
     getChallenge(usernameField){
