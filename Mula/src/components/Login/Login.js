@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity} from 'react-native';
+import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import sha1 from 'sha1'
 
@@ -21,6 +21,32 @@ export default class Login extends Component{
         alreadyLoggedIn: false,
         checkLogin: true,
         loadConnection: true
+    }
+
+    componentDidMount() {
+        alert("wat")
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+    }
+
+    handleBackButton = () => {               
+        Alert.alert(
+            'Exit App',
+            'Exiting the application?', [{
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+            }, {
+                text: 'OK',
+                onPress: () => BackHandler.exitApp()
+            }, ], {
+                cancelable: false
+            }
+         )
+         return true;
     }
 
     getChallenge(usernameField){
@@ -72,6 +98,7 @@ export default class Login extends Component{
     moveOn(){
 	    this.registerToDevice();
         if(this.state.autheticated){
+            BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
             this.props.navigation.navigate('Dashboard');
         }
     }
@@ -128,6 +155,10 @@ export default class Login extends Component{
 
     }
 
+    registerScreen() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+        this.props.navigation.navigate('Register');
+    }
 
     render(){
         if(this.state.loadConnection){
@@ -172,7 +203,7 @@ export default class Login extends Component{
                         onPress={() => this.getChallenge(this.state.username) /*& this.props.navigation.navigate('Dashboard')*/ }
                         />
                     <Button title="Register" color="#818181"
-                        onPress={()=> this.props.navigation.navigate('Register')  }/>
+                        onPress={()=> this.registerScreen()  }/>
                 </View>
             </View>
         )
