@@ -1,18 +1,13 @@
 import React, {Component} from 'react';
-import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackAndroid, BackHandler, ToastAndroid} from 'react-native';
+import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
-import {RNExitApp} from 'react-native-exit-app';
+
 import sha1 from 'sha1'
 
-export default class Login extends Component{
-    // constructor(props){
-    //     super(props);
 
-    //     this.state = {
-    //         username: "",
-    //         password: ""
-    //     };
-    // }
+
+
+export default class Login extends Component{
 
     state = {
         fetchedChallenge: false,
@@ -24,16 +19,33 @@ export default class Login extends Component{
         loadConnection: true
     }
 
-    componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-        alert('ok');
+   componentDidMount() {
+        
+        //alert("wat")
+        //BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
     }
 
-    handleBackButton() {
-        alert('okok');
-       BackHandler.exitApp();
-        return true;
+   /* componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton);
     }
+
+    _handleBackButton = () => {         
+       Alert.alert(
+            'Exit App',
+            'Exiting the application?', [{
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+            }, {
+                text: 'OK',
+                onPress: () => BackHandler.exitApp()
+            }, ], {
+                cancelable: false
+            }
+        )
+         
+         return true;
+    }*/
 
     getChallenge(usernameField){
         console.log(usernameField + "USERNAME GETCHALLENGE")
@@ -84,6 +96,7 @@ export default class Login extends Component{
     moveOn(){
 	    this.registerToDevice();
         if(this.state.autheticated){
+            BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
             this.props.navigation.navigate('Dashboard');
         }
     }
@@ -140,6 +153,10 @@ export default class Login extends Component{
 
     }
 
+    registerScreen() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+        this.props.navigation.navigate('Register');
+    }
 
     render(){
         if(this.state.loadConnection){
@@ -184,7 +201,7 @@ export default class Login extends Component{
                         onPress={() => this.getChallenge(this.state.username) /*& this.props.navigation.navigate('Dashboard')*/ }
                         />
                     <Button title="Register" color="#818181"
-                        onPress={()=> this.props.navigation.navigate('Register')  }/>
+                        onPress={()=> this.registerScreen()  }/>
                 </View>
             </View>
         )

@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, Icon, Image,TouchableOpacity, AsyncStor
 import { StackNavigator} from 'react-navigation';
 import Hamburger from 'react-native-hamburger';
 
+import Splashscreen from './src/components/Splashscreen/Splashscreen';
 import Login from './src/components/Login/Login';
 import Dashboard from './src/components/Dashboard/Dashboard';
 import Register from './src/components/Register/Register';
@@ -32,6 +33,13 @@ import DashboardBills from './src/components/Dashboard/DashboardBills';
 // }
 
 export default App = StackNavigator({
+  Splashscreen: {
+    navigationOptions: {
+      title: 'Splashscreen',
+      header: null,
+    },
+    screen: Splashscreen
+  },
   Login: {
     navigationOptions: {
       title: 'Login',
