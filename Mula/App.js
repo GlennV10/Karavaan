@@ -5,6 +5,7 @@ import Hamburger from 'react-native-hamburger';
 
 import Login from './src/components/Login/Login';
 import Dashboard from './src/components/Dashboard/Dashboard';
+import TripDashboard from './src/components/Trip/TripDashboard'
 import Register from './src/components/Register/Register';
 import AddEvent from './src/components/Event/AddEvent';
 import DetailEvent from './src/components/Event/DetailEvent';
@@ -12,6 +13,7 @@ import DetailPerson from './src/components/User/DetailPerson';
 import DetailGroup from './src/components/Groups/DetailGroup';
 import AddGroup from './src/components/Groups/AddGroup';
 import DashboardBills from './src/components/Dashboard/DashboardBills';
+import DashboardTrips from './src/components/Dashboard/DashboardTrips';
 // import DashboardGroups from './src/components/Dashboard/DashboardGroups';
 
 // import { AsyncStorage } from '../../../../.cache/typescript/2.6/node_modules/@types/react-native';
@@ -69,12 +71,28 @@ export default App = StackNavigator({
     }),
     screen: Dashboard
   },
-  DashboardBills: {
+  TripDashboard: {
     navigationOptions: ({ navigation }) => ({
-      title: 'DashboardBills',
+      title: 'Trip',
       headerStyle:{
-        backgroundColor: '#0992ef',
-        marginTop: 24
+        backgroundColor: '#6fc2b0'
+    },
+    headerTitleStyle:{
+        color: '#FFF'
+    },
+    headerBackTitleStyle:{
+        color: "#FFF"
+    },
+    // gesturesEnabled: false,
+    // headerLeft: null
+    }),
+    screen: TripDashboard
+  },
+  DashboardTrips: {
+    navigationOptions: ({ navigation }) => ({
+      title: 'Trips',
+      headerStyle:{
+        backgroundColor: '#6fc2b0'
       },
       headerTitleStyle:{
         color: '#FFF'
@@ -82,14 +100,14 @@ export default App = StackNavigator({
       headerBackTitleStyle:{
         color: "#FFF"
       },
-      gesturesEnabled: false,
-      headerLeft: null,
+      // gesturesEnabled: false,
+      // headerLeft: null,
       // headerRight: <Hamburger active={state} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('DashboardBills')}/>,
       drawer:() => ({
         label: 'Home'
       })
     }),
-    screen: DashboardBills
+    screen: DashboardTrips
   },
   // DashboardGroups: {
   //   navigationOptions: ({ navigation }) => ({

@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid,  TouchableOpacity, ScrollView} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import DashboardTrips from '../Dashboard/DashboardTrips';
-import DashboardBalance from '../Dashboard/DashboardBalance'
-import DashboardPersons from '../Dashboard/DashboardPersons'
+import TripExpenses from './TripExpenses'
+import TripCategory from './TripCategory';
+import TripTotal from './TripTotal';
 
-export default class Dashboard extends React.Component {
+export default class TripDashboard extends React.Component {
     render() {
       const nav = this.props.navigation;
       return (
@@ -15,8 +15,9 @@ export default class Dashboard extends React.Component {
           tabBarBackgroundColor={'#e2e8e5'}
           tabBarActiveTextColor={'#303030'}
           tabBarInactiveTextColor={'#303030'}>
-            <DashboardTrips tabLabel="Trips" navigator={nav} />
-            <DashboardBalance tabLabel="Balance" navigator={nav} />
+            <TripExpenses tabLabel="Expenses" navigator={nav} />
+            <TripCategory tabLabel="Category" navigator={nav} />
+            <TripTotal tabLabel="Total" navigator={nav} />
         </ScrollableTabView>
       );
     }
