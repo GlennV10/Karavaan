@@ -32,7 +32,7 @@ export default class Login extends Component{
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
     }
 
-    handleBackButton = () => {               
+    handleBackButton = () => {
         Alert.alert(
             'Exit App',
             'Exiting the application?', [{
@@ -179,9 +179,9 @@ export default class Login extends Component{
                 <View style={styles.formContainer}>
                     <TextInput
                         style={styles.inputField}
-                        placeholder="Username (email)"
+                        placeholder="Username"
                         underlineColorAndroid="transparent"
-                        placeholderTextColor="#818181"
+                        placeholderTextColor="#fff"
                         returnKeyType="next"
                         keyboardType="email-address"
                         onChangeText={(usernameText) => this.setState({username: usernameText})}
@@ -191,19 +191,19 @@ export default class Login extends Component{
                         secureTextEntry
                         placeholder="Password"
                         underlineColorAndroid="transparent"
-                        placeholderTextColor="#818181"
+                        placeholderTextColor="#fff"
                         returnKeyType="go"
                         onChangeText={(passwordText) => this.setState({password: passwordText})}
                         ref={(input) => this.passwordInput = input}
                         onSubmitEditing={() => this.getChallenge(this.state.username)}></TextInput>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <Button style={styles.formButton}
-                        title="Login"
-                        onPress={() => this.getChallenge(this.state.username) /*& this.props.navigation.navigate('Dashboard')*/ }
-                        />
-                    <Button title="Register" color="#818181"
-                        onPress={()=> this.registerScreen()  }/>
+                    <TouchableOpacity style={styles.loginButton} onPress={() => this.getChallenge(this.state.username)}>
+                        <Text style={styles.buttonText}>Login</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.registerButton} onPress={() => this.registerScreen()}>
+                        <Text style={styles.buttonText}>Register</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
@@ -213,10 +213,11 @@ export default class Login extends Component{
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: 'rgba(176,207,227,34)',
+        backgroundColor: '#6fc2b0',
         alignSelf: 'stretch'
     },
     logoContainer:{
+        marginTop: 100,
         alignItems: 'center',
         flexGrow: .3,
         justifyContent: 'center'
@@ -226,22 +227,39 @@ const styles = StyleSheet.create({
         height: 33
     },
     formContainer:{
-        flexGrow:.3
+        marginTop: 30
+        // flexGrow:.3
     },
     inputField:{
-        marginLeft: 50,
-        marginRight: 50,
-        fontSize: 20,
+        marginLeft: 30,
+        marginRight: 30,
+        fontSize: 17,
         padding: 10,
-        backgroundColor: 'rgba(255,255,255,.2)',
-        marginBottom: 15,
-        color: '#000',
+        marginBottom: 2,
+        color: '#fff',
         borderBottomWidth: 0,
         borderRadius: 5
     },
     buttonContainer:{
-        marginLeft: 50,
-        marginRight:50,
-        justifyContent: 'space-between'
+        flex: 1,
+        marginTop: 20,
+        marginLeft: 30,
+        marginRight: 30,
+    },
+    loginButton: {
+        height: 40,
+        alignItems: 'center',
+        backgroundColor: '#fff',
+    },
+    registerButton: {
+        height: 40,
+        alignItems: 'center',
+        backgroundColor: '#ffd185'
+    },
+    buttonText: {
+        fontSize: 12,
+        lineHeight: 28,
+        color: '#303030',
+        textAlign: 'center'
     }
 });
