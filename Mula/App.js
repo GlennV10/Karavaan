@@ -63,19 +63,19 @@ export default App = StackNavigator({
         color: "#FFF"
     },
     gesturesEnabled: false,
-    headerLeft: null
+    headerLeft: null,
     // headerRight: <Hamburger active={true} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('Dashboard')}/>,
-    // headerRight: <TouchableOpacity onPress={()=>{
-    //   try{
-    //     AsyncStorage.removeItem("userName").then(console.log("Logged out"));
-    //     AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
-    //   }catch(error){
-    //     console.log(error);
-    //   }
-    // }}><Image source={require('./imgMain/logout.png')} style={{width: 25, height: 25, marginRight: 10}}/></TouchableOpacity>,
-    //   drawer:() => ({
-    //     label: 'Home'
-    //   })
+    headerRight: <TouchableOpacity onPress={()=>{
+      try{
+        AsyncStorage.removeItem("userName").then(console.log("Logged out"));
+        AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
+      }catch(error){
+        console.log(error);
+      }
+    }}><Image source={require('./imgMain/logout.png')} style={{width: 25, height: 25, marginRight: 10}}/></TouchableOpacity>,
+      drawer:() => ({
+        label: 'Home'
+      })
     }),
     screen: Dashboard
   },
