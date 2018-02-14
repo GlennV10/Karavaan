@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
+import I18n from 'react-native-i18n';
 
 import sha1 from 'sha1';
 

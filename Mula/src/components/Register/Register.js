@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid, Image, TouchableOpacity} from 'react-native';
 import {StackNavigator} from 'react-navigation';
+import I18n from 'react-native-i18n';
 
 export default class Register extends React.Component {
     state = {

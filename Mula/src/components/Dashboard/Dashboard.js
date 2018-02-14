@@ -5,6 +5,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import DashboardTrips from '../Dashboard/DashboardTrips';
 import DashboardBalance from '../Dashboard/DashboardBalance'
 import DashboardPersons from '../Dashboard/DashboardPersons'
+import I18n from 'react-native-i18n';
 
 export default class Dashboard extends React.Component {
 

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Image, Text, TextInput, Button, Modal, TouchableOpacity, ScrollView, Picker, AsyncStorage} from 'react-native';
 import {StackNavigator} from 'react-navigation';
-
+import I18n from 'react-native-i18n';
 /**
 |--------------------------------------------------
 TODO::
