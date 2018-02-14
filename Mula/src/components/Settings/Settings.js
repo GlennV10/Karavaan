@@ -22,7 +22,6 @@ export default class Settings extends Component{
         });
         AsyncStorage.getItem('language').then((language) => {
             this.setState({ language });
-            I18n.locale = language;
         });
         AsyncStorage.getItem('currency').then((currency) => {
             this.setState({ currency });
@@ -34,6 +33,17 @@ export default class Settings extends Component{
     _handleBackButton = () => {
         this.props.navigation.navigate('Dashboard');
         return true;
+    }
+
+    updateLanguage(newLanguage) {
+        this.setState({ language: newLanguage});
+        AsyncStorage.setItem('language', newLanguage).then(console.log("Language updated."));
+        I18n.locale = newLanguage;
+    }
+
+    updateCurrency(newCurrency) {
+        this.setState({ currency: newCurrency});
+        AsyncStorage.setItem('language', newCurrency).then(console.log("Currency updated."));
     }
 
     logout() {
@@ -92,7 +102,7 @@ export default class Settings extends Component{
                     onChangeText={(passwordText) => this.setState({password: passwordText})}
                     ref={(input) => this.passwordInput = input}></TextInput>
                 <Text>Language</Text>
-                <Picker selectedValue={this.state.language} onValueChange={(itemValue, itemIndex) => this.setState({language: itemValue})}>
+                <Picker selectedValue={this.state.language} onValueChange={(itemValue, itemIndex) => this.updateLanguage(itemValue)}>
                     <Picker.Item label="Dutch" value="Dutch" />
                     <Picker.Item label="English" value="English" />
                 </Picker>
