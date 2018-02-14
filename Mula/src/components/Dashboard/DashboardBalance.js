@@ -25,7 +25,7 @@ export default class DashboardBalance extends Component {
     render() {
       return(
         <View style={styles.container}>
-          <Text>DASHBOARD BALANCE</Text>
+          <Text>DASHBOARD BALANCE hurdurdur</Text>
         </View>
       )
     }

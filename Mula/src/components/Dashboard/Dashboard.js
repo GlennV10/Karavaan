@@ -40,8 +40,8 @@ export default class Dashboard extends React.Component {
         tabBarBackgroundColor={'#e2e8e5'}
         tabBarActiveTextColor={'#303030'}
         tabBarInactiveTextColor={'#303030'}>
-      <DashboardTrips tabLabel="Trips" navigator={nav} />
-      <DashboardBalance tabLabel="Balance" navigator={nav} />
+      <DashboardTrips tabLabel={I18n.t('trips')} navigator={nav} />
+      <DashboardBalance tabLabel={I18n.t('balance')} navigator={nav} />
       </ScrollableTabView>
     );
   }
