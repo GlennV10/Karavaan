@@ -98,7 +98,15 @@ export default class Login extends Component{
 
    registerToDevice(){
        try{
-           AsyncStorage.setItem('userName', this.state.username).then(console.log("Username written to memory."));
+            AsyncStorage.setItem('userName', this.state.username).then(console.log("Username written to memory."));
+            AsyncStorage.getItem('language').then((language) => {
+                if(language!= null) AsyncStorage.setItem('language', language).then(console.log("Language written to memory."));
+                else {AsyncStorage.setItem('language', "Dutch").then(console.log("Language written to memory."));}
+            });
+            AsyncStorage.getItem('currency').then((currency) => {
+                if(currency!= null) AsyncStorage.setItem('currency', currency).then(console.log("Currency written to memory."));
+                else {AsyncStorage.setItem('currency', "Euro").then(console.log("Language written to memory."));}
+            });
        }catch(error){
            console.log(error);
        }
