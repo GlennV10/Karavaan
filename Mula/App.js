@@ -55,44 +55,42 @@ export default App = StackNavigator({
       headerStyle:{
         backgroundColor: '#6fc2b0'
         // marginTop: 24,
-    },
-    headerTitleStyle:{
-        color: '#FFF'
-    },
-    headerBackTitleStyle:{
-        color: "#FFF"
-    },
-    gesturesEnabled: false,
-    headerLeft: null,
-    // headerRight: <Hamburger active={true} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('Dashboard')}/>,
-    headerRight: <TouchableOpacity onPress={()=>{
-      try{
-        AsyncStorage.removeItem("userName").then(console.log("Logged out"));
-        AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
-      }catch(error){
-        console.log(error);
-      }
-    }}><Image source={require('./imgMain/logout.png')} style={{width: 25, height: 25, marginRight: 10}}/></TouchableOpacity>,
-      drawer:() => ({
-        label: 'Home'
-      })
+      },
+      headerTitleStyle:{
+          color: '#FFF'
+      },
+      headerBackTitleStyle:{
+          color: "#FFF"
+      },
+      gesturesEnabled: false,
+      headerLeft: null,
+      // headerRight: <Hamburger active={true} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('Dashboard')}/>,
+      headerRight: <TouchableOpacity onPress={()=>{
+        try{
+          AsyncStorage.removeItem("userName").then(console.log("Logged out"));
+          AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
+        }catch(error){
+          console.log(error);
+        }
+      }}><Image source={require('./imgMain/logout.png')} style={{width: 25, height: 25, marginRight: 10}}/></TouchableOpacity>,
+        drawer:() => ({
+          label: 'Home'
+        })
     }),
     screen: Dashboard
   },
   TripDashboard: {
     navigationOptions: ({ navigation }) => ({
-      title: 'Trip',
+      title: navigation.state.params.trip.event,
       headerStyle:{
         backgroundColor: '#6fc2b0'
-    },
-    headerTitleStyle:{
-        color: '#FFF'
-    },
-    headerBackTitleStyle:{
-        color: "#FFF"
-    },
-    // gesturesEnabled: false,
-    // headerLeft: null
+      },
+      headerTitleStyle:{
+          color: '#FFF'
+      },
+      headerBackTitleStyle:{
+          color: "#FFF"
+      },
     }),
     screen: TripDashboard
   },
@@ -117,28 +115,6 @@ export default App = StackNavigator({
     }),
     screen: DashboardTrips
   },
-  // DashboardGroups: {
-  //   navigationOptions: ({ navigation }) => ({
-  //     title: 'DashboardGroups',
-  //     headerStyle:{
-  //       backgroundColor: '#0992ef',
-  //       marginTop: 24
-  //     },
-  //     headerTitleStyle:{
-  //       color: '#FFF'
-  //     },
-  //     headerBackTitleStyle:{
-  //       color: "#FFF"
-  //     },
-  //     gesturesEnabled: false,
-  //     headerLeft: null,
-  //     // headerRight: <Hamburger active={state} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('DashboardGroups')}/>,
-  //     drawer:() => ({
-  //       label: 'Home'
-  //     })
-  //   }),
-  //   screen: DashboardGroups
-  // },
   AddEvent: {
     navigationOptions: ({ navigation }) => ({
       title: 'Add Event',
