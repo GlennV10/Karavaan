@@ -5,6 +5,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TripExpenses from './TripExpenses'
 import TripCategory from './TripCategory';
 import TripTotal from './TripTotal';
+import I18n from 'react-native-i18n';
 
 export default class TripDashboard extends React.Component {
     render() {

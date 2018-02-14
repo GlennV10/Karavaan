@@ -5,6 +5,7 @@ import Hamburger from 'react-native-hamburger';
 
 import Splashscreen from './src/components/Splashscreen/Splashscreen';
 import Login from './src/components/Login/Login';
+import Settings from './src/components/Settings/Settings';
 import Dashboard from './src/components/Dashboard/Dashboard';
 import TripDashboard from './src/components/Trip/TripDashboard'
 import Register from './src/components/Register/Register';
@@ -15,6 +16,18 @@ import DetailGroup from './src/components/Groups/DetailGroup';
 import AddGroup from './src/components/Groups/AddGroup';
 import DashboardBills from './src/components/Dashboard/DashboardBills';
 import DashboardTrips from './src/components/Dashboard/DashboardTrips';
+import I18n from 'react-native-i18n';
+
+import en from './src/Translations/en';
+import nl from './src/Translations/nl';
+
+I18n.fallbacks = true;
+
+I18n.translations = {
+  en,
+  nl
+};
+
 // import DashboardGroups from './src/components/Dashboard/DashboardGroups';
 
 // import { AsyncStorage } from '../../../../.cache/typescript/2.6/node_modules/@types/react-native';
@@ -65,36 +78,32 @@ export default App = StackNavigator({
       gesturesEnabled: false,
       headerLeft: null,
       // headerRight: <Hamburger active={true} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('Dashboard')}/>,
-      headerRight: <TouchableOpacity onPress={()=>{
-        try{
-          Alert.alert(
-            'Logout',
-            'Logout the application?', [{
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel'
-            }, {
-              text: 'OK',
-              onPress: () => {
-                AsyncStorage.removeItem("userName").then(console.log("Logged out"));
-                AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
-                navigation.navigate('Login');
-              }
-            }, ], {
-              cancelable: false
-            }
-          )
-          AsyncStorage.removeItem("userName").then(console.log("Logged out"));
-          AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
-        }catch(error){
-          console.log(error);
-        }
-      }}><Image source={require('./imgMain/logout.png')} style={{width: 25, height: 25, marginRight: 10}}/></TouchableOpacity>,
+      headerRight:
+      <TouchableOpacity onPress={()=>{
+        navigation.navigate('Settings');
+      }}>
+      <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/></TouchableOpacity>,
         drawer:() => ({
           label: 'Home'
         })
     }),
     screen: Dashboard
+  },
+  Settings: {
+    navigationOptions: ({ navigation }) => ({
+      title: 'Settings',
+      headerStyle:{
+        backgroundColor: '#6fc2b0'
+        // marginTop: 24,
+      },
+      headerTitleStyle:{
+          color: '#FFF'
+      },
+      headerBackTitleStyle:{
+          color: "#FFF"
+      }
+    }),
+    screen: Settings
   },
   TripDashboard: {
     navigationOptions: ({ navigation }) => ({
@@ -113,7 +122,7 @@ export default App = StackNavigator({
   },
   DashboardTrips: {
     navigationOptions: ({ navigation }) => ({
-      title: 'Trips',
+      title: I18n.t('trips'),
       headerStyle:{
         backgroundColor: '#6fc2b0'
       },

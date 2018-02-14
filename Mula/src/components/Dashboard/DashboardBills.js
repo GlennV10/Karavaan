@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Modal, Switch, ActivityIndicator, Picker, AsyncStorage} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import DatePicker from 'react-native-datepicker';
+import I18n from 'react-native-i18n';
 
 // ############ Colors ############
 const red = '#C42525';

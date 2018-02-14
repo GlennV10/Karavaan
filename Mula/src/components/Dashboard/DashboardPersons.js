@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, ActivityIndicator,Modal,Picker, AsyncStorage, NetInfo} from 'react-native';
 import CheckBox from 'react-native-checkbox-heaven';
 import sha1 from 'sha1';
-
+import I18n from 'react-native-i18n';
 
 //SET ASYNC DATA
 //AsyncStorage.setItem('uid123', 'testString');

@@ -6,6 +6,7 @@ import {Switch} from 'react-native-switch' ;
 import Autocomplete from 'react-native-autocomplete-input';
 import CheckBox from 'react-native-checkbox-heaven';
 import FontAwesome, {Icons} from 'react-native-fontawesome';
+import I18n from 'react-native-i18n';
 // var friends = [];
 var groups = [];
 var autoData = [];

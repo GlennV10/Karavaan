@@ -7,6 +7,7 @@ import Autocomplete from 'react-native-autocomplete-input';
 import CheckBox from 'react-native-checkbox-heaven';
 import FontAwesome, {Icons} from 'react-native-fontawesome';
 import MultiSelect from 'react-native-multiple-select';
+import I18n from 'react-native-i18n';
 
 var items = [{
     id: '92iijs7yta',

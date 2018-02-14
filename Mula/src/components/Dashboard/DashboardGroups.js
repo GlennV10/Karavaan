@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage} from 'react-native';
+import I18n from 'react-native-i18n';
 
 var friends = [];
 

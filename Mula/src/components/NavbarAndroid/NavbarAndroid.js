@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Text, View, ToolbarAndroid, StyleSheet} from 'react-native';
 import Hamburger from 'react-native-hamburger';
+import I18n from 'react-native-i18n';
+
 export default class NavbarAndroid extends Component{
     _renderScene(route, navigator){
         switch (route.id){
