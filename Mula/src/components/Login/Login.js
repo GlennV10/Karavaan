@@ -17,10 +17,13 @@ export default class Login extends Component{
         loadConnection: true
     }
 
+    componentWillMount() {
+        this.checkSettings();
+    }
+
     componentDidMount() {
         this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
-        this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
-        this.checkSettings();
+        this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));        
     }
 
     checkSettings() {
