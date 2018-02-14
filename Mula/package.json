@@ -28,6 +28,7 @@
     "react-native-elements": "^0.18.2",
     "react-native-fontawesome": "^5.7.0",
     "react-native-hamburger": "0.0.2",
+    "react-native-i18n": "^2.0.12",
     "react-native-multiple-select": "^0.4.1",
     "react-native-scrollable-tab-view": "^0.8.0",
     "react-native-switch": "^1.1.2",

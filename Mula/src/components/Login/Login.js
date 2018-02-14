@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
+import I18n from 'react-native-i18n';
 
 import sha1 from 'sha1';
 
@@ -175,7 +176,7 @@ export default class Login extends Component{
                 <View style={styles.formContainer}>
                     <TextInput
                         style={styles.inputField}
-                        placeholder="Username"
+                        placeholder={I18n.t('username')}
                         underlineColorAndroid="transparent"
                         placeholderTextColor="#fff"
                         returnKeyType="next"
@@ -185,7 +186,7 @@ export default class Login extends Component{
                     <TextInput
                         style={styles.inputField}
                         secureTextEntry
-                        placeholder="Password"
+                        placeholder={I18n.t('password')}
                         underlineColorAndroid="transparent"
                         placeholderTextColor="#fff"
                         returnKeyType="go"
@@ -195,10 +196,10 @@ export default class Login extends Component{
                 </View>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.loginButton} onPress={() => this.getChallenge(this.state.username)}>
-                        <Text style={styles.buttonText}>Login</Text>
+                        <Text style={styles.buttonText}>{I18n.t('login')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.registerButton} onPress={() => this.props.navigation.navigate('Register')}>
-                        <Text style={styles.buttonText}>Register</Text>
+                        <Text style={styles.buttonText}>{I18n.t('register')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

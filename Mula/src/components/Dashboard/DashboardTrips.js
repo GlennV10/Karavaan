@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Modal, Switch, ActivityIndicator, Picker, AsyncStorage} from 'react-native';
-
+import I18n from 'react-native-i18n';
 // ############ Colors ############
 const red = '#C42525';
 const green = '#4F9628';

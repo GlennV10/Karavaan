@@ -16,6 +16,18 @@ import DetailGroup from './src/components/Groups/DetailGroup';
 import AddGroup from './src/components/Groups/AddGroup';
 import DashboardBills from './src/components/Dashboard/DashboardBills';
 import DashboardTrips from './src/components/Dashboard/DashboardTrips';
+import I18n from 'react-native-i18n';
+
+import en from './src/Translations/en';
+import nl from './src/Translations/nl';
+
+I18n.fallbacks = true;
+
+I18n.translations = {
+  en,
+  nl
+};
+
 // import DashboardGroups from './src/components/Dashboard/DashboardGroups';
 
 // import { AsyncStorage } from '../../../../.cache/typescript/2.6/node_modules/@types/react-native';
@@ -110,7 +122,7 @@ export default App = StackNavigator({
   },
   DashboardTrips: {
     navigationOptions: ({ navigation }) => ({
-      title: 'Trips',
+      title: I18n.t('trips'),
       headerStyle:{
         backgroundColor: '#6fc2b0'
       },
