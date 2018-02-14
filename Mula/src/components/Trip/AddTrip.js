@@ -46,7 +46,9 @@ export default class AddTrip extends Component{
             selectedStartDate: "",
             selectedEndDate: "",
             selectedItems: [],
-            persons: []
+            currencies: [],
+            selectedCurrencies: []
+
             
         };
         
@@ -57,20 +59,37 @@ export default class AddTrip extends Component{
         selectedEndDate = new Date().toDateString
         
       }
-    onSelectedItemsChange = (selectedItems) => {
+    onSelectedItemsChange = selectedItems => {
         this.setState({ selectedItems });
         console.log(selectedItems);
         
       };
-    renderSelectedPersons(){
-        this.state.selectedItems.map((item) => {
-            console.log(item);
-        });
+      onSelectedCurrencyChange = selectedCurrencies => {
+        this.setState({ selectedItems });
+        console.log(selectedItems);
+        
+      };
+
+      //GET EXCHANGE RATES
+    getExchangeRates(){
+        if(this.state.loadRates){
+            return fetch('https://api.fixer.io/latest')
+            .then((resp) => resp.json())
+            .then((data) => this.parseRates(data));
+        }
     }
     
       
     render(){
         const { selectedItems } = this.state;
+        var month =  new Date().getUTCMonth() +1 ;
+        var yeara = new Date().getFullYear() +1 ;
+        var yearb = new Date().getFullYear()-1 ;
+        var yearbefore = ""+ yearb +"-"+ month+ "-"+ new Date().getUTCDate();
+        var yearafter = ""+yeara +"-"+ month+ "-"+ new Date().getUTCDate();
+        
+        console.log(yearbefore);
+        console.log(yearafter);
         return(
             <ScrollView style={styles.container}>
             <View >
@@ -93,8 +112,8 @@ export default class AddTrip extends Component{
                 <DatePicker
                     mode='date'
                     format='YYYY-MM-DD'
-                    minDate= {""+new Date().getFullYear()-1 +"-"+ new Date().getMonth()+1 + "-"+ new Date().getDate()}
-                    maxDate={""+new Date().getFullYear()+1 +"-"+ new Date().getMonth()+1 + "-"+ new Date().getDate()}
+                    minDate= {yearbefore}
+                    maxDate={yearafter}
                     date={this.state.selectedStartDate}
                     showIcon={true}
                     placeholder="Select date..."
@@ -116,8 +135,8 @@ export default class AddTrip extends Component{
                 <DatePicker
                     mode='date'
                     format='YYYY-MM-DD'
-                    minDate= {""+new Date().getFullYear()-1 +"-"+ new Date().getMonth()+1 + "-"+ new Date().getDate()}
-                    maxDate={""+new Date().getFullYear()+1 +"-"+ new Date().getMonth()+1 + "-"+ new Date().getDate()}
+                    minDate= {yearbefore}
+                    maxDate={yearafter}
                     date={this.state.selectedEndDate}
                     showIcon={true}
                     placeholder="Select date..."
@@ -133,7 +152,7 @@ export default class AddTrip extends Component{
                 <MultiSelect
                 hideTags
                 items={items}
-                uniqueKey="name"
+                uniqueKey="id"
                 ref={(component) => { this.multiSelect = component }}
                 selectedItems={selectedItems}
                 onSelectedItemsChange={this.onSelectedItemsChange}
@@ -151,8 +170,9 @@ export default class AddTrip extends Component{
                 submitButtonColor="#CCC"
                 submitButtonText="Submit"
                 />
-                {this.renderSelectedPersons()}
+                
             </View>
+            
             
           
             
