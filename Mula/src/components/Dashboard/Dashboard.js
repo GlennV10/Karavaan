@@ -1,13 +1,20 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid,  TouchableOpacity, ScrollView, BackHandler, Alert} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid,  TouchableOpacity, ScrollView, BackHandler, Alert, AsyncStorage} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import DashboardTrips from '../Dashboard/DashboardTrips';
-import DashboardBalance from '../Dashboard/DashboardBalance'
-import DashboardPersons from '../Dashboard/DashboardPersons'
+import DashboardBalance from '../Dashboard/DashboardBalance';
+import DashboardPersons from '../Dashboard/DashboardPersons';
 import I18n from 'react-native-i18n';
 
 export default class Dashboard extends React.Component {
+
+  componentWillMount() {
+    AsyncStorage.getItem('language').then((language) => {
+      if(language == "English")I18n.locale = "en";
+      if(language == "Dutch")I18n.locale = "nl";
+    });
+  }
 
   componentDidMount() {
     this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));

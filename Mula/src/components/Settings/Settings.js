@@ -37,13 +37,18 @@ export default class Settings extends Component{
 
     updateLanguage(newLanguage) {
         this.setState({ language: newLanguage});
-        AsyncStorage.setItem('language', newLanguage).then(console.log("Language updated."));
-        I18n.locale = newLanguage;
+        AsyncStorage.setItem('language', newLanguage).then(console.log("Language updated to " + newLanguage));
+        if(newLanguage == 'English') {
+            I18n.locale = 'en';
+        }
+        if(newLanguage == 'Dutch') {
+            I18n.locale = 'nl';
+        }
     }
 
     updateCurrency(newCurrency) {
         this.setState({ currency: newCurrency});
-        AsyncStorage.setItem('language', newCurrency).then(console.log("Currency updated."));
+        AsyncStorage.setItem('currency', newCurrency).then(console.log("Currency updated to " + newCurrency));
     }
 
     logout() {
@@ -58,7 +63,6 @@ export default class Settings extends Component{
                     text: 'OK',
                     onPress: () => {
                         AsyncStorage.removeItem("userName").then(console.log("Logged out"));
-                        AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
                         this.props.navigation.navigate('Login');
                     }
                 }, ], {
@@ -107,7 +111,7 @@ export default class Settings extends Component{
                     <Picker.Item label="English" value="English" />
                 </Picker>
                 <Text>Currency</Text>
-                <Picker selectedValue={this.state.currency} onValueChange={(itemValue, itemIndex) => this.setState({currency: itemValue})}>
+                <Picker selectedValue={this.state.currency} onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
                     <Picker.Item label="Euro" value="Euro" />
                     <Picker.Item label="American Dollar" value="USD" />
                 </Picker>

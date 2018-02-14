@@ -1,6 +1,6 @@
 export default {
     //Dashboard
-    trips: 'reizen',
+    trips: 'Reizen',
     balance: 'Balans',
 
     //App.js -> stacknavigator titles

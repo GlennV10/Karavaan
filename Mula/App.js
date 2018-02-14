@@ -18,14 +18,15 @@ import DashboardBills from './src/components/Dashboard/DashboardBills';
 import DashboardTrips from './src/components/Dashboard/DashboardTrips';
 import I18n from 'react-native-i18n';
 
-import English from './src/Translations/English';
-import Dutch from './src/Translations/Dutch';
+import nl from './src/Translations/Dutch';
+import en from './src/Translations/English';
 
-I18n.fallbacks = true;
+I18n.defaultLocale = "nl";
+I18n.fallbacks = false;
 
 I18n.translations = {
-  English,
-  Dutch
+  nl,
+  en
 };
 
 // import DashboardGroups from './src/components/Dashboard/DashboardGroups';
