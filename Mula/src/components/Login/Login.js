@@ -25,7 +25,7 @@ export default class Login extends Component{
         BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton);
     }
 
-    _handleBackButton = () => {         
+    _handleBackButton = () => {
        Alert.alert(
             'Exit App',
             'Exiting the application?', [{
@@ -39,7 +39,7 @@ export default class Login extends Component{
                 cancelable: false
             }
         )
-         
+
          return true;
     }
 
@@ -92,7 +92,6 @@ export default class Login extends Component{
     moveOn(){
 	    this.registerToDevice();
         if(this.state.autheticated){
-            BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
             this.props.navigation.navigate('Dashboard');
         }
     }
@@ -149,11 +148,6 @@ export default class Login extends Component{
 
     }
 
-    registerScreen() {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
-        this.props.navigation.navigate('Register');
-    }
-
     render(){
         if(this.state.loadConnection){
             this.connectionMode();
@@ -195,7 +189,7 @@ export default class Login extends Component{
                     <TouchableOpacity style={styles.loginButton} onPress={() => this.getChallenge(this.state.username)}>
                         <Text style={styles.buttonText}>Login</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.registerButton} onPress={() => this.registerScreen()}>
+                    <TouchableOpacity style={styles.registerButton} onPress={() => this.props.navigation.navigate('Register')}>
                         <Text style={styles.buttonText}>Register</Text>
                     </TouchableOpacity>
                 </View>
@@ -238,7 +232,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 20,
         marginLeft: 30,
-        marginRight: 30,
+        marginRight: 30
     },
     loginButton: {
         height: 40,

@@ -11,12 +11,25 @@ export default class DashboardTrips extends Component {
       super(props);
       this.state = {
         trips: [],
-        username: ""
+        username: "",
+        isLoading: false,
       }
     }
 
+    componentWillMount() {
+        this.setState({ isLoading: true });
+        this.getAllTrips();
+    }
+
     componentDidMount() {
-      this.getAllTrips();
+        this.setState({ isLoading: false });
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.state.trips !== nextState.trips) {
+          return true;
+        }
+        return false;
     }
 
     getCurrencySymbol(trip) {
@@ -57,43 +70,51 @@ export default class DashboardTrips extends Component {
 
     renderTrips() {
         if(this.state.trips.length === 0){
-          return(
-            <View style={styles.noBillView}>
-              <Text style={styles.noBillText}>NO TRIPS FOUND</Text>
-            </View>
-          )
-        } else {
-        return this.state.trips.map((trip) => {
-            let image = null;
-            if (trip.has_paid) {
-                image = <Image style={styles.way} source={require('../../images/in.png')}/>;
-            } else {
-                image = <Image style={styles.way} source={require('../../images/out.png')}/>;
-            }
-
             return(
-              <TouchableOpacity style={styles.eventItem} onPress={() => this.props.navigator.navigate('TripDashboard', { trip: trip })} key={ trip.id }>
-                <View style={styles.splitRow}>
-                  <View style={[styles.half, styles.wayContainer]}>
-                    { image }
-                  </View>
-                  <Text style={[styles.eventAmount, styles.half]}>{ this.getCurrencySymbol(trip) }{ trip.total_price.toFixed(2) }</Text>
+                <View style={styles.noBillView}>
+                <Text style={styles.noBillText}>NO TRIPS FOUND</Text>
                 </View>
-                <Text style={styles.eventName}>{ trip.event }</Text>
-                <View style={styles.splitRow}>
-                  <Text style={[styles.eventDate, styles.half]}>{ trip.date }</Text>
-                  <Text style={[styles.eventAmountUsers, styles.half]}>{ trip.amount_already_paid }/{ trip.amount_users }</Text>
-                </View>
-                <View style={styles.progressBarContainer}>
-                  <View style={{backgroundColor: barStyle(trip.amount_already_paid, trip.amount_users), flex: 0.05+((0.95/trip.amount_users)*trip.amount_already_paid)}}></View>
-                </View>
-              </TouchableOpacity>
-            );
-        });
+            )
+        } else {
+            return this.state.trips.map((trip) => {
+                let image = null;
+                if (trip.has_paid) {
+                    image = <Image style={styles.way} source={require('../../images/in.png')}/>;
+                } else {
+                    image = <Image style={styles.way} source={require('../../images/out.png')}/>;
+                }
+
+                return(
+                <TouchableOpacity style={styles.eventItem} onPress={() => this.props.navigator.navigate('TripDashboard', { trip: trip })} key={ trip.id }>
+                    <View style={styles.splitRow}>
+                    <View style={[styles.half, styles.wayContainer]}>
+                        { image }
+                    </View>
+                    <Text style={[styles.eventAmount, styles.half]}>{ this.getCurrencySymbol(trip) }{ trip.total_price.toFixed(2) }</Text>
+                    </View>
+                    <Text style={styles.eventName}>{ trip.event }</Text>
+                    <View style={styles.splitRow}>
+                    <Text style={[styles.eventDate, styles.half]}>{ trip.date }</Text>
+                    <Text style={[styles.eventAmountUsers, styles.half]}>{ trip.amount_already_paid }/{ trip.amount_users }</Text>
+                    </View>
+                    <View style={styles.progressBarContainer}>
+                    <View style={{backgroundColor: barStyle(trip.amount_already_paid, trip.amount_users), flex: 0.05+((0.95/trip.amount_users)*trip.amount_already_paid)}}></View>
+                    </View>
+                </TouchableOpacity>
+                );
+            });
         }
     }
 
     render() {
+      if(this.state.isLoading) {
+        return(
+          <View style={styles.containerIndicator}>
+            <ActivityIndicator />
+          </View>
+        )
+      }
+
       return(
       <View style={styles.container}>
         <ScrollView style={styles.eventList}>
@@ -118,15 +139,22 @@ function barStyle(paid, total){
 }
 
 const styles = StyleSheet.create({
-    container:{
+    container: {
         flex:1,
         backgroundColor: '#d4e8e5'
         //backgroundColor: 'rgba(176,207,227,34)',
-    },eventList:{
+    },
+    containerIndicator: {
+        flex: 1,
+        paddingTop: 5,
+        backgroundColor: '#d4e8e5'
+    },
+    eventList: {
         //flex:1,
         marginLeft: 10,
         marginRight: 10
-    },eventItem:{
+    },
+    eventItem: {
         backgroundColor: '#f7f7f7',
         paddingBottom:10,
         paddingLeft:10,
@@ -137,21 +165,21 @@ const styles = StyleSheet.create({
         // flex:.5,
         // height: 115,
         borderColor: '#000'
-    },eventAmount:{
+    },eventAmount: {
         fontSize: 35,
         textAlign: 'right',
-    },eventName:{
+    },eventName: {
         textAlign: 'right',
         fontSize: 20,
-    },eventDate:{
+    },eventDate: {
         // flex:.5,
-    },splitRow:{
+    },splitRow: {
         flexDirection: 'row',
         marginBottom: 5
-    },eventAmountUsers:{
+    },eventAmountUsers: {
         textAlign:'right',
         flex:.5
-    },progressBarContainer:{
+    },progressBarContainer: {
         flex:1,
         height: 5,
         marginLeft: -10,
@@ -159,7 +187,7 @@ const styles = StyleSheet.create({
         marginRight:-10,
         flexDirection: 'row',
         backgroundColor: '#213544',
-    },addButton:{
+    },addButton: {
         backgroundColor: '#3B4859',
         width: 50,
         height: 50,
@@ -169,15 +197,15 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 10,
         right: 10,
-    },addButtonText:{
+    },addButtonText: {
         color: '#fff'
     },
-    innerModalStyle:{
+    innerModalStyle: {
         backgroundColor: 'rgba(0,0,0,.75)',
         flex:1,
         justifyContent: 'center'
     },
-    innerModalContentStyle:{
+    innerModalContentStyle: {
         backgroundColor: '#EFF2F7',
         // paddingLeft: 10,
         // paddingRight:10,
@@ -186,30 +214,30 @@ const styles = StyleSheet.create({
         borderRadius:5,
         flex:.7,
     },
-    modalAddEventSave:{
+    modalAddEventSave: {
         flex:.5,
         backgroundColor:green,
     },
-    modalAddEventCancel:{
+    modalAddEventCancel: {
       flex:.5  ,
       backgroundColor: red,
     },
-    modalButtons:{
+    modalButtons: {
         flex:.1,
         flexDirection:'row',
         marginRight:-20,
         marginLeft:-20
     },
-    modalContent:{
+    modalContent: {
         flex:1,
     },
-    buttonStyle:{
+    buttonStyle: {
         flex:1,
         textAlign: 'center',
         color: "#ffffff",
         textAlignVertical: 'center'
     },
-    inputField:{
+    inputField: {
         marginLeft: 50,
         marginRight: 50,
         fontSize: 20,
@@ -220,47 +248,48 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderRadius:5,
     },
-    half:{
+    half: {
         flex:.5
     },
-    way:{
+    way: {
         width:50,
         height: 50
     },
-    wayContainer:{
+    wayContainer: {
         alignItems: 'center',
     },
-    datePickerStyle:{
+    datePickerStyle: {
         width: 300
     },
-    threequarter:{
+    threequarter: {
         flex: .75,
     },
-    quarter:{
+    quarter: {
         flex: .25
 
-    },splitRowModal:{
+    },
+    splitRowModal: {
         flexDirection: 'row',
         marginBottom: 5,
         marginLeft: 50,
         marginRight: 50
     },
-    itemsRight:{
+    itemsRight: {
         alignItems: 'flex-end'
     },
-    testRed:{
+    testRed: {
         backgroundColor: red
     },
-    modalNumberInput:{
+    modalNumberInput: {
         fontSize: 20,
         backgroundColor: 'rgba(255,255,255,0)',
         color: '#000',
         borderBottomWidth: 2,
     },
-    choose:{
+    choose: {
         flexDirection:'row',
     },
-    addButtonLeft:{
+    addButtonLeft: {
         backgroundColor: '#3B4859',
         width: 50,
         height: 50,

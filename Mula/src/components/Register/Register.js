@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid, Image} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid, Image, TouchableOpacity} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 
 export default class Register extends React.Component {
@@ -15,12 +15,12 @@ export default class Register extends React.Component {
         userCreated: false
     }
 
-    checkReqs(){            
+    checkReqs(){
         if(this.state.firstName !== "" & this.state.lastName !== "" & this.state.email !== "" & this.validMail(this.state.email) & this.state.tempPassword === this.state.tempPassword2){
             this.setState({password: this.state.tempPassword});
             //POST Request
             return fetch('http://193.191.177.169:8080/mula/Controller?action=addUser',{
-                method: 'POST', 
+                method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export default class Register extends React.Component {
       return (
         <View style={styles.container}>
              <View style={styles.logoContainer}>
-             <Image 
+             <Image
                  style={styles.logo}
                  source={require('../../images/placeholder_user.png')}
                  />
@@ -92,7 +92,7 @@ export default class Register extends React.Component {
             <TextInput
                 placeholder="Password"
                 style={styles.inputField}
-                secureTextEntry
+                secureTextEntry={true}
                 underlineColorAndroid="transparent"
                 placeholderTextColor="#818181"
                 onChangeText={(text)=>this.setState({tempPassword: text})}
@@ -102,14 +102,17 @@ export default class Register extends React.Component {
             <TextInput
                 placeholder="Password (check)"
                 style={styles.inputField}
-                secureTextEntry
+                secureTextEntry={true}
                 underlineColorAndroid="transparent"
                 placeholderTextColor="#818181"
                 onChangeText={(text)=>this.setState({tempPassword2: text})}
                 ref={(input) => this.password2Input = input}
                 onSubmitEditing={() => this.checkReqs()}/>
             <View style={styles.buttonContainer}>
-                <Button onPress={()=>this.checkReqs()} title="Register" />
+                <TouchableOpacity style={styles.registerButton}
+                  onPress={() => this.checkReqs()}>
+                  <Text style={styles.buttonText}>Register</Text>
+                </TouchableOpacity>
             </View>
         </View>
       );
@@ -119,24 +122,35 @@ export default class Register extends React.Component {
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: 'rgba(176,207,227,34)',
+        backgroundColor: '#fff',
         alignSelf: 'stretch'
     },
     inputField:{
-        marginLeft: 50,
-        marginRight: 50,
-        fontSize: 20,
+        marginLeft: 30,
+        marginRight: 30,
+        fontSize: 17,
         padding: 10,
-        backgroundColor: 'rgba(255,255,255,.2)',
-        marginBottom: 15,
-        color: '#000',
+        marginBottom: 2,
+        color: '#303030',
         borderBottomWidth: 0,
-        borderRadius:5
+        borderRadius: 5
     },
     buttonContainer:{
-        marginLeft: 50,
-        marginRight:50,
-        justifyContent: 'space-between'
+        flex: 1,
+        marginTop: 20,
+        marginLeft: 30,
+        marginRight: 30
+    },
+    registerButton: {
+        height: 40,
+        alignItems: 'center',
+        backgroundColor: '#ffd185'
+    },
+    buttonText: {
+        fontSize: 12,
+        lineHeight: 28,
+        color: '#303030',
+        textAlign: 'center'
     },
     logoContainer:{
         alignItems: 'center',

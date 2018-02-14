@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Icon, Image,TouchableOpacity, AsyncStorage} from 'react-native';
+import { StyleSheet, Text, View, Button, Icon, Image,TouchableOpacity, AsyncStorage, Alert} from 'react-native';
 import { StackNavigator} from 'react-navigation';
 import Hamburger from 'react-native-hamburger';
 
@@ -8,7 +8,7 @@ import Login from './src/components/Login/Login';
 import Dashboard from './src/components/Dashboard/Dashboard';
 import TripDashboard from './src/components/Trip/TripDashboard'
 import Register from './src/components/Register/Register';
-import AddEvent from './src/components/Event/AddEvent';
+import AddEvent from './src/components/Trip/AddTrip';
 import DetailEvent from './src/components/Event/DetailEvent';
 import DetailPerson from './src/components/User/DetailPerson';
 import DetailGroup from './src/components/Groups/DetailGroup';
@@ -55,44 +55,59 @@ export default App = StackNavigator({
       headerStyle:{
         backgroundColor: '#6fc2b0'
         // marginTop: 24,
-    },
-    headerTitleStyle:{
-        color: '#FFF'
-    },
-    headerBackTitleStyle:{
-        color: "#FFF"
-    },
-    gesturesEnabled: false,
-    headerLeft: null
-    // headerRight: <Hamburger active={true} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('Dashboard')}/>,
-    // headerRight: <TouchableOpacity onPress={()=>{
-    //   try{
-    //     AsyncStorage.removeItem("userName").then(console.log("Logged out"));
-    //     AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
-    //   }catch(error){
-    //     console.log(error);
-    //   }
-    // }}><Image source={require('./imgMain/logout.png')} style={{width: 25, height: 25, marginRight: 10}}/></TouchableOpacity>,
-    //   drawer:() => ({
-    //     label: 'Home'
-    //   })
+      },
+      headerTitleStyle:{
+          color: '#FFF'
+      },
+      headerBackTitleStyle:{
+          color: "#FFF"
+      },
+      gesturesEnabled: false,
+      headerLeft: null,
+      // headerRight: <Hamburger active={true} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('Dashboard')}/>,
+      headerRight: <TouchableOpacity onPress={()=>{
+        try{
+          Alert.alert(
+            'Logout',
+            'Logout the application?', [{
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel'
+            }, {
+              text: 'OK',
+              onPress: () => {
+                AsyncStorage.removeItem("userName").then(console.log("Logged out"));
+                AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
+                navigation.navigate('Login');
+              }
+            }, ], {
+              cancelable: false
+            }
+          )
+          AsyncStorage.removeItem("userName").then(console.log("Logged out"));
+          AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
+        }catch(error){
+          console.log(error);
+        }
+      }}><Image source={require('./imgMain/logout.png')} style={{width: 25, height: 25, marginRight: 10}}/></TouchableOpacity>,
+        drawer:() => ({
+          label: 'Home'
+        })
     }),
     screen: Dashboard
   },
   TripDashboard: {
     navigationOptions: ({ navigation }) => ({
-      title: 'Trip',
+      title: navigation.state.params.trip.event,
       headerStyle:{
         backgroundColor: '#6fc2b0'
-    },
-    headerTitleStyle:{
-        color: '#FFF'
-    },
-    headerBackTitleStyle:{
-        color: "#FFF"
-    },
-    // gesturesEnabled: false,
-    // headerLeft: null
+      },
+      headerTitleStyle:{
+          color: '#FFF'
+      },
+      headerBackTitleStyle:{
+          color: "#FFF"
+      },
     }),
     screen: TripDashboard
   },
@@ -117,28 +132,6 @@ export default App = StackNavigator({
     }),
     screen: DashboardTrips
   },
-  // DashboardGroups: {
-  //   navigationOptions: ({ navigation }) => ({
-  //     title: 'DashboardGroups',
-  //     headerStyle:{
-  //       backgroundColor: '#0992ef',
-  //       marginTop: 24
-  //     },
-  //     headerTitleStyle:{
-  //       color: '#FFF'
-  //     },
-  //     headerBackTitleStyle:{
-  //       color: "#FFF"
-  //     },
-  //     gesturesEnabled: false,
-  //     headerLeft: null,
-  //     // headerRight: <Hamburger active={state} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('DashboardGroups')}/>,
-  //     drawer:() => ({
-  //       label: 'Home'
-  //     })
-  //   }),
-  //   screen: DashboardGroups
-  // },
   AddEvent: {
     navigationOptions: ({ navigation }) => ({
       title: 'Add Event',
@@ -255,8 +248,7 @@ export default App = StackNavigator({
     navigationOptions: {
       title: "Register account",
       headerStyle:{
-        backgroundColor: '#0992ef',
-        marginTop: 24
+        backgroundColor: '#6fc2b0'
       },
       headerTitleStyle:{
         color: '#FFF'
