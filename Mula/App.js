@@ -5,6 +5,7 @@ import Hamburger from 'react-native-hamburger';
 
 import Splashscreen from './src/components/Splashscreen/Splashscreen';
 import Login from './src/components/Login/Login';
+import Settings from './src/components/Settings/Settings';
 import Dashboard from './src/components/Dashboard/Dashboard';
 import TripDashboard from './src/components/Trip/TripDashboard'
 import Register from './src/components/Register/Register';
@@ -77,36 +78,32 @@ export default App = StackNavigator({
       gesturesEnabled: false,
       headerLeft: null,
       // headerRight: <Hamburger active={true} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('Dashboard')}/>,
-      headerRight: <TouchableOpacity onPress={()=>{
-        try{
-          Alert.alert(
-            'Logout',
-            'Logout the application?', [{
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel'
-            }, {
-              text: 'OK',
-              onPress: () => {
-                AsyncStorage.removeItem("userName").then(console.log("Logged out"));
-                AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
-                navigation.navigate('Login');
-              }
-            }, ], {
-              cancelable: false
-            }
-          )
-          AsyncStorage.removeItem("userName").then(console.log("Logged out"));
-          AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
-        }catch(error){
-          console.log(error);
-        }
-      }}><Image source={require('./imgMain/logout.png')} style={{width: 25, height: 25, marginRight: 10}}/></TouchableOpacity>,
+      headerRight:
+      <TouchableOpacity onPress={()=>{
+        navigation.navigate('Settings');
+      }}>
+      <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/></TouchableOpacity>,
         drawer:() => ({
           label: 'Home'
         })
     }),
     screen: Dashboard
+  },
+  Settings: {
+    navigationOptions: ({ navigation }) => ({
+      title: 'Settings',
+      headerStyle:{
+        backgroundColor: '#6fc2b0'
+        // marginTop: 24,
+      },
+      headerTitleStyle:{
+          color: '#FFF'
+      },
+      headerBackTitleStyle:{
+          color: "#FFF"
+      }
+    }),
+    screen: Settings
   },
   TripDashboard: {
     navigationOptions: ({ navigation }) => ({

@@ -1,33 +1,108 @@
 import React, {Component} from 'react';
-import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker} from 'react-native';
+import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import I18n from 'react-native-i18n';
 
 export default class Settings extends Component{
 
+    constructor(props) {
+        super(props);
+        this.state = {
+          name: "",
+          username: "",
+          password: "",
+          language: "",
+          currency: ""
+        }
+    }
+
     componentDidMount() {
+        AsyncStorage.getItem('userName').then((username) => {
+            this.setState({ username });
+        });
+        AsyncStorage.getItem('language').then((language) => {
+            this.setState({ language });
+            I18n.locale = language;
+        });
+        AsyncStorage.getItem('currency').then((currency) => {
+            this.setState({ currency });
+        });
         this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
         this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton))
     }
 
     _handleBackButton = () => {
         this.props.navigation.navigate('Dashboard');
+        return true;
     }
 
     logout() {
-        
+        try{
+            Alert.alert(
+                'Logout',
+                'Logout the application?', [{
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel'
+                }, {
+                    text: 'OK',
+                    onPress: () => {
+                        AsyncStorage.removeItem("userName").then(console.log("Logged out"));
+                        AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
+                        this.props.navigation.navigate('Login');
+                    }
+                }, ], {
+                    cancelable: false
+                }
+            )
+        } catch(error){
+            console.log(error);
+        }
     }
 
     render(){
         return(
             <View style={styles.container}>
-                <Text>Taal</Text>
+                <TouchableOpacity style={styles.profileButton}>
+                    <Image source={require('../../images/placeholder_user.png')} style={styles.profileImage} />
+                </TouchableOpacity>
+                <TextInput
+                    style={styles.inputField}
+                    placeholder="Firstname Name"
+                    underlineColorAndroid="transparent"
+                    placeholderTextColor="#fff"
+                    returnKeyType="next"
+                    onChangeText={(nameText) => this.setState({name: nameText})}
+                    onSubmitEditing={() => this.passwordInput.focus()}></TextInput>
+                <TextInput
+                    style={styles.inputField}
+                    placeholder="Username/Email"
+                    underlineColorAndroid="transparent"
+                    placeholderTextColor="#fff"
+                    returnKeyType="next"
+                    onChangeText={(usernameText) => this.setState({username: usernameText})}
+                    onSubmitEditing={() => this.passwordInput.focus()}></TextInput>
+                <TextInput
+                    style={styles.inputField}
+                    secureTextEntry
+                    placeholder="Password"
+                    underlineColorAndroid="transparent"
+                    placeholderTextColor="#fff"
+                    returnKeyType="done"
+                    onChangeText={(passwordText) => this.setState({password: passwordText})}
+                    ref={(input) => this.passwordInput = input}></TextInput>
+                <Text>Language</Text>
                 <Picker selectedValue={this.state.language} onValueChange={(itemValue, itemIndex) => this.setState({language: itemValue})}>
-                    <Picker.Item label="Nederlands" value="Nederlands" />
+                    <Picker.Item label="Dutch" value="Dutch" />
                     <Picker.Item label="English" value="English" />
                 </Picker>
-                <TouchableOpacity style={styles.registerButton} onPress={() => this.props.navigation.navigate('Login')}>
-                    <Text style={styles.buttonText}>Afmelden</Text>
+                <Text>Currency</Text>
+                <Picker selectedValue={this.state.currency} onValueChange={(itemValue, itemIndex) => this.setState({currency: itemValue})}>
+                    <Picker.Item label="Euro" value="Euro" />
+                    <Picker.Item label="American Dollar" value="USD" />
+                </Picker>
+                <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
+                    <Text style={styles.logoutText}>Logout</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -38,7 +113,27 @@ export default class Settings extends Component{
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: '#6fc2b0',
-        alignSelf: 'stretch'
+        backgroundColor: '#FFFFFF',
+        alignSelf: 'stretch',
+        padding: 20
     },
+    profileImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 40  
+    },
+    profileButton: {
+        alignSelf: 'center'
+    },
+    logoutButton: {
+        height: 40,
+        alignItems: 'center',
+        backgroundColor: '#ffd185',
+    },
+    logoutText: {
+        fontSize: 12,
+        lineHeight: 28,
+        color: '#303030',
+        textAlign: 'center'
+    }
 });
