@@ -25,7 +25,7 @@ export default class Login extends Component{
         BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton);
     }
 
-    _handleBackButton = () => {         
+    _handleBackButton = () => {
        Alert.alert(
             'Exit App',
             'Exiting the application?', [{
@@ -39,7 +39,7 @@ export default class Login extends Component{
                 cancelable: false
             }
         )
-         
+
          return true;
     }
 
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 20,
         marginLeft: 30,
-        marginRight: 30,
+        marginRight: 30
     },
     loginButton: {
         height: 40,

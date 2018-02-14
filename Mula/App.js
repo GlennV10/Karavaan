@@ -248,8 +248,7 @@ export default App = StackNavigator({
     navigationOptions: {
       title: "Register account",
       headerStyle:{
-        backgroundColor: '#0992ef',
-        marginTop: 24
+        backgroundColor: '#6fc2b0'
       },
       headerTitleStyle:{
         color: '#FFF'
