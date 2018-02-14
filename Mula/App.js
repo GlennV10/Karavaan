@@ -18,8 +18,8 @@ import DashboardBills from './src/components/Dashboard/DashboardBills';
 import DashboardTrips from './src/components/Dashboard/DashboardTrips';
 import I18n from 'react-native-i18n';
 
-import English from './src/Translations/en';
-import Dutch from './src/Translations/nl';
+import English from './src/Translations/English';
+import Dutch from './src/Translations/Dutch';
 
 I18n.fallbacks = true;
 
