@@ -16,8 +16,13 @@ export default class DashboardTrips extends Component {
       }
     }
 
+    componentWillMount() {
+        this.setState({ isLoading: true });
+        this.getAllTrips();
+    }
+
     componentDidMount() {
-      this.getAllTrips();
+        this.setState({ isLoading: false });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -38,7 +43,6 @@ export default class DashboardTrips extends Component {
     }
 
     getAllTrips(){
-      this.setState({ isLoading: true });
       try {
         AsyncStorage.getItem('userName').then((username) => {
             this.setState({ username });
@@ -56,7 +60,7 @@ export default class DashboardTrips extends Component {
             })
             .then((res) => res.json())
             .then((response) => {
-              this.setState({ trips: response.bills, isLoading: false })
+              this.setState({ trips: response.bills })
             });
           });
       } catch(error) {
