@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Icon, Image,TouchableOpacity, AsyncStorage} from 'react-native';
+import { StyleSheet, Text, View, Button, Icon, Image,TouchableOpacity, AsyncStorage, Alert} from 'react-native';
 import { StackNavigator} from 'react-navigation';
 import Hamburger from 'react-native-hamburger';
 
@@ -67,6 +67,23 @@ export default App = StackNavigator({
       // headerRight: <Hamburger active={true} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('Dashboard')}/>,
       headerRight: <TouchableOpacity onPress={()=>{
         try{
+          Alert.alert(
+            'Logout',
+            'Logout the application?', [{
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel'
+            }, {
+              text: 'OK',
+              onPress: () => {
+                AsyncStorage.removeItem("userName").then(console.log("Logged out"));
+                AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
+                navigation.navigate('Login');
+              }
+            }, ], {
+              cancelable: false
+            }
+          )
           AsyncStorage.removeItem("userName").then(console.log("Logged out"));
           AsyncStorage.clear().then(()=>console.log("Cleared... APP.JS"));
         }catch(error){
