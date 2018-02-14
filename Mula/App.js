@@ -8,7 +8,7 @@ import Login from './src/components/Login/Login';
 import Dashboard from './src/components/Dashboard/Dashboard';
 import TripDashboard from './src/components/Trip/TripDashboard'
 import Register from './src/components/Register/Register';
-import AddEvent from './src/components/Event/AddEvent';
+import AddEvent from './src/components/Trip/AddTrip';
 import DetailEvent from './src/components/Event/DetailEvent';
 import DetailPerson from './src/components/User/DetailPerson';
 import DetailGroup from './src/components/Groups/DetailGroup';
@@ -248,8 +248,7 @@ export default App = StackNavigator({
     navigationOptions: {
       title: "Register account",
       headerStyle:{
-        backgroundColor: '#0992ef',
-        marginTop: 24
+        backgroundColor: '#6fc2b0'
       },
       headerTitleStyle:{
         color: '#FFF'
