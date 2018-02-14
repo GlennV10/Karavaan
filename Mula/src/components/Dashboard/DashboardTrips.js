@@ -12,12 +12,19 @@ export default class DashboardTrips extends Component {
       this.state = {
         trips: [],
         username: "",
-        isLoading: false
+        isLoading: false,
       }
     }
 
     componentDidMount() {
       this.getAllTrips();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.state.trips !== nextState.trips) {
+          return true;
+        }
+        return false;
     }
 
     getCurrencySymbol(trip) {
@@ -59,39 +66,39 @@ export default class DashboardTrips extends Component {
 
     renderTrips() {
         if(this.state.trips.length === 0){
-          return(
-            <View style={styles.noBillView}>
-              <Text style={styles.noBillText}>NO TRIPS FOUND</Text>
-            </View>
-          )
-        } else {
-        return this.state.trips.map((trip) => {
-            let image = null;
-            if (trip.has_paid) {
-                image = <Image style={styles.way} source={require('../../images/in.png')}/>;
-            } else {
-                image = <Image style={styles.way} source={require('../../images/out.png')}/>;
-            }
-
             return(
-              <TouchableOpacity style={styles.eventItem} onPress={() => this.props.navigator.navigate('TripDashboard', { trip: trip })} key={ trip.id }>
-                <View style={styles.splitRow}>
-                  <View style={[styles.half, styles.wayContainer]}>
-                    { image }
-                  </View>
-                  <Text style={[styles.eventAmount, styles.half]}>{ this.getCurrencySymbol(trip) }{ trip.total_price.toFixed(2) }</Text>
+                <View style={styles.noBillView}>
+                <Text style={styles.noBillText}>NO TRIPS FOUND</Text>
                 </View>
-                <Text style={styles.eventName}>{ trip.event }</Text>
-                <View style={styles.splitRow}>
-                  <Text style={[styles.eventDate, styles.half]}>{ trip.date }</Text>
-                  <Text style={[styles.eventAmountUsers, styles.half]}>{ trip.amount_already_paid }/{ trip.amount_users }</Text>
-                </View>
-                <View style={styles.progressBarContainer}>
-                  <View style={{backgroundColor: barStyle(trip.amount_already_paid, trip.amount_users), flex: 0.05+((0.95/trip.amount_users)*trip.amount_already_paid)}}></View>
-                </View>
-              </TouchableOpacity>
-            );
-        });
+            )
+        } else {
+            return this.state.trips.map((trip) => {
+                let image = null;
+                if (trip.has_paid) {
+                    image = <Image style={styles.way} source={require('../../images/in.png')}/>;
+                } else {
+                    image = <Image style={styles.way} source={require('../../images/out.png')}/>;
+                }
+
+                return(
+                <TouchableOpacity style={styles.eventItem} onPress={() => this.props.navigator.navigate('TripDashboard', { trip: trip })} key={ trip.id }>
+                    <View style={styles.splitRow}>
+                    <View style={[styles.half, styles.wayContainer]}>
+                        { image }
+                    </View>
+                    <Text style={[styles.eventAmount, styles.half]}>{ this.getCurrencySymbol(trip) }{ trip.total_price.toFixed(2) }</Text>
+                    </View>
+                    <Text style={styles.eventName}>{ trip.event }</Text>
+                    <View style={styles.splitRow}>
+                    <Text style={[styles.eventDate, styles.half]}>{ trip.date }</Text>
+                    <Text style={[styles.eventAmountUsers, styles.half]}>{ trip.amount_already_paid }/{ trip.amount_users }</Text>
+                    </View>
+                    <View style={styles.progressBarContainer}>
+                    <View style={{backgroundColor: barStyle(trip.amount_already_paid, trip.amount_users), flex: 0.05+((0.95/trip.amount_users)*trip.amount_already_paid)}}></View>
+                    </View>
+                </TouchableOpacity>
+                );
+            });
         }
     }
 

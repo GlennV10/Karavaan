@@ -28,9 +28,9 @@ export default class Splashscreen extends React.Component {
             AsyncStorage.getItem('userName').then((username) => {
                 console.log(username);
                 if(username != null){
-                    setTimeout(() => this.props.navigation.navigate('Dashboard'), 3000);
+                    setTimeout(() => this.props.navigation.navigate('Dashboard'), 2500);
                 } else {
-                    setTimeout(() => this.props.navigation.navigate('Login'), 3000);
+                    setTimeout(() => this.props.navigation.navigate('Login'), 2500);
                 }
             })
         } catch(error) {
