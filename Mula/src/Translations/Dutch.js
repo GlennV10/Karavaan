@@ -9,7 +9,7 @@ export default {
     detailExpense: 'Overzicht van uitgave',
     registerpage: 'Nieuw Account Aanmaken',
     addExpense: 'Uitgave toevoegen ',
-    tripdetails: ': overzicht',
+    tripdetails: 'Overzicht van uitgaven',
 
     //login
     username: 'Gebruikersnaam',
@@ -26,6 +26,8 @@ export default {
     dutch: 'Nederlands',
     english: 'Engels',
     save: 'Instellingen opslaan',
+    lang: 'Taal:',
+    currency: 'Munteenheid:',
 
     //Logout
     logout: 'Afmelden',

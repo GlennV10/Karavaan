@@ -8,7 +8,7 @@ export default {
     detailExpense: 'Overview of expense',
     registerpage: 'Register New Account',
     addExpense: 'Add expense',
-    tripdetails: ': overview',
+    tripdetails: 'Overview of expenses',
 
     //login
     username: 'Username',
@@ -26,6 +26,8 @@ export default {
     dutch: 'Dutch',
     english: 'English',
     save: 'Save settings',
+    lang: 'Language:',
+    currency: 'Currency:',
 
     //Logout
     logout: 'Log out',

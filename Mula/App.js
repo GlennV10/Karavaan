@@ -99,7 +99,7 @@ export default App = StackNavigator({
     },
     TripDashboard: {
       navigationOptions: ({ navigation }) => ({
-        title: navigation.state.params.trip.name + I18n.t('tripdetails'),
+        title: I18n.t('tripdetails'),
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
@@ -109,10 +109,6 @@ export default App = StackNavigator({
         headerBackTitleStyle:{
             color: "#FFF"
         },
-        headerRight:
-        <TouchableOpacity onPress={()=>{ navigation.navigate('Settings') }}>
-          <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/>
-        </TouchableOpacity>,
       }),
       screen: TripDashboard
     },
@@ -132,10 +128,6 @@ export default App = StackNavigator({
         headerLeftStyle:{
           color:'#fff'
         },
-        headerRight:
-        <TouchableOpacity onPress={()=>{ navigation.navigate('Settings') }}>
-          <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/>
-        </TouchableOpacity>,
          drawer:() => ({
            label: 'Home'
         })
@@ -195,10 +187,6 @@ export default App = StackNavigator({
         headerLeftStyle: {
           color:'#fff'
         },
-        headerRight:
-        <TouchableOpacity onPress={()=>{ navigation.navigate('Settings') }}>
-          <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/>
-        </TouchableOpacity>,
         drawer:() => ({
           label: 'Home'
         })
