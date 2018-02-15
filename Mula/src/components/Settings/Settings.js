@@ -108,18 +108,17 @@ export default class Settings extends Component{
                     returnKeyType="done"
                     onChangeText={(passwordText) => this.setState({password: passwordText})}
                     ref={(input) => this.passwordInput = input}></TextInput>
-                <Text>Language</Text>
+                <Text>{I18n.t('lang')}</Text>
                 <Picker selectedValue={this.state.language} onValueChange={(itemValue, itemIndex) => this.updateLanguage(itemValue)}>
                     <Picker.Item label="Dutch" value="Dutch" />
                     <Picker.Item label="English" value="English" />
                 </Picker>
-                <Text>Currency</Text>
+                <Text>{I18n.t('currency')}</Text>
                 <Picker selectedValue={this.state.currency} onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
                     <Picker.Item label="Euro" value="Euro" />
                     <Picker.Item label="American Dollar" value="USD" />
                 </Picker>
-                
-                
+                                
                 <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
                     <Text style={styles.logoutText}>{I18n.t('logout')}</Text>
                 </TouchableOpacity>
@@ -144,11 +143,11 @@ const styles = StyleSheet.create({
     profileButton: {
         alignSelf: 'center'
     },
-    
     logoutButton: {
         height: 40,
         alignItems: 'center',
         backgroundColor: '#ffd185',
+        borderRadius: 5
     },
     logoutText: {
         fontSize: 12,

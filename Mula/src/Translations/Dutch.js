@@ -8,8 +8,8 @@ export default {
     addEvent: 'Reis Toevoegen',
     detailExpense: 'Overzicht van uitgave',
     registerpage: 'Nieuw Account Aanmaken',
-    addExpense: 'Uitgave toevoegen aan ',
-    tripdetails: ': overzicht',
+    addExpense: 'Uitgave toevoegen ',
+    tripdetails: ': Overzicht',
 
     //login
     username: 'Gebruikersnaam',
@@ -26,6 +26,8 @@ export default {
     dutch: 'Nederlands',
     english: 'Engels',
     save: 'Instellingen opslaan',
+    lang: 'Taal:',
+    currency: 'Munteenheid:',
 
     //Logout
     logout: 'Afmelden',
