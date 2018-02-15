@@ -2,21 +2,20 @@ import React from 'react';
 import { StyleSheet, Text, View, Button, Icon, Image,TouchableOpacity, AsyncStorage, Alert} from 'react-native';
 import { StackNavigator} from 'react-navigation';
 import Hamburger from 'react-native-hamburger';
+import I18n from 'react-native-i18n';
 
 import Splashscreen from './src/components/Splashscreen/Splashscreen';
 import Login from './src/components/Login/Login';
+import Register from './src/components/Register/Register';
 import Settings from './src/components/Settings/Settings';
 import Dashboard from './src/components/Dashboard/Dashboard';
 import TripDashboard from './src/components/Trip/TripDashboard'
-import Register from './src/components/Register/Register';
 import AddEvent from './src/components/Trip/AddTrip';
+import AddExpense from './src/components/Trip/AddExpense';
 import DetailEvent from './src/components/Event/DetailEvent';
-import DetailPerson from './src/components/User/DetailPerson';
-import DetailGroup from './src/components/Groups/DetailGroup';
-import AddGroup from './src/components/Groups/AddGroup';
-import DashboardBills from './src/components/Dashboard/DashboardBills';
-import DashboardTrips from './src/components/Dashboard/DashboardTrips';
-import I18n from 'react-native-i18n';
+// import DetailPerson from './src/components/User/DetailPerson';
+// import DetailGroup from './src/components/Groups/DetailGroup';
+// import AddGroup from './src/components/Groups/AddGroup';
 
 import nl from './src/Translations/Dutch';
 import en from './src/Translations/English';
@@ -29,252 +28,219 @@ I18n.translations = {
   en
 };
 
-// import DashboardGroups from './src/components/Dashboard/DashboardGroups';
-
-// import { AsyncStorage } from '../../../../.cache/typescript/2.6/node_modules/@types/react-native';
-// import { TouchableOpacity } from '../../../../.cache/typescript/2.6/node_modules/@types/react-native';
-
-// class DashboardScreen extends React.Component{
-//   static navigationOptions = {title: "Dashboard"};
-//   render(){
-//       return <Dashboard/>
-//   }
-// };
-
-// class LoginScreen extends React.Component{
-//   static navigationOptions = {title: "Login"};
-//   render(){
-//       return  <Login/>
-//   }
-// }
-
 export default App = StackNavigator({
-  Splashscreen: {
-    navigationOptions: {
-      title: 'Splashscreen',
-      header: null,
-    },
-    screen: Splashscreen
-  },
-  Login: {
-    navigationOptions: {
-      title: 'Login',
-      header: null,
-    },
-    screen: Login
-  },
-  Dashboard: {
-    navigationOptions: ({ navigation }) => ({
-      title: 'Dashboard',
-      headerStyle:{
-        backgroundColor: '#6fc2b0'
-        // marginTop: 24,
+    Splashscreen: {
+      navigationOptions: {
+        title: 'Splashscreen',
+        header: null,
       },
-      headerTitleStyle:{
+      screen: Splashscreen
+    },
+    Login: {
+      navigationOptions: {
+        title: 'Login',
+        header: null,
+      },
+      screen: Login
+    },
+    Register: {
+      navigationOptions: {
+        title: "Register account",
+        headerStyle:{
+          backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle:{
           color: '#FFF'
-      },
-      headerBackTitleStyle:{
+        },
+        headerBackTitleStyle:{
           color: "#FFF"
+        }
       },
-      gesturesEnabled: false,
-      headerLeft: null,
-      // headerRight: <Hamburger active={true} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('Dashboard')}/>,
-      headerRight:
-      <TouchableOpacity onPress={()=>{
-        navigation.navigate('Settings');
-      }}>
-      <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/></TouchableOpacity>,
+      screen: Register
+    },
+    Dashboard: {
+      navigationOptions: ({ navigation }) => ({
+        title: 'Dashboard',
+        headerStyle:{
+          backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle:{
+            color: '#FFF'
+        },
+        headerBackTitleStyle:{
+            color: "#FFF"
+        },
+        gesturesEnabled: false,
+        headerLeft: null,
+        headerRight:
+          <TouchableOpacity onPress={()=>{ navigation.navigate('Settings') }}>
+            <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/>
+          </TouchableOpacity>,
         drawer:() => ({
           label: 'Home'
         })
-    }),
-    screen: Dashboard
-  },
-  Settings: {
-    navigationOptions: ({ navigation }) => ({
-      title: 'Settings',
-      headerStyle:{
-        backgroundColor: '#6fc2b0'
-        // marginTop: 24,
-      },
-      headerTitleStyle:{
-          color: '#FFF'
-      },
-      headerBackTitleStyle:{
-          color: "#FFF"
-      }
-    }),
-    screen: Settings
-  },
-  TripDashboard: {
-    navigationOptions: ({ navigation }) => ({
-      title: navigation.state.params.trip.event,
-      headerStyle:{
-        backgroundColor: '#6fc2b0'
-      },
-      headerTitleStyle:{
-          color: '#FFF'
-      },
-      headerBackTitleStyle:{
-          color: "#FFF"
-      },
-    }),
-    screen: TripDashboard
-  },
-  DashboardTrips: {
-    navigationOptions: ({ navigation }) => ({
-      title: I18n.t('trips'),
-      headerStyle:{
-        backgroundColor: '#6fc2b0'
-      },
-      headerTitleStyle:{
-        color: '#FFF'
-      },
-      headerBackTitleStyle:{
-        color: "#FFF"
-      },
-      // gesturesEnabled: false,
-      // headerLeft: null,
-      // headerRight: <Hamburger active={state} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('DashboardBills')}/>,
-      drawer:() => ({
-        label: 'Home'
-      })
-    }),
-    screen: DashboardTrips
-  },
-  AddEvent: {
-    navigationOptions: ({ navigation }) => ({
-      title: 'Add Event',
-      headerStyle:{
-         backgroundColor: '#0992ef',
-         marginTop: 24
-      },
-      headerTitleStyle:{
-         color: '#FFF'
-      },
-      headerBackTitleStyle:{
-         color: "#FFF"
-      },
-      headerLeftStyle:{
-        color:'#fff'
-      },
-      // headerRight: <Hamburger active={state} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('Dashboard')}/>,
-       drawer:() => ({
-         label: 'Home'
-      })
-    }),
-    screen: AddEvent
-  },
-  AddGroup: {
-    navigationOptions: ({ navigation }) => ({
-      title: 'Add Group',
-      headerStyle:{
-         backgroundColor: '#0992ef',
-         marginTop: 24
-      },
-      headerTitleStyle:{
-         color: '#FFF'
-      },
-      headerBackTitleStyle:{
-         color: "#FFF"
-      },
-      headerLeftStyle:{
-        color:'#fff'
-      },
-      // headerRight: <Hamburger active={state} type="spinCross" color="white" style={styles.hamburgerStyle} onPress={()=> state = !state & navigation.navigate('Dashboard')}/>,
-      drawer:() => ({
-        label: 'Home'
-      })
-    }),
-    screen: AddGroup
-  },
-  DetailEvent: {
-    navigationOptions: ({ navigation }) => ({
-      title: 'Detail Event',
-      headerStyle: {
-         backgroundColor: '#0992ef',
-         marginTop: 24
-      },
-      headerTitleStyle: {
-         color: '#FFF'
-      },
-      headerBackTitleStyle: {
-         color: "#FFF"
-      },
-      headerLeftStyle: {
-        color:'#fff'
-      },
-      drawer:() => ({
-        label: 'Home'
-      })
-    }),
-    screen: DetailEvent
-  },
-  DetailPerson: {
-    navigationOptions: ({ navigation }) => ({
-      title: 'Detail Person',
-      headerStyle: {
-         backgroundColor: '#0992ef',
-         marginTop: 24
-      },
-      headerTitleStyle: {
-         color: '#FFF'
-      },
-      headerBackTitleStyle: {
-         color: "#FFF"
-      },
-      headerLeftStyle: {
-        color:'#fff'
-      },
-      drawer:() => ({
-        label: 'Home'
-      })
-    }),
-    screen: DetailPerson
-  },
-  DetailGroup: {
-    navigationOptions: ({ navigation }) => ({
-      title: 'Detail Group',
-      headerStyle: {
-         backgroundColor: '#0992ef',
-         marginTop: 24
-      },
-      headerTitleStyle: {
-         color: '#FFF'
-      },
-      headerBackTitleStyle: {
-         color: "#FFF"
-      },
-      headerLeftStyle: {
-        color:'#fff'
-      },
-      drawer:() => ({
-        label: 'Home'
-      })
-    }),
-    screen: DetailGroup
-  },
-  Register: {
-    navigationOptions: {
-      title: "Register account",
-      headerStyle:{
-        backgroundColor: '#6fc2b0'
-      },
-      headerTitleStyle:{
-        color: '#FFF'
-      },
-      headerBackTitleStyle:{
-        color: "#FFF"
-      }
+      }),
+      screen: Dashboard
     },
-    screen: Register
+    Settings: {
+      navigationOptions: ({ navigation }) => ({
+        title: 'Settings',
+        headerStyle:{
+          backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle:{
+            color: '#FFF'
+        },
+        headerBackTitleStyle:{
+            color: "#FFF"
+        }
+      }),
+      screen: Settings
+    },
+    TripDashboard: {
+      navigationOptions: ({ navigation }) => ({
+        title: navigation.state.params.trip.name,
+        headerStyle:{
+          backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle:{
+            color: '#FFF'
+        },
+        headerBackTitleStyle:{
+            color: "#FFF"
+        },
+      }),
+      screen: TripDashboard
+    },
+    AddEvent: {
+      navigationOptions: ({ navigation }) => ({
+        title: 'Add Event',
+        headerStyle:{
+           backgroundColor: '#0992ef',
+           marginTop: 24
+        },
+        headerTitleStyle:{
+           color: '#FFF'
+        },
+        headerBackTitleStyle:{
+           color: "#FFF"
+        },
+        headerLeftStyle:{
+          color:'#fff'
+        },
+         drawer:() => ({
+           label: 'Home'
+        })
+      }),
+      screen: AddEvent
+    },
+    AddExpense: {
+      navigationOptions: ({ navigation }) => ({
+        title: 'Add Expense to ' + navigation.state.params.trip.name,
+        headerStyle:{
+          backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle:{
+            color: '#FFF'
+        },
+        headerBackTitleStyle:{
+            color: "#FFF"
+        }
+      }),
+      screen: AddExpense
+    },
+    // AddGroup: {
+    //   navigationOptions: ({ navigation }) => ({
+    //     title: 'Add Group',
+    //     headerStyle:{
+    //        backgroundColor: '#0992ef',
+    //        marginTop: 24
+    //     },
+    //     headerTitleStyle:{
+    //        color: '#FFF'
+    //     },
+    //     headerBackTitleStyle:{
+    //        color: "#FFF"
+    //     },
+    //     headerLeftStyle:{
+    //       color:'#fff'
+    //     },
+    //     drawer:() => ({
+    //       label: 'Home'
+    //     })
+    //   }),
+    //   screen: AddGroup
+    // },
+    DetailEvent: {
+      navigationOptions: ({ navigation }) => ({
+        title: 'Detail Event',
+        headerStyle: {
+           backgroundColor: '#0992ef',
+           marginTop: 24
+        },
+        headerTitleStyle: {
+           color: '#FFF'
+        },
+        headerBackTitleStyle: {
+           color: "#FFF"
+        },
+        headerLeftStyle: {
+          color:'#fff'
+        },
+        drawer:() => ({
+          label: 'Home'
+        })
+      }),
+      screen: DetailEvent
+    },
+    // DetailPerson: {
+    //   navigationOptions: ({ navigation }) => ({
+    //     title: 'Detail Person',
+    //     headerStyle: {
+    //        backgroundColor: '#0992ef',
+    //        marginTop: 24
+    //     },
+    //     headerTitleStyle: {
+    //        color: '#FFF'
+    //     },
+    //     headerBackTitleStyle: {
+    //        color: "#FFF"
+    //     },
+    //     headerLeftStyle: {
+    //       color:'#fff'
+    //     },
+    //     drawer:() => ({
+    //       label: 'Home'
+    //     })
+    //   }),
+    //   screen: DetailPerson
+    // },
+    // DetailGroup: {
+    //   navigationOptions: ({ navigation }) => ({
+    //     title: 'Detail Group',
+    //     headerStyle: {
+    //        backgroundColor: '#0992ef',
+    //        marginTop: 24
+    //     },
+    //     headerTitleStyle: {
+    //        color: '#FFF'
+    //     },
+    //     headerBackTitleStyle: {
+    //        color: "#FFF"
+    //     },
+    //     headerLeftStyle: {
+    //       color:'#fff'
+    //     },
+    //     drawer:() => ({
+    //       label: 'Home'
+    //     })
+    //   }),
+    //   screen: DetailGroup
+    // }
+  },
+  {
+    headerMode: 'screen'
   }
-
-  },{headerMode: 'screen'}
 );
 
-const styles = StyleSheet.create({
-  hamburgerStyle:{
-    marginRight: 10
-  }
-});
+const styles = StyleSheet.create({});
