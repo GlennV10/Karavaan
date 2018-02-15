@@ -36,7 +36,6 @@ export default class Settings extends Component{
     }
 
     updateLanguage(newLanguage) {
-        console.log(newLanguage);
         this.setState({ language: newLanguage});
         AsyncStorage.setItem('language', newLanguage).then(console.log("Language updated to " + newLanguage));
         if(newLanguage == 'English') {
@@ -47,6 +46,9 @@ export default class Settings extends Component{
             I18n.locale = 'nl';
             console.log('nl');
         }
+        this.props.navigation.setParams({
+            title: I18n.t('settings')
+        });
     }
 
     updateCurrency(newCurrency) {

@@ -28,9 +28,8 @@ export default class Dashboard extends React.Component {
              cancelable: false
          }
      )
-
       return true;
- }
+  }
 
   render() {
     const nav = this.props.navigation;

@@ -93,7 +93,11 @@ export default App = StackNavigator({
         },
         headerBackTitleStyle:{
             color: "#FFF"
-        }
+        },
+        headerLeft: 
+        <TouchableOpacity onPress={()=>{ navigation.navigate('Dashboard') }}>
+          <Image source={require('./src/images/chevron_left.png')} style={{width: 35, height: 35, marginLeft: 5}}/>
+        </TouchableOpacity>,
       }),
       screen: Settings
     },
