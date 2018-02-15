@@ -743,7 +743,7 @@ export default class AddEvent extends Component{
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: 'rgba(176,207,227,34)',
+        backgroundColor: '#fffff',
         paddingTop: 10,
         paddingLeft:20,
         paddingRight:20
