@@ -74,7 +74,7 @@ export default App = StackNavigator({
         headerLeft: null,
         headerRight:
           <TouchableOpacity onPress={()=>{ navigation.navigate('Settings') }}>
-            <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/>
+              <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/>
           </TouchableOpacity>,
         drawer:() => ({
           label: 'Home'
@@ -136,7 +136,7 @@ export default App = StackNavigator({
     },
     AddExpense: {
       navigationOptions: ({ navigation }) => ({
-        title: I18n.t('addExpense'),
+        title: I18n.t('addExpense') + navigation.state.params.trip.name,
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
@@ -187,6 +187,13 @@ export default App = StackNavigator({
         headerLeftStyle: {
           color:'#fff'
         },
+<<<<<<< HEAD
+=======
+        headerRight:
+            <TouchableOpacity onPress={()=>{ navigation.navigate('Settings') }}>
+                <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/>
+            </TouchableOpacity>,
+>>>>>>> 7ebcff5e0f7ac5a875c4d1335eda20777122dfbf
         drawer:() => ({
           label: 'Home'
         })
