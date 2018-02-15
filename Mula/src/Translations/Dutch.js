@@ -8,6 +8,6 @@ export default {
     //login
     username: 'Gebruikersnaam',
     password: 'Wachtwoord',
-    login: 'Inloggen',
+    login: 'Aanmelden',
     register: 'Registreer'
 }
