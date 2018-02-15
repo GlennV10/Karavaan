@@ -15,18 +15,21 @@ export default class DashboardTrips extends Component {
           name: 'Amsterdam',
           startDate: '9 maart 2018',
           endDate: '11 maart 2018',
+          currencies: ['USD', 'CAD']
         },
         {
           id: 2,
           name: 'Ardennen',
           startDate: '20 april 2018',
-          endDate: '22 april 2018'
+          endDate: '22 april 2018',
+          currencies: ['AUD', 'NZD']
         },
         {
           id: 3,
           name: 'Thailand',
           startDate: '8 september 2018',
-          endDate:'23 september 2018'
+          endDate:'23 september 2018',
+          currencies: ['USD', 'EUR', 'THD']
         }],
         username: "",
         isLoading: false,
@@ -34,7 +37,6 @@ export default class DashboardTrips extends Component {
     }
 
     componentWillMount() {
-        console.log(this.state.trips);
         // this.setState({ isLoading: true });
         // this.getAllTrips();
     }
