@@ -9,13 +9,6 @@ import I18n from 'react-native-i18n';
 
 export default class Dashboard extends React.Component {
 
-  componentWillMount() {
-    AsyncStorage.getItem('language').then((language) => {
-      if(language == "English")I18n.locale = "en";
-      if(language == "Dutch")I18n.locale = "nl";
-    });
-  }
-
   componentDidMount() {
     this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
     this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton))
@@ -23,8 +16,8 @@ export default class Dashboard extends React.Component {
 
   _handleBackButton = () => {
     Alert.alert(
-         'Exit App',
-         'Exiting the application?', [{
+         I18n.t('closeapp'),
+         I18n.t('closeappmessage'), [{
              text: 'Cancel',
              onPress: () => console.log('Cancel Pressed'),
              style: 'cancel'

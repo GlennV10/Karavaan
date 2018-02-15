@@ -45,7 +45,7 @@ export default App = StackNavigator({
     },
     Register: {
       navigationOptions: {
-        title: "Register account",
+        title: I18n.t('registerpage'),
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
@@ -84,7 +84,7 @@ export default App = StackNavigator({
     },
     Settings: {
       navigationOptions: ({ navigation }) => ({
-        title: 'Settings',
+        title: I18n.t('settings'),
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
@@ -99,7 +99,7 @@ export default App = StackNavigator({
     },
     TripDashboard: {
       navigationOptions: ({ navigation }) => ({
-        title: navigation.state.params.trip.name,
+        title: navigation.state.params.trip.name + I18n.t('tripdetails'),
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
@@ -109,12 +109,16 @@ export default App = StackNavigator({
         headerBackTitleStyle:{
             color: "#FFF"
         },
+        headerRight:
+        <TouchableOpacity onPress={()=>{ navigation.navigate('Settings') }}>
+          <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/>
+        </TouchableOpacity>,
       }),
       screen: TripDashboard
     },
     AddEvent: {
       navigationOptions: ({ navigation }) => ({
-        title: 'Add Event',
+        title: I18n.t('addEvent'),
         headerStyle:{
            backgroundColor: '#0992ef',
            marginTop: 24
@@ -128,6 +132,10 @@ export default App = StackNavigator({
         headerLeftStyle:{
           color:'#fff'
         },
+        headerRight:
+        <TouchableOpacity onPress={()=>{ navigation.navigate('Settings') }}>
+          <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/>
+        </TouchableOpacity>,
          drawer:() => ({
            label: 'Home'
         })
@@ -136,7 +144,7 @@ export default App = StackNavigator({
     },
     AddExpense: {
       navigationOptions: ({ navigation }) => ({
-        title: 'Add Expense to ' + navigation.state.params.trip.name,
+        title: I18n.t('addExpense'),
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
@@ -173,7 +181,7 @@ export default App = StackNavigator({
     // },
     DetailEvent: {
       navigationOptions: ({ navigation }) => ({
-        title: 'Detail Event',
+        title: I18n.t('detailExpense'),
         headerStyle: {
            backgroundColor: '#0992ef',
            marginTop: 24
@@ -187,6 +195,10 @@ export default App = StackNavigator({
         headerLeftStyle: {
           color:'#fff'
         },
+        headerRight:
+        <TouchableOpacity onPress={()=>{ navigation.navigate('Settings') }}>
+          <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/>
+        </TouchableOpacity>,
         drawer:() => ({
           label: 'Home'
         })

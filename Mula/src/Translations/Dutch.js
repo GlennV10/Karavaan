@@ -6,8 +6,10 @@ export default {
     //App.js -> stacknavigator titles
     settings: 'Instellingen',
     addEvent: 'Reis Toevoegen',
-    detailExpense: 'Uitgave overzicht',
-    register: 'Nieuw Account Aanmaken',
+    detailExpense: 'Overzicht van uitgave',
+    registerpage: 'Nieuw Account Aanmaken',
+    addExpense: 'Uitgave toevoegen ',
+    tripdetails: ': overzicht',
 
     //login
     username: 'Gebruikersnaam',
@@ -23,6 +25,7 @@ export default {
     //Settings
     dutch: 'Nederlands',
     english: 'Engels',
+    save: 'Instellingen opslaan',
 
     //Logout
     logout: 'Afmelden',

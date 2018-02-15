@@ -35,12 +35,26 @@ export default class DashboardTrips extends Component {
 
     componentWillMount() {
         console.log(this.state.trips);
-        // this.setState({ isLoading: true });
-        // this.getAllTrips();
+        AsyncStorage.getItem('language').then((language) => {
+      if(language == "English") {
+         I18n.locale = "en";
+     }
+      if(language == "Dutch") {
+         I18n.locale = "nl";
+      }
+    });
     }
 
     componentDidMount() {
         this.setState({ isLoading: false });
+        AsyncStorage.getItem('language').then((language) => {
+            if(language == "English") {
+               I18n.locale = "en";
+           }
+            if(language == "Dutch") {
+               I18n.locale = "nl";
+            }
+          });
     }
 
     shouldComponentUpdate(nextProps, nextState) {

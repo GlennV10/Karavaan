@@ -5,8 +5,10 @@ export default {
     //App.js -> stacknavigator titles
     settings: 'Settings',
     addEvent: 'Add Trip',
-    detailExpense: 'Expense overview',
-    register: 'Register New Account',
+    detailExpense: 'Overview of expense',
+    registerpage: 'Register New Account',
+    addExpense: 'Add expense',
+    tripdetails: ': overview',
 
     //login
     username: 'Username',
@@ -23,6 +25,7 @@ export default {
     //Settings
     dutch: 'Dutch',
     english: 'English',
+    save: 'Save settings',
 
     //Logout
     logout: 'Log out',
