@@ -23,8 +23,6 @@ export default class AddExpense extends Component {
     }
 
     render() {
-        const {trip} = this.props.navigation.state.params.trip;
-
         return(
           <View style={styles.container}>
             <Text>Currency</Text>

@@ -93,7 +93,7 @@ export default class TripExpenses extends Component {
               }
 
               return(
-              <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailEvent', { /* CHANGE TO EXPENSE when DetailEvent changed*/event: expense })} key={ expense.id }>
+              <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={ expense.id }>
                   <View style={styles.splitRow}>
                     <View style={[styles.whoPaidImageContainer, styles.half]}>
                         { image }
@@ -119,6 +119,9 @@ export default class TripExpenses extends Component {
         return(
           <View style={styles.containerIndicator}>
             <ActivityIndicator />
+            <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+              <Text style={styles.addTripButtonText} >+</Text>
+            </TouchableOpacity>
           </View>
         )
       }

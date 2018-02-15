@@ -10,9 +10,10 @@ import Register from './src/components/Register/Register';
 import Settings from './src/components/Settings/Settings';
 import Dashboard from './src/components/Dashboard/Dashboard';
 import TripDashboard from './src/components/Trip/TripDashboard'
-import AddEvent from './src/components/Trip/AddTrip';
-import AddExpense from './src/components/Trip/AddExpense';
-import DetailEvent from './src/components/Event/DetailEvent';
+import AddTrip from './src/components/Trip/AddTrip';
+import AddExpense from './src/components/Expense/AddExpense';
+import DetailExpense from './src/components/Expense/DetailExpense';
+// import DetailEvent from './src/components/Event/DetailEvent';
 // import DetailPerson from './src/components/User/DetailPerson';
 // import DetailGroup from './src/components/Groups/DetailGroup';
 // import AddGroup from './src/components/Groups/AddGroup';
@@ -116,12 +117,11 @@ export default App = StackNavigator({
       }),
       screen: TripDashboard
     },
-    AddEvent: {
+    AddTrip: {
       navigationOptions: ({ navigation }) => ({
         title: I18n.t('addEvent'),
         headerStyle:{
-           backgroundColor: '#0992ef',
-           marginTop: 24
+           backgroundColor: '#6fc2b0'
         },
         headerTitleStyle:{
            color: '#FFF'
@@ -129,18 +129,15 @@ export default App = StackNavigator({
         headerBackTitleStyle:{
            color: "#FFF"
         },
-        headerLeftStyle:{
-          color:'#fff'
-        },
          drawer:() => ({
            label: 'Home'
         })
       }),
-      screen: AddEvent
+      screen: AddTrip
     },
     AddExpense: {
       navigationOptions: ({ navigation }) => ({
-        title: I18n.t('addExpense') + navigation.state.params.trip.name,
+        title: I18n.t('addExpense'),
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
@@ -152,6 +149,21 @@ export default App = StackNavigator({
         }
       }),
       screen: AddExpense
+    },
+    DetailExpense: {
+      navigationOptions: ({ navigation }) => ({
+        title: I18n.t('detailExpense'),
+        headerStyle: {
+           backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle: {
+           color: '#FFF'
+        },
+        headerBackTitleStyle: {
+           color: "#FFF"
+        }
+      }),
+      screen: DetailExpense
     },
     // AddGroup: {
     //   navigationOptions: ({ navigation }) => ({
@@ -175,28 +187,28 @@ export default App = StackNavigator({
     //   }),
     //   screen: AddGroup
     // },
-    DetailEvent: {
-      navigationOptions: ({ navigation }) => ({
-        title: I18n.t('detailExpense'),
-        headerStyle: {
-           backgroundColor: '#0992ef',
-           marginTop: 24
-        },
-        headerTitleStyle: {
-           color: '#FFF'
-        },
-        headerBackTitleStyle: {
-           color: "#FFF"
-        },
-        headerLeftStyle: {
-          color:'#fff'
-        },
-        drawer:() => ({
-          label: 'Home'
-        })
-      }),
-      screen: DetailEvent
-    },
+    // DetailEvent: {
+    //   navigationOptions: ({ navigation }) => ({
+    //     title: I18n.t('detailExpense'),
+    //     headerStyle: {
+    //        backgroundColor: '#0992ef',
+    //        marginTop: 24
+    //     },
+    //     headerTitleStyle: {
+    //        color: '#FFF'
+    //     },
+    //     headerBackTitleStyle: {
+    //        color: "#FFF"
+    //     },
+    //     headerLeftStyle: {
+    //       color:'#fff'
+    //     },
+    //     drawer:() => ({
+    //       label: 'Home'
+    //     })
+    //   }),
+    //   screen: DetailEvent
+    // },
     // DetailPerson: {
     //   navigationOptions: ({ navigation }) => ({
     //     title: 'Detail Person',

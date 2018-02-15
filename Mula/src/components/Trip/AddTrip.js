@@ -195,7 +195,7 @@ export default class AddTrip extends Component{
                 <DatePicker
                     mode='date'
                     format='YYYY-MM-DD'
-                    minDate= {yearbefore}
+                    minDate={this.state.selectedStartDate}
                     maxDate={yearafter}
                     date={this.state.selectedEndDate}
                     showIcon={true}
@@ -207,8 +207,11 @@ export default class AddTrip extends Component{
                 />
 
             </View>
+            <View>
+                <Text></Text>
+            </View>
             
-            <View style={{ flex: 1 }}>
+            <View style={[styles.subItem]}>
                 <Text>Select your travel company</Text>
                 <MultiSelect
                 hideTags
@@ -220,15 +223,15 @@ export default class AddTrip extends Component{
                 selectText="Pick Items"
                 searchInputPlaceholderText="Search Items..."
                 onChangeInput={ (item)=> console.log(item)}
-                tagRemoveIconColor="#CCC"
-                tagBorderColor="#CCC"
-                tagTextColor="#CCC"
-                selectedItemTextColor="#CCC"
-                selectedItemIconColor="#CCC"
-                itemTextColor="#000"
                 displayKey="name"
-                searchInputStyle={{ color: '#CCC' }}
-                submitButtonColor="#CCC"
+                style={[styles.subItem]}
+                tagTextColor='#303030'
+                selectedItemTextColor="#edc14f"
+                selectedItemIconColor="#edc14f"
+                itemTextColor="#303030"
+                displayKey="name"
+                searchInputStyle={{ color: '#303030' }}
+                submitButtonColor="#edc14f"
                 submitButtonText="Submit"
                 />
                 
@@ -244,33 +247,32 @@ export default class AddTrip extends Component{
             </View>
            
             
-            <View style={{ flex: 1 }}>
+            <View style = {styles.multi}>
                 <Text>Select the other currency you're going to use on the trip</Text>
                 <MultiSelect
-                hideTags
-                items={this.state.currencies}
-                uniqueKey="id"
-                ref={(component) => { this.multiSelect = component }}
-                selectedItems={selectedCurrencies}
-                onSelectedItemsChange={this.onSelectedCurrencyChange}
-                selectText="Pick your currencies"
-                searchInputPlaceholderText="Search currency..."
-                onChangeInput={ (item)=> console.log(item)}
-                tagRemoveIconColor="#CCC"
-                tagBorderColor="#CCC"
-                tagTextColor="#CCC"
-                selectedItemTextColor="#CCC"
-                selectedItemIconColor="#CCC"
-                itemTextColor="#000"
-                displayKey="name"
-                searchInputStyle={{ color: '#CCC' }}
-                submitButtonColor="#CCC"
-                submitButtonText="Submit"
+                    hideTags
+                    items={this.state.currencies}
+                    uniqueKey="id"
+                    ref={(component) => { this.multiSelect = component }}
+                    selectedItems={selectedCurrencies}
+                    onSelectedItemsChange={this.onSelectedCurrencyChange}
+                    selectText="Pick your currencies"
+                    searchInputPlaceholderText="Search currency..."
+                    onChangeInput={ (item)=> console.log(item)}
+                    backgroundColor ="#d4e8e5"
+                    tagTextColor="#303030"
+                    selectedItemTextColor="#edc14f"
+                    selectedItemIconColor="#edc14f"
+                    itemTextColor="#303030"
+                    displayKey="name"
+                    searchInputStyle={{ color: '#303030' }}
+                    submitButtonColor="#edc14f"
+                    submitButtonText="Submit"
                 />
                 
             </View>
             
-          
+            
             
             </ScrollView>
         );
@@ -278,12 +280,18 @@ export default class AddTrip extends Component{
 
 }
 
+
 const styles = StyleSheet.create({
-    container:{
+    container: {
         flex:1,
-        backgroundColor: 'rgba(176,207,227,34)',
+        backgroundColor: '#d4e8e5',
         paddingTop: 10,
         paddingLeft:20,
         paddingRight:20
+    },
+    multi:{
+        backgroundColor: '#d4e8e5',
     }
+    
+    
 });
