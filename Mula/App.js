@@ -10,7 +10,7 @@ import Register from './src/components/Register/Register';
 import Settings from './src/components/Settings/Settings';
 import Dashboard from './src/components/Dashboard/Dashboard';
 import TripDashboard from './src/components/Trip/TripDashboard'
-import AddEvent from './src/components/Trip/AddTrip';
+import AddTrip from './src/components/Trip/AddTrip';
 import AddExpense from './src/components/Expense/AddExpense';
 import DetailExpense from './src/components/Expense/DetailExpense';
 // import DetailEvent from './src/components/Event/DetailEvent';
@@ -113,12 +113,11 @@ export default App = StackNavigator({
       }),
       screen: TripDashboard
     },
-    AddEvent: {
+    AddTrip: {
       navigationOptions: ({ navigation }) => ({
         title: I18n.t('addEvent'),
         headerStyle:{
-           backgroundColor: '#6fc2b0',
-           marginTop: 24
+           backgroundColor: '#6fc2b0'
         },
         headerTitleStyle:{
            color: '#FFF'
@@ -126,14 +125,11 @@ export default App = StackNavigator({
         headerBackTitleStyle:{
            color: "#FFF"
         },
-        headerLeftStyle:{
-          color:'#fff'
-        },
          drawer:() => ({
            label: 'Home'
         })
       }),
-      screen: AddEvent
+      screen: AddTrip
     },
     AddExpense: {
       navigationOptions: ({ navigation }) => ({
