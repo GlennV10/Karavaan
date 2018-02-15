@@ -9,7 +9,7 @@ export default {
     detailExpense: 'Overzicht van uitgave',
     registerpage: 'Nieuw Account Aanmaken',
     addExpense: 'Uitgave toevoegen ',
-    tripdetails: 'Overzicht van uitgaven',
+    tripdetails: ': Overzicht',
 
     //login
     username: 'Gebruikersnaam',

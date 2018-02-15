@@ -8,7 +8,7 @@ export default {
     detailExpense: 'Overview of expense',
     registerpage: 'Register New Account',
     addExpense: 'Add expense to',
-    tripdetails: 'Overview of expenses',
+    tripdetails: ': Overview',
 
     //login
     username: 'Username',
