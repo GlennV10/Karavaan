@@ -11,6 +11,7 @@ import Settings from './src/components/Settings/Settings';
 import Dashboard from './src/components/Dashboard/Dashboard';
 import TripDashboard from './src/components/Trip/TripDashboard'
 import AddEvent from './src/components/Trip/AddTrip';
+import AddExpense from './src/components/Trip/AddExpense';
 import DetailEvent from './src/components/Event/DetailEvent';
 // import DetailPerson from './src/components/User/DetailPerson';
 // import DetailGroup from './src/components/Groups/DetailGroup';
@@ -132,6 +133,21 @@ export default App = StackNavigator({
         })
       }),
       screen: AddEvent
+    },
+    AddExpense: {
+      navigationOptions: ({ navigation }) => ({
+        title: 'Add Expense to ' + navigation.state.params.trip.name,
+        headerStyle:{
+          backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle:{
+            color: '#FFF'
+        },
+        headerBackTitleStyle:{
+            color: "#FFF"
+        }
+      }),
+      screen: AddExpense
     },
     // AddGroup: {
     //   navigationOptions: ({ navigation }) => ({

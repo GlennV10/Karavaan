@@ -128,6 +128,9 @@ export default class TripExpenses extends Component {
           <ScrollView style={styles.expenseList}>
               { this.renderExpenses() }
           </ScrollView>
+          <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+            <Text style={styles.addTripButtonText} >+</Text>
+          </TouchableOpacity>
         </View>
       )
     }
@@ -211,5 +214,19 @@ const styles = StyleSheet.create({
         marginRight: -10,
         flexDirection: 'row',
         backgroundColor: '#213544',
+    },
+    addTripButton: {
+        backgroundColor: '#3B4859',
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+    },
+    addTripButtonText: {
+        color: '#fff'
     }
 });

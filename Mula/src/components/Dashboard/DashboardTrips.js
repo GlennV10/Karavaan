@@ -126,7 +126,7 @@ export default class DashboardTrips extends Component {
         <ScrollView style={styles.tripList}>
           { this.renderTrips() }
         </ScrollView>
-        <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddEvent') /*& this.setModalVisible(true) & this.getCurrentLocation()*/ }>
+        <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddEvent')}>
           <Text style={styles.addTripButtonText} >+</Text>
         </TouchableOpacity>
       </View>

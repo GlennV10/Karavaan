@@ -35,7 +35,7 @@ export default class Dashboard extends React.Component {
              cancelable: false
          }
      )
-      
+
       return true;
  }
 
