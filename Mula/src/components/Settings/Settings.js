@@ -36,13 +36,16 @@ export default class Settings extends Component{
     }
 
     updateLanguage(newLanguage) {
+        console.log(newLanguage);
         this.setState({ language: newLanguage});
         AsyncStorage.setItem('language', newLanguage).then(console.log("Language updated to " + newLanguage));
         if(newLanguage == 'English') {
             I18n.locale = 'en';
+            console.log('en');
         }
         if(newLanguage == 'Dutch') {
             I18n.locale = 'nl';
+            console.log('nl');
         }
     }
 
@@ -54,8 +57,8 @@ export default class Settings extends Component{
     logout() {
         try{
             Alert.alert(
-                'Logout',
-                'Logout the application?', [{
+                I18n.t('logout'),
+                I18n.t('logoutmessage'), [{
                     text: 'Cancel',
                     onPress: () => console.log('Cancel Pressed'),
                     style: 'cancel'
@@ -115,8 +118,10 @@ export default class Settings extends Component{
                     <Picker.Item label="Euro" value="Euro" />
                     <Picker.Item label="American Dollar" value="USD" />
                 </Picker>
+                
+                
                 <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
-                    <Text style={styles.logoutText}>Logout</Text>
+                    <Text style={styles.logoutText}>{I18n.t('logout')}</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -139,6 +144,7 @@ const styles = StyleSheet.create({
     profileButton: {
         alignSelf: 'center'
     },
+    
     logoutButton: {
         height: 40,
         alignItems: 'center',
