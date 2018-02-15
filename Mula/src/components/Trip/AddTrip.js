@@ -1,5 +1,5 @@
 import React, {Component, cloneElement} from 'react';
-import {StyleSheet, View, Image, Text, TextInput, Button, Modal, TouchableOpacity, ScrollView, Picker, AsyncStorage} from 'react-native';
+import {StyleSheet, View, Image, Text, TextInput, Button, Modal, TouchableOpacity, ScrollView, Picker, AsyncStorage,Label} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import DatePicker from 'react-native-datepicker';
 import {Switch} from 'react-native-switch' ;
@@ -209,6 +209,7 @@ export default class AddTrip extends Component{
             </View>
             
             <View style={{ flex: 1 }}>
+                <Text>Select your travel company</Text>
                 <MultiSelect
                 hideTags
                 items={items}
@@ -233,6 +234,7 @@ export default class AddTrip extends Component{
                 
             </View>
             <View style={[styles.subItem]}>
+                        <Text>Select your base currency</Text>
                         <Picker style={{flex:.50}}           
                             onValueChange={currency => this.setState({baseCurrency: currency}) &this.setState({loadRates: true}) & this.getExchangeRatesWithBase(currency) & this.renderValutaToArray(this.state.rates)}
                             selectedValue={this.state.baseCurrency}>
@@ -243,6 +245,7 @@ export default class AddTrip extends Component{
            
             
             <View style={{ flex: 1 }}>
+                <Text>Select the other currency you're going to use on the trip</Text>
                 <MultiSelect
                 hideTags
                 items={this.state.currencies}
