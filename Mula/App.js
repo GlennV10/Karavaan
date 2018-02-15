@@ -117,7 +117,7 @@ export default App = StackNavigator({
       navigationOptions: ({ navigation }) => ({
         title: I18n.t('addEvent'),
         headerStyle:{
-           backgroundColor: '#0992ef',
+           backgroundColor: '#6fc2b0',
            marginTop: 24
         },
         headerTitleStyle:{
@@ -137,7 +137,7 @@ export default App = StackNavigator({
     },
     AddExpense: {
       navigationOptions: ({ navigation }) => ({
-        title: I18n.t('addExpense') + navigation.state.params.trip.name,
+        title: I18n.t('addExpense'),
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
