@@ -117,7 +117,7 @@ export default class DashboardTrips extends Component {
         } else {
             return this.state.trips.map((trip) => {
                 return(
-                  <TouchableOpacity style={styles.trip} onPress={() => this.props.navigation.navigate('TripDashboard', { trip })} key={ trip.id }>
+                  <TouchableOpacity style={styles.trip} onLongPress={() => this.props.navigation.navigate('TripSettings', { trip })} onPress={() => this.props.navigation.navigate('TripDashboard', { trip })} key={ trip.id }>
                       <View style={styles.splitRow}>
                         <Text style={styles.tripName}>{ trip.name }</Text>
                       </View>
