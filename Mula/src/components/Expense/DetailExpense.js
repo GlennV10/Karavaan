@@ -11,7 +11,7 @@ export default class DetailExpense extends Component{
     }
 
     componentDidMount() {
-
+        console.log(this.props.navigation.state.params.expense);
     }
 
     render(){
@@ -26,8 +26,8 @@ export default class DetailExpense extends Component{
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#d4e8e5',
-  }
+    container: {
+        flex: 1,
+        backgroundColor: '#d4e8e5',
+    }
 });

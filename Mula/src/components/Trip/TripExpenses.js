@@ -10,46 +10,7 @@ export default class TripExpenses extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        expenses: [{
-          id: 1,
-          name: 'Restaurant A',
-          date: '9 maart 2018',
-          paidBy: 'Glenn',
-          category: 'Food',
-          currency: 'USD',
-          amount: 50,
-          tripID: 1
-        },
-        {
-          id: 2,
-          name: 'Taxi',
-          date: '10 maart 2018',
-          paidBy: 'Annelore',
-          category: 'Taxi',
-          currency: 'CAD',
-          amount: 75,
-          tripID: 1
-        },
-        {
-          id: 3,
-          name: 'Restaurant B',
-          date: '21 april 2018',
-          paidBy: 'Deni',
-          category: 'Food',
-          currency: 'AUD',
-          amount: 88,
-          tripID: 2
-        },
-        {
-          id: 3,
-          name: 'Restaurant C',
-          date: '12 september 2018',
-          paidBy: 'Jens',
-          category: 'Food',
-          currency: 'EUR',
-          amount: 10,
-          tripID: 3
-        }],
+        expenses: [],
         username: "",
         isLoading: false
       }
@@ -69,16 +30,6 @@ export default class TripExpenses extends Component {
           return true;
         }
         return false;
-    }
-
-    getCurrencySymbol(expense) {
-      if (expense.currency === 'EUR') {
-        return '€';
-      } else if (expense.currency === 'USD') {
-        return '$';
-      } else {
-        return expense.currency;
-      }
     }
 
     /*
@@ -112,36 +63,34 @@ export default class TripExpenses extends Component {
     }
 
     renderExpenses() {
-      if(this.state.expenses.length === 0){
+      if(this.props.expenses.length === 0){
           return(
               <View style={styles.noExpensesView}>
                   <Text style={styles.noExpensesText}>NO EXPENSES FOUND</Text>
               </View>
           )
       } else {
-          return this.state.expenses.map((expense) => {
-              if (expense.tripID === this.props.navigator.state.params.trip.id) {
-                  return(
-                      <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={ expense.id }>
-                          <View style={[styles.expenseContainer, styles.half]}>
-                              <View style={styles.splitRow}>
-                                  <Text style={[styles.expenseName]}>{ expense.name }</Text>
-                              </View>
-                              <View style={styles.splitRow}>
-                                  <Text style={styles.expenseDate}>{ expense.date }</Text>
-                              </View>
+          return this.props.expenses.map((expense) => {
+              return(
+                  <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={ expense.id }>
+                      <View style={[styles.expenseContainer, styles.half]}>
+                          <View style={styles.splitRow}>
+                              <Text style={[styles.expenseName]}>{ expense.name }</Text>
                           </View>
-                          <View style={[styles.expenseAmountContainer, styles.half]}>
-                              <View style={styles.splitRow}>
-                                  <Text style={styles.expenseAmount}>{ expense.amount.toFixed(2) }</Text>
-                              </View>
-                              <View style={styles.splitRow}>
-                                  <Text style={styles.expenseCurrency}>{ expense.currency }</Text>
-                              </View>
+                          <View style={styles.splitRow}>
+                              <Text style={styles.expenseDate}>{ expense.date }</Text>
                           </View>
-                      </TouchableOpacity>
-                  )
-              }
+                      </View>
+                      <View style={[styles.expenseAmountContainer, styles.half]}>
+                          <View style={styles.splitRow}>
+                              <Text style={styles.expenseAmount}>{ expense.amount.toFixed(2) }</Text>
+                          </View>
+                          <View style={styles.splitRow}>
+                              <Text style={styles.expenseCurrency}>{ expense.currency }</Text>
+                          </View>
+                      </View>
+                  </TouchableOpacity>
+              )
           });
       }
     }
@@ -211,10 +160,6 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         borderColor: '#d3d3d3',
         borderWidth: .5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
         flex: 1,
         flexDirection: 'row'
     },
