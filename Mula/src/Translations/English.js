@@ -7,7 +7,7 @@ export default {
     addEvent: 'Add Trip',
     detailExpense: 'Overview of expense',
     registerpage: 'Register New Account',
-    addExpense: 'Add expense to',
+    addExpense: 'Add expense to ',
     tripdetails: ': Overview',
     tripsettings: 'Trip settings',
 

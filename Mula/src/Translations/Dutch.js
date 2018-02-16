@@ -1,14 +1,14 @@
 export default {
     //Dashboard
     trips: 'Reizen',
-    
+
 
     //App.js -> stacknavigator titles
     settings: 'Instellingen',
     addEvent: 'Reis Toevoegen',
     detailExpense: 'Overzicht van uitgave',
     registerpage: 'Nieuw Account Aanmaken',
-    addExpense: 'Uitgave toevoegen ',
+    addExpense: 'Uitgave toevoegen aan ',
     tripdetails: ': Overzicht',
     tripsettings: 'Reis instellingen',
 
@@ -26,7 +26,7 @@ export default {
     //TripDashboard
     expenses: 'Uitgaven',
     category: 'Categoriën',
-    balance: 'Balans',  
+    balance: 'Balans',
 
     //Settings
     dutch: 'Nederlands',
