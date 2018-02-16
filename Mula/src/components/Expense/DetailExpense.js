@@ -19,7 +19,7 @@ export default class DetailExpense extends Component{
 
         return(
           <ScrollView style={styles.container}>
-              <Text>{ expense.event }</Text>
+              <Text>{ expense.name }</Text>
           </ScrollView>
         )
     }
