@@ -198,7 +198,7 @@ export default class Login extends Component{
                 <View style={styles.formContainer}>
                     <TextInput
                         style={styles.inputField}
-                        placeholder={I18n.t('username')}
+                        placeholder={I18n.t('email')}
                         underlineColorAndroid="transparent"
                         placeholderTextColor="#fff"
                         returnKeyType="next"
@@ -250,6 +250,15 @@ const styles = StyleSheet.create({
         // flexGrow:.3
     },
     inputField:{
+        marginLeft: 30,
+        marginRight: 30,
+        fontSize: 17,
+        padding: 10,
+        marginBottom: 2,
+        color: '#fff',
+        borderBottomWidth: 0,
+        borderRadius: 5
+    },inputField:{
         marginLeft: 30,
         marginRight: 30,
         fontSize: 17,

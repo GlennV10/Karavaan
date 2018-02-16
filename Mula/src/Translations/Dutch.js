@@ -13,10 +13,15 @@ export default {
     tripsettings: 'Reis instellingen',
 
     //login
-    username: 'Gebruikersnaam',
+    email: 'Email',
     password: 'Wachtwoord',
     login: 'Aanmelden',
     register: 'Registreer',
+
+    //Register
+    firstname: 'Voornaam',
+    lastname: 'Achternaam',
+    validatepass: 'Typ wachtwoord opnieuw',
 
     //TripDashboard
     expenses: 'Uitgaven',

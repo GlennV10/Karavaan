@@ -42,7 +42,7 @@ export default class TripDashboard extends React.Component {
           tripID: 2
         },
         {
-          id: 3,
+          id: 4,
           name: 'Restaurant C',
           date: '12 september 2018',
           paidBy: 'Jens',

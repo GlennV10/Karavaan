@@ -64,7 +64,7 @@ export default class Register extends React.Component {
                  />
          </View>
             <TextInput
-                placeholder="First name"
+                placeholder={I18n.t('firstname')}
                 style={styles.inputField}
                 underlineColorAndroid="transparent"
                 placeholderTextColor="#818181"
@@ -72,7 +72,7 @@ export default class Register extends React.Component {
                 onSubmitEditing={() => this.lastNameInput.focus()}
                 returnKeyType="go"/>
             <TextInput
-                placeholder="Last name"
+                placeholder={I18n.t('lastname')}
                 style={styles.inputField}
                 underlineColorAndroid="transparent"
                 placeholderTextColor="#818181"
@@ -81,7 +81,7 @@ export default class Register extends React.Component {
                 onSubmitEditing={() => this.emailInput.focus()}
                 returnKeyType="go"/>
             <TextInput
-                placeholder="Email"
+                placeholder={I18n.t('email')}
                 style={styles.inputField}
                 underlineColorAndroid="transparent"
                 placeholderTextColor="#818181"
@@ -91,7 +91,7 @@ export default class Register extends React.Component {
                 onSubmitEditing={() => this.password1Input.focus()}
                 returnKeyType="go"/>
             <TextInput
-                placeholder="Password"
+                placeholder={I18n.t('password')}
                 style={styles.inputField}
                 secureTextEntry={true}
                 underlineColorAndroid="transparent"
@@ -101,7 +101,7 @@ export default class Register extends React.Component {
                 onSubmitEditing={() => this.password2Input.focus()}
                 returnKeyType="go"/>
             <TextInput
-                placeholder="Password (check)"
+                placeholder={I18n.t('validatepass')}
                 style={styles.inputField}
                 secureTextEntry={true}
                 underlineColorAndroid="transparent"
@@ -112,7 +112,7 @@ export default class Register extends React.Component {
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.registerButton}
                   onPress={() => this.checkReqs()}>
-                  <Text style={styles.buttonText}>Register</Text>
+                  <Text style={styles.buttonText}>{I18n.t('register')}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffd185'
     },
     buttonText: {
-        fontSize: 12,
+        fontSize: 15,
         lineHeight: 28,
         color: '#303030',
         textAlign: 'center'

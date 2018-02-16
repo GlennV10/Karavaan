@@ -12,10 +12,15 @@ export default {
     tripsettings: 'Trip settings',
 
     //login
-    username: 'Username',
+    email: 'Email',
     password: 'Password',
     login: 'Log in',
     register: 'Register',
+
+    //Register
+    firstname: 'First Name',
+    lastname: 'Last Name',
+    validatepass: 'Retype password',
 
     //TripDashboard
     expenses: 'Expenses',
