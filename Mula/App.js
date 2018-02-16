@@ -96,7 +96,7 @@ export default App = StackNavigator({
         headerBackTitleStyle:{
             color: "#FFF"
         },
-        headerLeft: 
+        headerLeft:
         <TouchableOpacity onPress={()=>{ navigation.navigate('DashboardTrips') }}>
           <Image source={require('./src/images/chevron_left.png')} style={{width: 35, height: 35, marginLeft: 5}}/>
         </TouchableOpacity>,
@@ -138,7 +138,7 @@ export default App = StackNavigator({
     },
     AddExpense: {
       navigationOptions: ({ navigation }) => ({
-        title: I18n.t('addExpense'),
+        title: I18n.t('addExpense') + navigation.state.params.trip.name,
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
