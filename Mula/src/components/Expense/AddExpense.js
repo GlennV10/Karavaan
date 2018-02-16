@@ -25,7 +25,7 @@ export default class AddExpense extends Component {
     render() {
         return(
           <View style={styles.container}>
-            <Text>Currency</Text>
+            <Text style={styles.label}>Currency</Text>
             <Picker selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
                 { this.renderPickerCurrencies() }
             </Picker>
@@ -37,6 +37,10 @@ export default class AddExpense extends Component {
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: '#d4e8e5'
+        backgroundColor: '#d4e8e5',
+        marginLeft: 5
+    }, 
+    label: {
+        
     }
 });

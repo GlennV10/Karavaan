@@ -114,6 +114,7 @@ export default class Login extends Component{
             this.setState({autheticated: responseJson.login_succes});
             console.log(this.state.autheticated);
             if(responseJson.login_succes === "true"){
+                console.log('test');
                 this.moveOn();
             }
         }).catch((error)=> console.log("ERROR: " + error));
@@ -122,7 +123,8 @@ export default class Login extends Component{
     moveOn(){
 	    this.registerToDevice();
         if(this.state.autheticated){
-            this.props.navigation.navigate('Dashboard');
+            console.log('test2');
+            this.props.navigation.navigate('DashboardTrips');
         }
     }
 
@@ -267,14 +269,18 @@ const styles = StyleSheet.create({
         height: 40,
         alignItems: 'center',
         backgroundColor: '#fff',
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5
     },
     registerButton: {
         height: 40,
         alignItems: 'center',
-        backgroundColor: '#ffd185'
+        backgroundColor: '#ffd185',
+        borderBottomLeftRadius: 5,
+        borderBottomRightRadius: 5
     },
     buttonText: {
-        fontSize: 12,
+        fontSize: 15,
         lineHeight: 28,
         color: '#303030',
         textAlign: 'center'

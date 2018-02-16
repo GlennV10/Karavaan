@@ -142,6 +142,25 @@ export default class TripExpenses extends Component {
                       </TouchableOpacity>
                   )
               }
+
+              return(
+              <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={ expense.id }>
+                  <View style={styles.splitRow}>
+                    <View style={[styles.whoPaidImageContainer, styles.half]}>
+                        { image }
+                    </View>
+                    <Text style={[styles.expenseAmount, styles.half]}>{ this.getCurrencySymbol(expense) }{ expense.total_price.toFixed(2) }</Text>
+                  </View>
+                  <Text style={styles.expenseName}>{ expense.event }</Text>
+                  <View style={styles.splitRow}>
+                    <Text style={[styles.expenseDate, styles.half]}>{ expense.date }</Text>
+                    {/* <Text style={[styles.expenseAmountUsers, styles.half]}>{ expense.amount_already_paid }/{ expense.amount_users }</Text> */}
+                  </View>
+                  <View style={styles.progressBarContainer}>
+                    {/* <View style={{backgroundColor: barStyle(expense.amount_already_paid, expense.amount_users), flex: 0.05+((0.95/expense.amount_users)*expense.amount_already_paid)}}></View> */}
+                  </View>
+              </TouchableOpacity>
+              );
           });
       }
     }
