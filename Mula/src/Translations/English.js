@@ -10,6 +10,7 @@ export default {
     registerpage: 'Register New Account',
     addExpense: 'Add expense to',
     tripdetails: ': Overview',
+    tripsettings: 'Trip settings',
 
     //login
     username: 'Username',

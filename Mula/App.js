@@ -13,6 +13,7 @@ import TripDashboard from './src/components/Trip/TripDashboard'
 import AddTrip from './src/components/Trip/AddTrip';
 import AddExpense from './src/components/Expense/AddExpense';
 import DetailExpense from './src/components/Expense/DetailExpense';
+import TripSettings from './src/components/Settings/Trip  Settings';
 // import DetailEvent from './src/components/Event/DetailEvent';
 // import DetailPerson from './src/components/User/DetailPerson';
 // import DetailGroup from './src/components/Groups/DetailGroup';
@@ -149,6 +150,21 @@ export default App = StackNavigator({
         }
       }),
       screen: AddExpense
+    },
+    TripSettings: {
+      navigationOptions: ({ navigation }) => ({
+        title: I18n.t('tripsettings'),
+        headerStyle: {
+           backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle: {
+           color: '#FFF'
+        },
+        headerBackTitleStyle: {
+           color: "#FFF"
+        }
+      }),
+      screen: TripSettings
     },
     DetailExpense: {
       navigationOptions: ({ navigation }) => ({

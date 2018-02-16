@@ -10,6 +10,7 @@ export default {
     registerpage: 'Nieuw Account Aanmaken',
     addExpense: 'Uitgave toevoegen ',
     tripdetails: ': Overzicht',
+    tripsettings: 'Reis instellingen',
 
     //login
     username: 'Gebruikersnaam',
