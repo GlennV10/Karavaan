@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
         borderRadius: 5
     },
     logoutText: {
-        fontSize: 12,
+        fontSize: 15,
         lineHeight: 28,
         color: '#303030',
         textAlign: 'center'

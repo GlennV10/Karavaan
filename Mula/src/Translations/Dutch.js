@@ -1,7 +1,7 @@
 export default {
     //Dashboard
     trips: 'Reizen',
-    balance: 'Balans',
+    
 
     //App.js -> stacknavigator titles
     settings: 'Instellingen',
@@ -21,7 +21,7 @@ export default {
     //TripDashboard
     expenses: 'Uitgaven',
     category: 'Categoriën',
-    total: 'Totaal',
+    balance: 'Balans',  
 
     //Settings
     dutch: 'Nederlands',

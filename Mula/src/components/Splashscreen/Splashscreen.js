@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid, Image, AsyncStorage} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid, Image, AsyncStorage, TouchableOpacity, Linking} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import { NavigationActions } from 'react-navigation';
 import I18n from 'react-native-i18n';
@@ -69,10 +69,13 @@ export default class Splashscreen extends React.Component {
 
         return (
         <View style={styles.container}>
+            <TouchableOpacity 
+                onPress={() => Linking.openURL('https://www.Karavaan.be')}>
             <Image
                 style={{width: 200, height: 133}}
                 source={require('../../images/Karavaan_pos.png')}
             />
+            </TouchableOpacity>
         </View>
         );
     }

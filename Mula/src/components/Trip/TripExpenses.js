@@ -103,10 +103,10 @@ export default class TripExpenses extends Component {
                   <Text style={styles.expenseName}>{ expense.event }</Text>
                   <View style={styles.splitRow}>
                     <Text style={[styles.expenseDate, styles.half]}>{ expense.date }</Text>
-                    <Text style={[styles.expenseAmountUsers, styles.half]}>{ expense.amount_already_paid }/{ expense.amount_users }</Text>
+                    {/* <Text style={[styles.expenseAmountUsers, styles.half]}>{ expense.amount_already_paid }/{ expense.amount_users }</Text> */}
                   </View>
                   <View style={styles.progressBarContainer}>
-                    <View style={{backgroundColor: barStyle(expense.amount_already_paid, expense.amount_users), flex: 0.05+((0.95/expense.amount_users)*expense.amount_already_paid)}}></View>
+                    {/* <View style={{backgroundColor: barStyle(expense.amount_already_paid, expense.amount_users), flex: 0.05+((0.95/expense.amount_users)*expense.amount_already_paid)}}></View> */}
                   </View>
               </TouchableOpacity>
               );
