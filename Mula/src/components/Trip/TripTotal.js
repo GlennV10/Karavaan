@@ -24,11 +24,11 @@ export default class TripTotal extends Component {
       return(
         <View style={styles.container}>
           <Text>Hier moet de balans van elke user getoond worden => Jos heeft al 600 euro betaald (in totaal betaald), 200 euro daarvan heeft hij zelf
-          gebruikt (aan drank en eten bv) => de Jos moet nog 400 euro terugkrijgen 
+          gebruikt (aan drank en eten bv) => de Jos moet nog 400 euro terugkrijgen
           </Text>
           <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
               <Text style={styles.addTripButtonText} >+</Text>
-            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
       )
     }

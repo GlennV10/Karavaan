@@ -26,7 +26,7 @@ export default class TripCategory extends Component {
           <Text>TRIP CATEGORY</Text>
           <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
               <Text style={styles.addTripButtonText} >+</Text>
-            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
       )
     }

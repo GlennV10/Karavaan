@@ -1,7 +1,7 @@
 export default {
     //Dashboard
     trips: 'Trips',
-    
+
     //App.js -> stacknavigator titles
     settings: 'Settings',
     addEvent: 'Add Trip',
@@ -20,7 +20,7 @@ export default {
     //TripDashboard
     expenses: 'Expenses',
     category: 'Categories',
-    balance: 'Balance',
+    total: 'Total',
 
     //Settings
     dutch: 'Dutch',
