@@ -10,15 +10,54 @@ export default class TripExpenses extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        expenses: [],
+        expenses: [{
+          id: 1,
+          name: 'Restaurant A',
+          date: '9 maart 2018',
+          paidBy: 'Glenn',
+          category: 'Food',
+          currency: 'USD',
+          amount: 50,
+          tripID: 1
+        },
+        {
+          id: 2,
+          name: 'Taxi',
+          date: '10 maart 2018',
+          paidBy: 'Annelore',
+          category: 'Taxi',
+          currency: 'CAD',
+          amount: 75,
+          tripID: 1
+        },
+        {
+          id: 3,
+          name: 'Restaurant B',
+          date: '21 april 2018',
+          paidBy: 'Deni',
+          category: 'Food',
+          currency: 'AUD',
+          amount: 88,
+          tripID: 2
+        },
+        {
+          id: 3,
+          name: 'Restaurant C',
+          date: '12 september 2018',
+          paidBy: 'Jens',
+          category: 'Food',
+          currency: 'EUR',
+          amount: 10,
+          tripID: 3
+        }],
         username: "",
         isLoading: false
       }
     }
 
     componentWillMount() {
-        this.setState({ isLoading: true });
-        this.getAllExpensesByTrip();
+        // this.setState({ isLoading: true });
+        // this.getAllExpensesByTrip();
     }
 
     componentDidMount() {
@@ -72,44 +111,37 @@ export default class TripExpenses extends Component {
         }
     }
 
-    /*
-      Rendering EXPENSES
-      Change trip values (??)
-    */
     renderExpenses() {
       if(this.state.expenses.length === 0){
           return(
               <View style={styles.noExpensesView}>
-                <Text style={styles.noExpensesText}>NO EXPENSES FOUND</Text>
+                  <Text style={styles.noExpensesText}>NO EXPENSES FOUND</Text>
               </View>
           )
       } else {
           return this.state.expenses.map((expense) => {
-              let image = null;
-              if (expense.has_paid) {
-                  image = <Image style={styles.whoPaidImage} source={require('../../images/in.png')}/>;
-              } else {
-                  image = <Image style={styles.whoPaidImage} source={require('../../images/out.png')}/>;
+              if (expense.tripID === this.props.navigator.state.params.trip.id) {
+                  return(
+                      <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={ expense.id }>
+                          <View style={[styles.expenseContainer, styles.half]}>
+                              <View style={styles.splitRow}>
+                                  <Text style={[styles.expenseName]}>{ expense.name }</Text>
+                              </View>
+                              <View style={styles.splitRow}>
+                                  <Text style={styles.expenseDate}>{ expense.date }</Text>
+                              </View>
+                          </View>
+                          <View style={[styles.expenseAmountContainer, styles.half]}>
+                              <View style={styles.splitRow}>
+                                  <Text style={styles.expenseAmount}>{ expense.amount.toFixed(2) }</Text>
+                              </View>
+                              <View style={styles.splitRow}>
+                                  <Text style={styles.expenseCurrency}>{ expense.currency }</Text>
+                              </View>
+                          </View>
+                      </TouchableOpacity>
+                  )
               }
-
-              return(
-              <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={ expense.id }>
-                  <View style={styles.splitRow}>
-                    <View style={[styles.whoPaidImageContainer, styles.half]}>
-                        { image }
-                    </View>
-                    <Text style={[styles.expenseAmount, styles.half]}>{ this.getCurrencySymbol(expense) }{ expense.total_price.toFixed(2) }</Text>
-                  </View>
-                  <Text style={styles.expenseName}>{ expense.event }</Text>
-                  <View style={styles.splitRow}>
-                    <Text style={[styles.expenseDate, styles.half]}>{ expense.date }</Text>
-                    <Text style={[styles.expenseAmountUsers, styles.half]}>{ expense.amount_already_paid }/{ expense.amount_users }</Text>
-                  </View>
-                  <View style={styles.progressBarContainer}>
-                    <View style={{backgroundColor: barStyle(expense.amount_already_paid, expense.amount_users), flex: 0.05+((0.95/expense.amount_users)*expense.amount_already_paid)}}></View>
-                  </View>
-              </TouchableOpacity>
-              );
           });
       }
     }
@@ -118,35 +150,25 @@ export default class TripExpenses extends Component {
       if(this.state.isLoading) {
         return(
           <View style={styles.containerIndicator}>
-            <ActivityIndicator />
-            <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
-              <Text style={styles.addTripButtonText} >+</Text>
-            </TouchableOpacity>
+              <ActivityIndicator />
+              <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+                  <Text style={styles.addTripButtonText} >+</Text>
+              </TouchableOpacity>
           </View>
         )
       }
 
       return(
         <View style={styles.container}>
-          <ScrollView style={styles.expenseList}>
-              { this.renderExpenses() }
-          </ScrollView>
-          <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
-            <Text style={styles.addTripButtonText} >+</Text>
-          </TouchableOpacity>
+            <ScrollView style={styles.expenseList}>
+                { this.renderExpenses() }
+            </ScrollView>
+            <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+                <Text style={styles.addTripButtonText} >+</Text>
+            </TouchableOpacity>
         </View>
       )
     }
-}
-
-function barStyle(paid, total){
-  if(paid == total) {
-    return green
-  } else if(paid > 0) {
-    return yellow
-  } else {
-    return red
-  }
 }
 
 const styles = StyleSheet.create({
@@ -160,8 +182,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#d4e8e5'
     },
     splitRow: {
-        flexDirection: 'row',
-        marginBottom: 5
+        flexDirection: 'row'
     },
     half: {
         flex: .5
@@ -176,13 +197,6 @@ const styles = StyleSheet.create({
         marginTop: 50,
         color: "#a8a8a8"
     },
-    whoPaidImageContainer: {
-        alignItems: 'center'
-    },
-    whoPaidImage: {
-        width: 50,
-        height: 50
-    },
     expenseList: {
         marginLeft: 10,
         marginRight: 10
@@ -193,30 +207,41 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         paddingTop: 10,
-        marginTop: 20,
-        borderRadius: 5,
-        borderColor: '#000'
-    },
-    expenseAmount: {
-        fontSize: 35,
-        textAlign: 'right'
+        marginTop: 10 ,
+        borderRadius: 2,
+        borderColor: '#d3d3d3',
+        borderWidth: .5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        flex: 1,
+        flexDirection: 'row'
     },
     expenseName: {
-        fontSize: 20,
+        fontSize: 16
+    },
+    expenseDate: {
+        fontSize: 12,
+        color: '#bababa'
+    },
+    expenseAmount: {
+        fontSize: 16,
         textAlign: 'right'
     },
-    expenseAmountUsers: {
-        flex: .5,
-        textAlign:'right'
+    expenseCurrency: {
+        fontSize: 12,
+        color: '#bababa',
+        textAlign: 'right'
     },
-    progressBarContainer: {
-        flex: 1,
-        height: 5,
-        marginLeft: -10,
-        marginBottom: -10,
-        marginRight: -10,
-        flexDirection: 'row',
-        backgroundColor: '#213544',
+    expenseContainer: {
+        flex: .5,
+        paddingLeft: 10
+    },
+    expenseAmountContainer: {
+        flex: .5,
+        alignItems: 'flex-end',
+        justifyContent: 'center'
     },
     addTripButton: {
         backgroundColor: '#3B4859',
