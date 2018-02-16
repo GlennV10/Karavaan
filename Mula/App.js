@@ -8,7 +8,7 @@ import Splashscreen from './src/components/Splashscreen/Splashscreen';
 import Login from './src/components/Login/Login';
 import Register from './src/components/Register/Register';
 import Settings from './src/components/Settings/Settings';
-import Dashboard from './src/components/Dashboard/Dashboard';
+import DashboardTrips from './src/components/Dashboard/DashboardTrips';
 import TripDashboard from './src/components/Trip/TripDashboard'
 import AddTrip from './src/components/Trip/AddTrip';
 import AddExpense from './src/components/Expense/AddExpense';
@@ -59,9 +59,9 @@ export default App = StackNavigator({
       },
       screen: Register
     },
-    Dashboard: {
+    DashboardTrips: {
       navigationOptions: ({ navigation }) => ({
-        title: 'Dashboard',
+        title: I18n.t('trips'),
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
@@ -81,7 +81,7 @@ export default App = StackNavigator({
           label: 'Home'
         })
       }),
-      screen: Dashboard
+      screen: DashboardTrips
     },
     Settings: {
       navigationOptions: ({ navigation }) => ({
@@ -96,7 +96,7 @@ export default App = StackNavigator({
             color: "#FFF"
         },
         headerLeft: 
-        <TouchableOpacity onPress={()=>{ navigation.navigate('Dashboard') }}>
+        <TouchableOpacity onPress={()=>{ navigation.navigate('DashboardTrips') }}>
           <Image source={require('./src/images/chevron_left.png')} style={{width: 35, height: 35, marginLeft: 5}}/>
         </TouchableOpacity>,
       }),

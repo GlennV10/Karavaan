@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Modal, Switch, ActivityIndicator, Picker, AsyncStorage} from 'react-native';
+import {StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Modal, Switch, ActivityIndicator, BackHandler, Picker, AsyncStorage} from 'react-native';
 import I18n from 'react-native-i18n';
 // ############ Colors ############
 const red = '#C42525';
@@ -39,26 +39,29 @@ export default class DashboardTrips extends Component {
     componentWillMount() {
         //this.setState({ isLoading: true });
         //this.getAllTrips();
-        AsyncStorage.getItem('language').then((language) => {
-          if(language == "English") {
-              I18n.locale = "en";
-          }
-          if(language == "Dutch") {
-              I18n.locale = "nl";
-          }
-        });
     }
 
     componentDidMount() {
         this.setState({ isLoading: false });
-        AsyncStorage.getItem('language').then((language) => {
-          if(language == "English") {
-              I18n.locale = "en";
-          }
-          if(language == "Dutch") {
-              I18n.locale = "nl";
-          }
-        });
+        this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
+        this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
+    }
+
+    _handleBackButton = () => {
+      Alert.alert(
+           I18n.t('closeapp'),
+           I18n.t('closeappmessage'), [{
+               text: 'Cancel',
+               onPress: () => console.log('Cancel Pressed'),
+               style: 'cancel'
+           }, {
+               text: 'OK',
+               onPress: () => BackHandler.exitApp()
+           }, ], {
+               cancelable: false
+           }
+       )
+        return true;
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -114,7 +117,7 @@ export default class DashboardTrips extends Component {
         } else {
             return this.state.trips.map((trip) => {
                 return(
-                  <TouchableOpacity style={styles.trip} onPress={() => this.props.navigator.navigate('TripDashboard', { trip })} key={ trip.id }>
+                  <TouchableOpacity style={styles.trip} onPress={() => this.props.navigation.navigate('TripDashboard', { trip })} key={ trip.id }>
                       <View style={styles.splitRow}>
                         <Text style={styles.tripName}>{ trip.name }</Text>
                       </View>
@@ -144,7 +147,7 @@ export default class DashboardTrips extends Component {
         <ScrollView style={styles.tripList}>
           { this.renderTrips() }
         </ScrollView>
-        <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddTrip')}>
+        <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigation.navigate('AddTrip')}>
           <Text style={styles.addTripButtonText} >+</Text>
         </TouchableOpacity>
       </View>

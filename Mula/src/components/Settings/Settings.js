@@ -31,7 +31,7 @@ export default class Settings extends Component{
     }
 
     _handleBackButton = () => {
-        this.props.navigation.navigate('Dashboard');
+        this.props.navigation.navigate('DashboardTrips');
         return true;
     }
 
