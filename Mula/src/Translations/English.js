@@ -1,8 +1,7 @@
 export default {
     //Dashboard
     trips: 'Trips',
-    balance: 'Balance',
-    
+
     //App.js -> stacknavigator titles
     settings: 'Settings',
     addEvent: 'Add Trip',
