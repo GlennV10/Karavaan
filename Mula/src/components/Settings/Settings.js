@@ -88,7 +88,7 @@ export default class Settings extends Component{
                 <TextInput
                     style={styles.inputField}
                     placeholder="Firstname Name"
-                    underlineColorAndroid="transparent"
+                    underlineColorAndroid="#ffd185"
                     placeholderTextColor="#fff"
                     returnKeyType="next"
                     onChangeText={(nameText) => this.setState({name: nameText})}
@@ -96,7 +96,7 @@ export default class Settings extends Component{
                 <TextInput
                     style={styles.inputField}
                     placeholder="Username/Email"
-                    underlineColorAndroid="transparent"
+                    underlineColorAndroid="#ffd185"
                     placeholderTextColor="#fff"
                     returnKeyType="next"
                     onChangeText={(usernameText) => this.setState({username: usernameText})}
@@ -105,7 +105,7 @@ export default class Settings extends Component{
                     style={styles.inputField}
                     secureTextEntry
                     placeholder="Password"
-                    underlineColorAndroid="transparent"
+                    underlineColorAndroid="#ffd185"
                     placeholderTextColor="#fff"
                     returnKeyType="done"
                     onChangeText={(passwordText) => this.setState({password: passwordText})}
