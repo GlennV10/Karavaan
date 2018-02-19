@@ -152,11 +152,8 @@ const styles = StyleSheet.create({
     },
     expense: {
         backgroundColor: '#f7f7f7',
-        paddingBottom: 10,
-        paddingLeft: 10,
-        paddingRight: 10,
-        paddingTop: 10,
-        marginTop: 10 ,
+        padding: 10,
+        marginTop: 10,
         borderRadius: 2,
         borderColor: '#d3d3d3',
         borderWidth: .5,
