@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker } from 'react-native';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
+import {StackNavigator} from 'react-navigation';
 
 export default class AddExpense extends Component {
     constructor(props) {
         super(props);
         this.state = {
             name: "",
-            ammount: "",
-            category: 'Choose category',
+            amount: "",
+            category: I18n.t('categoryplaceholder'),
             currency: ""
         }
     }
@@ -28,26 +29,20 @@ export default class AddExpense extends Component {
 
     setCategory(item) {
         if (item == "add") {
-            console.log('testAddCategory')
-            this.addItemToCategory();
+            this.setState({ promptVisible: true });
         } else {
             this.setState({ category: item });
         }
     }
 
-    addItemToCategory() {
-        console.log('testAddCategory2')
-        this.setState({ promptVisible: true });
-    }
-
-    checkAmmount(text) {
+    checkAmount(text) {
         let newText = '';
         let numbers = '0123456789';
 
         for (var i = 0; i < text.length; i++) {
             if (numbers.indexOf(text[i]) > -1) {
                 newText = newText + text[i];
-            } 
+            }
             if (text[i] === ',') {
                 newText = newText + ',';
             }
@@ -56,42 +51,55 @@ export default class AddExpense extends Component {
             }
         }
 
-        this.setState({ ammount: newText })
+        this.setState({ amount: newText })
+    }
+
+    SaveExpense() {
+        //===========================
+        //ADD EXPENSE TO DB CODE HERE
+        //===========================
+
+        this.props.navigation.navigate('TripDashboard',  {trip: this.props.navigation.state.params.trip});
+
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.contentView}>
-                    <Text style={styles.label}>Naam</Text>
+                    <Text style={styles.label}>{I18n.t('name')}</Text>
                     <TextInput
-                        placeholder='kies naam'
+                        placeholder={I18n.t('nameplaceholder')}
                         style={styles.inputField}
                         underlineColorAndroid="transparent"
                         placeholderTextColor="#818181"
                         onChangeText={(text) => this.setState({ name: text })} />
 
-                    <Text style={styles.label}>Bedrag</Text>
+                    <Text style={styles.label}>{I18n.t('amount')}</Text>
                     <TextInput
-                        placeholder='Bedrag van uitgave'
+                        placeholder={I18n.t('amountplaceholder')}
                         style={styles.inputField}
                         keyboardType='numeric'
                         underlineColorAndroid="transparent"
                         placeholderTextColor="#818181"
-                        onChangeText={(text) => this.checkAmmount(text)}
-                        value={this.state.ammount} />
+                        onChangeText={(text) => this.checkAmount(text)}
+                        value={this.state.amount} />
 
-                    <Text style={styles.label}>Categorie: {this.state.category}</Text>
+                    <Text style={styles.label}>{I18n.t('categoryexpense')} {this.state.category}</Text>
                     <Picker style={styles.picker} selectedValue={this.state.category} onValueChange={(itemValue, itemIndex) => this.setCategory(itemValue)}>
                         <Picker.Item label="Restaurant" value="Restaurant" />
                         <Picker.Item label="Taxi" value="Taxi" />
                         <Picker.Item label="Add Category" value="add" />
                     </Picker>
 
-                    <Text style={styles.label}>Currency {this.state.currency}</Text>
+                    <Text style={styles.label}>{I18n.t('currency')} {this.state.currency}</Text>
                     <Picker style={styles.picker} selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
                         {this.renderPickerCurrencies()}
                     </Picker>
+
+                    <TouchableOpacity style={styles.saveButton} onPress={() => this.SaveExpense()}>
+                        <Text style={styles.saveText}>{I18n.t('savebutton')}</Text>
+                    </TouchableOpacity>
 
 
 
@@ -118,7 +126,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#d4e8e5',
-        marginLeft: 5
+        padding: 20
     },
     contentView: {
         marginTop: 10
@@ -137,5 +145,17 @@ const styles = StyleSheet.create({
     },
     picker: {
         marginLeft: 13
+    },
+    saveButton: {
+        height: 40,
+        alignItems: 'center',
+        backgroundColor: '#ffd185',
+        borderRadius: 5
+    },
+    saveText: {
+        fontSize: 15,
+        lineHeight: 28,
+        color: '#303030',
+        textAlign: 'center'
     }
 });

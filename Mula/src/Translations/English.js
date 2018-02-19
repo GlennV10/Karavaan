@@ -25,7 +25,7 @@ export default {
     //TripDashboard
     expenses: 'Expenses',
     category: 'Categories',
-    total: 'Total',
+    balance: 'Balance',
 
     //Settings
     dutch: 'Dutch',
@@ -41,4 +41,13 @@ export default {
     //Close App
     closeapp: 'Close Application',
     closeappmessage: 'Are you sure want to close the application?',
+
+    //AddExpense
+    name: 'Expense name',
+    nameplaceholder: 'Choose a name for your expense',
+    amount: 'Amount of expense',
+    amountplaceholder: 'Choose the amount of the expense',
+    categoryexpense: 'Expense category: ',
+    savebutton: 'Add expense',
+    categoryplaceholder: 'Choose category'
 }

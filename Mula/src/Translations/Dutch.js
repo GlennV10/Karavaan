@@ -42,4 +42,14 @@ export default {
     //Close App
     closeapp: 'Applicatie sluiten',
     closeappmessage: 'Bent u zeker dat u de applicatie wil sluiten?',
+
+    //AddExpense
+    name: 'Naam van uitgave',
+    nameplaceholder: 'Kies een naam voor de uitgave',
+    amount: 'Bedrag van uitgave',
+    amountplaceholder: 'Kies een bedrag voor de uitgave',
+    categoryexpense: 'Categorie van uitgave: ',
+    savebutton: 'Voeg uitgave toe',
+    categoryplaceholder: 'Kies categorie'
+
 }
