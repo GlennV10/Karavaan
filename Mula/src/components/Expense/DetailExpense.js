@@ -89,11 +89,13 @@ const styles = StyleSheet.create({
     userDetails: {
         flex: 1,
         flexDirection: 'row',
+        backgroundColor: '#fff',
         padding: 10,
         paddingLeft: 25,
         paddingRight: 25,
         marginTop: 10,
-        backgroundColor: '#fff'
+        marginLeft: 10,
+        marginRight: 10
     },
     userName: {
         fontSize: 18,

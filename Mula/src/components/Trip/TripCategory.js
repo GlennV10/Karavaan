@@ -3,66 +3,104 @@ import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Scr
 import I18n from 'react-native-i18n';
 
 export default class TripCategory extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      categories: [],
+    constructor(props) {
+      super(props);
+      this.state = {
+        categories: [],
+      }
     }
-  }
 
-  componentDidMount() {
+    componentDidMount() {
+        this.calculateCategoryAmount();
+    }
 
-  }
+    getAllExpensesByTrip() {
 
-  getAllExpensesByTrip() {
+    }
 
-  }
+    calculateCategoryAmount() {
+        let categories = [];
+        for(expense of this.props.expenses) {
+            if(categories.findIndex(i => i.category === expense.category) < 0) {
+                let category = {
+                    category: expense.category,
+                    amount: expense.amount
+                };
+                categories.push(category);
+            } else {
+                for (let j = 0; j < categories.length; j++) {
+                    if (categories[j].category === expense.category) {
+                        categories[j].amount += expense.amount;
+                    }
+                }
+            }
+        }
+        this.setState({ categories });
+    }
 
-  // renderCategories() {
-  //   if(this.props.categories.length === 0){
-  //      return(
-  //          <View style={styles.noCategoriesView}>
-  //              <Text style={styles.noCategoriesText}>NO noCategoriesText FOUND</Text>
-  //          </View>
-  //      )
-  //    } else {
-  //     return this.props.categories.map((category) => {
-  //         return(
-  //             <TouchableOpacity style={styles.category} onPress={() => this.props.navigator.navigate('', { category })}>
-  //                 <View style={[styles.categoryContainer, styles.half]}>
-  //                     <View style={styles.splitRow}>
-  //                         <Text style={[styles.categoryName]}>{ category.name }</Text>
-  //                     </View>
-  //                 </View>
-  //             </TouchableOpacity>
-  //         )
-  //     });
-  //   }
-  // }
+    // renderCategories() {
+    //   if(this.props.categories.length === 0){
+    //      return(
+    //          <View style={styles.noCategoriesView}>
+    //              <Text style={styles.noCategoriesText}>NO noCategoriesText FOUND</Text>
+    //          </View>
+    //      )
+    //    } else {
+    //     return this.props.categories.map((category) => {
+    //         return(
+    //             <TouchableOpacity style={styles.category} onPress={() => this.props.navigator.navigate('', { category })}>
+    //                 <View style={[styles.categoryContainer, styles.half]}>
+    //                     <View style={styles.splitRow}>
+    //                         <Text style={[styles.categoryName]}>{ category.name }</Text>
+    //                     </View>
+    //                 </View>
+    //             </TouchableOpacity>
+    //         )
+    //     });
+    //   }
+    // }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>TRIP CATEGORY</Text>
-        {/* <ScrollView style={styles.categoryList}>
-          {this.renderCategories()}
-        </ScrollView> */}
-        <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', { trip: this.props.navigator.state.params.trip })}>
-          <Text style={styles.addTripButtonText} >+</Text>
-        </TouchableOpacity>
-      </View>
-    )
-  }
+    renderCategories() {
+        if(this.state.categories.length === 0){
+            return(
+                <View style={styles.noCategoriesView}>
+                    <Text style={styles.noCategoriesText}>NO CATEGORIES FOUND</Text>
+                </View>
+            )
+        } else {
+            return this.state.categories.map((category, index) => {
+                return(
+                    <View style={styles.categoryDetails} key={index}>
+                        <View style={{flex: .7}}>
+                            <Text style={styles.categoryName}>{ category.category }</Text>
+                        </View>
+                        <View style={{flex: .3}}>
+                            <Text style={styles.categoryAmount}>{ category.amount.toFixed(2) }</Text>
+                        </View>
+                    </View>
+                )
+            });
+        }
+    }
+
+    render() {
+      return (
+        <View style={styles.container}>
+            <ScrollView style={styles.categoryList}>
+                { this.renderCategories() }
+            </ScrollView>
+            <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+                <Text style={styles.addTripButtonText} >+</Text>
+            </TouchableOpacity>
+        </View>
+      )
+    }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#d4e8e5'
-  },
-  expenseContainer: {
-    flex: .5,
-    paddingLeft: 10
   },
   addTripButton: {
     backgroundColor: '#3B4859',
@@ -93,6 +131,8 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   category: {
+    flex: 1,
+    flexDirection: 'row',
     backgroundColor: '#f7f7f7',
     paddingBottom: 10,
     paddingLeft: 10,
@@ -101,11 +141,30 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 2,
     borderColor: '#d3d3d3',
-    borderWidth: .5,
-    flex: 1,
-    flexDirection: 'row'
+    borderWidth: .5
   },
   categoryName: {
     fontSize: 16
+  },
+  categoryDetails: {
+      flex: 1,
+      flexDirection: 'row',
+      padding: 10,
+      paddingLeft: 25,
+      paddingRight: 25,
+      marginTop: 10,
+      backgroundColor: '#f7f7f7',
+      alignItems: 'center',
+      borderRadius: 2,
+      borderColor: '#d3d3d3',
+      borderWidth: .5
+  },
+  categoryName: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      opacity: .7
+  },
+  categoryAmount: {
+      textAlign: 'right'
   }
 });
