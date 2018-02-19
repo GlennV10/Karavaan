@@ -16,6 +16,22 @@ export default class TripDashboard extends React.Component {
           name: 'Restaurant A',
           date: '9 maart 2018',
           paidBy: 'Glenn',
+          users: [{
+              name: "Annelore",
+              amount: 10
+          },
+          {
+              name: "Deni",
+              amount: 10
+          },
+          {
+              name: "Jens",
+              amount: 10
+          },
+          {
+              name: "Glenn",
+              amount: 20
+          }],
           category: 'Food',
           currency: 'USD',
           amount: 50,
@@ -26,6 +42,7 @@ export default class TripDashboard extends React.Component {
           name: 'Taxi',
           date: '10 maart 2018',
           paidBy: 'Annelore',
+          users: [{name:"",amount:0}],
           category: 'Taxi',
           currency: 'CAD',
           amount: 75,
@@ -36,6 +53,7 @@ export default class TripDashboard extends React.Component {
           name: 'Restaurant B',
           date: '21 april 2018',
           paidBy: 'Deni',
+          users: [{name:"",amount:0}],
           category: 'Food',
           currency: 'AUD',
           amount: 88,
@@ -46,6 +64,7 @@ export default class TripDashboard extends React.Component {
           name: 'Restaurant C',
           date: '12 september 2018',
           paidBy: 'Jens',
+          users: [{name:"",amount:0}],
           category: 'Food',
           currency: 'EUR',
           amount: 10,
