@@ -10,7 +10,7 @@ export default class AddExpense extends Component {
         this.state = {
             name: "",
             amount: "",
-            category: I18n.t('categoryplaceholder'),
+            category: "Restaurant",
             currency: ""
         }
     }
@@ -36,7 +36,7 @@ export default class AddExpense extends Component {
     }
 
     checkAmount(text) {
-        let newText = '';
+        var newText = '';
         let numbers = '0123456789';
 
         for (var i = 0; i < text.length; i++) {
@@ -44,17 +44,18 @@ export default class AddExpense extends Component {
                 newText = newText + text[i];
             }
             if (text[i] === ',') {
-                newText = newText + ',';
+                newText = newText + '.';
             }
             if (text[i] === '.') {
-                newText = newText + ',';
+                newText = newText + '.';
             }
         }
 
-        this.setState({ amount: newText })
+        this.setState({ amount: newText });
     }
 
     SaveExpense() {
+
         //===========================
         //ADD EXPENSE TO DB CODE HERE
         //===========================
