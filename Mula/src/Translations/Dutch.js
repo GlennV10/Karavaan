@@ -5,10 +5,10 @@ export default {
 
     //App.js -> stacknavigator titles
     settings: 'Instellingen',
-    addEvent: 'Reis Toevoegen',
+    addEvent: 'Reis toevoegen',
     detailExpense: 'Overzicht van uitgave',
-    registerpage: 'Nieuw Account Aanmaken',
-    addExpense: 'Uitgave toevoegen aan ',
+    registerpage: 'Nieuw account aanmaken',
+    addExpense: 'Nieuwe uitgave ',
     tripdetails: ': Overzicht',
     tripsettings: 'Reis instellingen',
 
@@ -42,4 +42,14 @@ export default {
     //Close App
     closeapp: 'Applicatie sluiten',
     closeappmessage: 'Bent u zeker dat u de applicatie wil sluiten?',
+
+    //AddExpense
+    name: 'Naam van uitgave',
+    nameplaceholder: 'Kies een naam voor de uitgave',
+    amount: 'Bedrag van uitgave',
+    amountplaceholder: 'Kies een bedrag voor de uitgave',
+    categoryexpense: 'Categorie van uitgave: ',
+    savebutton: 'Voeg uitgave toe',
+    categoryplaceholder: 'Kies categorie'
+
 }

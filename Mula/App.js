@@ -138,7 +138,7 @@ export default App = StackNavigator({
     },
     AddExpense: {
       navigationOptions: ({ navigation }) => ({
-        title: I18n.t('addExpense') + navigation.state.params.trip.name,
+        title: I18n.t('addExpense'),
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
