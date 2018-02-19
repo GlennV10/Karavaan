@@ -9,34 +9,7 @@ import FontAwesome, {Icons} from 'react-native-fontawesome';
 import MultiSelect from 'react-native-multiple-select';
 import I18n from 'react-native-i18n';
 
-var items = [{
-    id: '92iijs7yta',
-    name: 'Appel',
-  }, {
-    id: 'a0s0a8ssbsd',
-    name: 'Ogun',
-  }, {
-    id: '16hbajsabsd',
-    name: 'Calabar',
-  }, {
-    id: 'nahs75a5sg',
-    name: 'Lagos',
-  }, {
-    id: '667atsas',
-    name: 'Maiduguri',
-  }, {
-    id: 'hsyasajs',
-    name: 'Anambra',
-  }, {
-    id: 'djsjudksjd',
-    name: 'Benue',
-  }, {
-    id: 'sdhyaysdj',
-    name: 'Kaduna',
-  }, {
-    id: 'suudydjsjd',
-    name: 'Abuja',
-  }];
+
 export default class AddTrip extends Component{
     
     constructor(props) {
@@ -50,10 +23,20 @@ export default class AddTrip extends Component{
             selectedCurrencies: [],
             baseCurrency: "EUR",
             rates: Object,
-            loadRates: true
+            loadRates: true,
+            title: "",
+            username: "",
+            loadJSON: true,
+            connectionMode: "",
+            offlineFriends: {
+                friends: []
+            },
+            loadTests: true,
+            onlineFriends: {},
+            isLoading: true,
+            tripList:[] 
 
-            
-        };
+         };
         
       }
   
@@ -62,15 +45,48 @@ export default class AddTrip extends Component{
         selectedEndDate = new Date().toDateString
          
         this.getExchangeRates();
+        this.mainFetch();
         
       }
-    onSelectedItemsChange = selectedItems => {
-        this.setState({ selectedItems });
-        console.log(selectedItems);
-        
-      };
+    
+
+    addTrip(){
+        if(this.state.connectionMode == "online"){
+            return fetch('url',{
+            method: 'POST',
+            header:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: this.state.username,
+                title: this.state.title,
+                selectedStartDate: this.state.selectedStartDate,
+                selectedEndDate: this.state.selectedEndDate,
+                users: this.state.selectedItems,
+                baseCurrency: this.state.baseCurrency,
+                currencies: this.state.currencies
+            })
+            })
+            .then((res) => res.json())
+        }
+        else{
+            AsyncStorage.getItem("trips").then(trips);
+            this.setState({tripList: trips});
+            tripList.push({
+                email: this.state.username,
+                title: this.state.title, 
+                selectedStartDate: this.state.selectedStartDate,
+                selectedEndDate: this.state.selectedEndDate,
+                users: this.state.selectedItems,
+                baseCurrency: this.state.baseCurrency,
+                currencies: this.state.currencies})
+        }
+      }
+
+      //////////////////////////////////////////////////////////
+      ////////////////////CURRENCY//////////////////////////////
+
     onSelectedCurrencyChange = selectedCurrencies => {
-        console.log("hallo");
         this.setState({ selectedCurrencies });
         console.log(selectedCurrencies);
         
@@ -79,8 +95,6 @@ export default class AddTrip extends Component{
         this.setState({baseCurrency});
         console.log(baseCurrency);
     }
-
-      //GET EXCHANGE RATES
     getExchangeRates(){
         if(this.state.loadRates){
             return fetch('https://api.fixer.io/latest')
@@ -135,7 +149,84 @@ export default class AddTrip extends Component{
             )
         });
     }
-      
+
+    //////////////////////////////////////////////////////////
+      ////////////////////FRIENDS//////////////////////////////
+
+    onSelectedItemsChange = selectedItems => {
+        this.setState({ selectedItems });
+        console.log(selectedItems);
+        
+      };
+
+
+    mainFetch(){
+        // Get gerbuikersnaam uit memory
+        AsyncStorage.getItem('userName').then((userName, error)=>{
+            if(error){
+                console.log(error);
+            }
+            // Set username state
+            this.setState({username: userName, loadJSON: false});
+            console.log("Setting username state #1");
+            // Get connection status
+            AsyncStorage.getItem('connectionStatus').then((connection, error)=>{
+                if(error){
+                    console.log(error);
+                }
+                this.setState({connectionMode: connection});
+                if(this.state.connectionMode == "online"){
+                    // =======================================================
+                    // Get online data
+                    // =======================================================
+                    console.log("Fetching online data #2");
+                    return fetch('http://193.191.177.169:8080/mula/Controller?action=getFriends',{
+                        method: 'POST',
+                        header:{
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: this.state.username
+                        })
+                    }).then((response) => response.json())
+                    .then((responseJson) => {
+                        
+                        console.log("Set loadingStates to false #3");
+                        this.setState({isLoading: false, loadJSON: false, onlineFriends: responseJson});
+                    }).then(()=>{
+                        // =======================================================
+                        // get offline data
+                        // =======================================================
+
+                        console.log("Getting offline friends data #4");
+                        AsyncStorage.getItem('friends').then((friendsJson, error) =>{
+                            if(error){
+                                console.log(error);
+                            }
+                            this.setState({offlineFriends: JSON.parse(friendsJson)});
+                            AsyncStorage.setItem('friends', JSON.parse(friendsJson));
+                            console.log("CHECK HERE");
+                            console.log(this.state.offlineFriends);
+                            console.log(this.state.offlineFriends.friends);
+                        });
+                    });
+                }else{
+                    // Get offline data en render
+                    console.log("Connection is offline");
+                    AsyncStorage.getItem('friends').then((friendsJson, error) =>{
+                        if(error){
+                            console.log(error);
+                        }
+                        // Send JSON to renderfriends
+                        console.log("Parse friends with offline data #8");
+                        this.setState({friends: JSON.parse(friendsJson), offlineFriends: JSON.parse(friendsJson), loadJSON: false, isLoading: false});
+                    });
+                }
+            })
+        })
+        
+    }  
     render(){
         const { selectedItems } = this.state;
         const {selectedCurrencies} = this.state;
@@ -154,7 +245,7 @@ export default class AddTrip extends Component{
             <ScrollView style={styles.container}>
             <View >
                 <TextInput
-                    placeholder="Subject (Taxi, Restaurant, ...)"
+                    placeholder="Trip name"
                     style={styles.inputField}
                     underlineColorAndroid="transparent"
                     placeholderTextColor="#818181"
@@ -162,7 +253,7 @@ export default class AddTrip extends Component{
                 <TextInput
                     placeholder= "Startdate"
                     value = {this.state.selectedStartDate}
-                    style={styles.inputField}
+                    style={styles.input}
                     underlineColorAndroid="transparent"
                     placeholderTextColor="#818181"
                     keyboardType= 'numeric'
@@ -179,13 +270,13 @@ export default class AddTrip extends Component{
                     placeholder="Select date..."
                     hideText={true}
                     // date={this.state.selectedDate}
-                    style={[styles.inputField, styles.datePickerStyle]}
+                    style={[styles.input, styles.datePickerStyle]}
                     onDateChange={(date) => this.setState({selectedStartDate: date})}
                     />
                 <TextInput
                     placeholder= "Enddate"
                     value = {this.state.selectedEndDate}
-                    style={styles.inputField}
+                    style={styles.input}
                     underlineColorAndroid="transparent"
                     placeholderTextColor="#818181"
                     keyboardType= 'numeric'
@@ -202,7 +293,7 @@ export default class AddTrip extends Component{
                     placeholder="Select date..."
                     hideText={true}
                     // date={this.state.selectedDate}
-                    style={[styles.inputField, styles.datePickerStyle]}
+                    style={[styles.input, styles.datePickerStyle]}
                     onDateChange={(date) => this.setState({selectedEndDate: date})}
                 />
 
@@ -215,24 +306,25 @@ export default class AddTrip extends Component{
                 <Text>Select your travel company</Text>
                 <MultiSelect
                 hideTags
-                items={items}
-                uniqueKey="id"
+                items={this.state.offlineFriends.friends}
+                uniqueKey="email"
                 ref={(component) => { this.multiSelect = component }}
                 selectedItems={selectedItems}
                 onSelectedItemsChange={this.onSelectedItemsChange}
                 selectText="Pick Items"
                 searchInputPlaceholderText="Search Items..."
                 onChangeInput={ (item)=> console.log(item)}
-                displayKey="name"
-                style={[styles.subItem]}
+                displayKey="userName"
+                style={backgroundColor = "#d4e8e5" }
                 tagTextColor='#303030'
                 selectedItemTextColor="#edc14f"
                 selectedItemIconColor="#edc14f"
                 itemTextColor="#303030"
-                displayKey="name"
                 searchInputStyle={{ color: '#303030' }}
                 submitButtonColor="#edc14f"
                 submitButtonText="Submit"
+            
+                
                 />
                 
             </View>
@@ -260,7 +352,9 @@ export default class AddTrip extends Component{
                     searchInputPlaceholderText="Search currency..."
                     onChangeInput={ (item)=> console.log(item)}
                     backgroundColor ="#d4e8e5"
-                    tagTextColor="#303030"
+                    displayKey="name"
+                    style={backgroundColor = "#d4e8e5" }
+                    tagTextColor='#303030'
                     selectedItemTextColor="#edc14f"
                     selectedItemIconColor="#edc14f"
                     itemTextColor="#303030"
@@ -271,7 +365,11 @@ export default class AddTrip extends Component{
                 />
                 
             </View>
-            
+            <Button style = {styles.savebutton}
+                        title="Save"
+                        onPress={()=> this.addTrip() & console.log("Waiting for backend...")}
+                        
+            />
             
             
             </ScrollView>
@@ -291,7 +389,17 @@ const styles = StyleSheet.create({
     },
     multi:{
         backgroundColor: '#d4e8e5',
+    },
+    savebutton:{
+        backgroundColor: '#d4e8e5',
+    },
+    input:{
+        
+        backgroundColor: '#d4e8e5',
+        flex: 0.5
+        
     }
+
     
     
 });
