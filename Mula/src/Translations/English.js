@@ -4,18 +4,23 @@ export default {
 
     //App.js -> stacknavigator titles
     settings: 'Settings',
-    addEvent: 'Add Trip',
+    addEvent: 'Add trip',
     detailExpense: 'Overview of expense',
-    registerpage: 'Register New Account',
-    addExpense: 'Add expense to',
+    registerpage: 'Register bew account',
+    addExpense: 'New expense ',
     tripdetails: ': Overview',
     tripsettings: 'Trip settings',
 
     //login
-    username: 'Username',
+    email: 'Email',
     password: 'Password',
     login: 'Log in',
     register: 'Register',
+
+    //Register
+    firstname: 'First Name',
+    lastname: 'Last Name',
+    validatepass: 'Retype password',
 
     //TripDashboard
     expenses: 'Expenses',

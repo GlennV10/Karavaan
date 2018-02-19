@@ -42,7 +42,7 @@ export default class TripDashboard extends React.Component {
           tripID: 2
         },
         {
-          id: 3,
+          id: 4,
           name: 'Restaurant C',
           date: '12 september 2018',
           paidBy: 'Jens',
@@ -74,7 +74,7 @@ export default class TripDashboard extends React.Component {
           tabBarInactiveTextColor={'#303030'}>
             <TripExpenses tabLabel={I18n.t('expenses')} navigator={nav} expenses={this.getTripExpenses()}/>
             <TripCategory tabLabel={I18n.t('category')} navigator={nav} expenses={this.getTripExpenses()}/>
-            <TripTotal tabLabel={I18n.t('total')} navigator={nav} expenses={this.getTripExpenses()}/>
+            <TripTotal tabLabel={I18n.t('balance')} navigator={nav} expenses={this.getTripExpenses()}/>
         </ScrollableTabView>
       );
     }
