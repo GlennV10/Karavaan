@@ -5,10 +5,10 @@ export default {
 
     //App.js -> stacknavigator titles
     settings: 'Instellingen',
-    addEvent: 'Reis Toevoegen',
+    addEvent: 'Reis toevoegen',
     detailExpense: 'Overzicht van uitgave',
-    registerpage: 'Nieuw Account Aanmaken',
-    addExpense: 'Uitgave toevoegen aan ',
+    registerpage: 'Nieuw account aanmaken',
+    addExpense: 'Nieuwe uitgave ',
     tripdetails: ': Overzicht',
     tripsettings: 'Reis instellingen',
 
