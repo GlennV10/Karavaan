@@ -6,7 +6,7 @@ export default {
     settings: 'Settings',
     addEvent: 'Add trip',
     detailExpense: 'Overview of expense',
-    registerpage: 'Register bew account',
+    registerpage: 'Register new account',
     addExpense: 'New expense ',
     tripdetails: ': Overview',
     tripsettings: 'Trip settings',

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import React, {Component} from 'react';
+import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert, ScrollView} from 'react-native';
+import {StackNavigator} from 'react-navigation';
 import I18n from 'react-native-i18n';
 
 export default class Settings extends Component {
@@ -79,9 +79,9 @@ export default class Settings extends Component {
         }
     }
 
-    render() {
-        return (
-            <View style={styles.container}>
+    render(){
+        return(
+            <ScrollView style={styles.container}>
                 <TouchableOpacity style={styles.profileButton}>
                     <Image source={require('../../images/placeholder_user.png')} style={styles.profileImage} />
                 </TouchableOpacity>
@@ -126,7 +126,7 @@ export default class Settings extends Component {
                 <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
                     <Text style={styles.logoutText}>{I18n.t('logout')}</Text>
                 </TouchableOpacity>
-            </View>
+            </ScrollView>
         )
     }
 
