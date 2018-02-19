@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker } from 'react-native';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
-import {StackNavigator} from 'react-navigation';
+import { StackNavigator } from 'react-navigation';
 
 export default class AddExpense extends Component {
     constructor(props) {
@@ -10,8 +10,8 @@ export default class AddExpense extends Component {
         this.state = {
             name: "",
             amount: "",
-            category: "Restaurant",
-            currency: ""
+            category: I18n.t('categoryplaceholder'),
+            currency: I18n.t('currencyplaceholder')
         }
     }
 
@@ -23,6 +23,14 @@ export default class AddExpense extends Component {
         return this.props.navigation.state.params.trip.currencies.map((currency, index) => {
             return (
                 <Picker.Item value={currency} label={currency} key={index} />
+            )
+        });
+    }
+
+    renderPickerCategories() {
+        return this.props.navigation.state.params.trip.categories.map((category, index) => {
+            return (
+                <Picker.Item value={category} label={category} key={index} />
             )
         });
     }
@@ -60,7 +68,7 @@ export default class AddExpense extends Component {
         //ADD EXPENSE TO DB CODE HERE
         //===========================
 
-        this.props.navigation.navigate('TripDashboard',  {trip: this.props.navigation.state.params.trip});
+        this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip });
 
     }
 
@@ -72,7 +80,7 @@ export default class AddExpense extends Component {
                     <TextInput
                         placeholder={I18n.t('nameplaceholder')}
                         style={styles.inputField}
-                        underlineColorAndroid="transparent"
+                        underlineColorAndroid="#ffd185"
                         placeholderTextColor="#818181"
                         onChangeText={(text) => this.setState({ name: text })} />
 
@@ -81,20 +89,21 @@ export default class AddExpense extends Component {
                         placeholder={I18n.t('amountplaceholder')}
                         style={styles.inputField}
                         keyboardType='numeric'
-                        underlineColorAndroid="transparent"
+                        underlineColorAndroid="#ffd185"
                         placeholderTextColor="#818181"
                         onChangeText={(text) => this.checkAmount(text)}
                         value={this.state.amount} />
 
                     <Text style={styles.label}>{I18n.t('categoryexpense')} {this.state.category}</Text>
                     <Picker style={styles.picker} selectedValue={this.state.category} onValueChange={(itemValue, itemIndex) => this.setCategory(itemValue)}>
-                        <Picker.Item label="Restaurant" value="Restaurant" />
-                        <Picker.Item label="Taxi" value="Taxi" />
-                        <Picker.Item label="Add Category" value="add" />
+                        <Picker.Item label={I18n.t('choosecategory')} value={I18n.t('categoryplaceholder')}/>
+                        {this.renderPickerCategories()}
+                        <Picker.Item label={I18n.t('addcategory')} value="add" />
                     </Picker>
 
                     <Text style={styles.label}>{I18n.t('currency')} {this.state.currency}</Text>
                     <Picker style={styles.picker} selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
+                        <Picker.Item label={I18n.t('choosecurrency')} value={I18n.t('currencyplaceholder')} />
                         {this.renderPickerCurrencies()}
                     </Picker>
 
@@ -134,7 +143,7 @@ const styles = StyleSheet.create({
     },
     label: {
         marginLeft: 10,
-        fontSize: 15
+        fontSize: 17
     },
     inputField: {
         marginLeft: 13,
@@ -142,6 +151,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 2,
         color: 'black',
+        borderBottomWidth: 0,
         borderRadius: 5
     },
     picker: {

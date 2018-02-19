@@ -31,8 +31,12 @@ export default {
     dutch: 'Dutch',
     english: 'English',
     save: 'Save settings',
-    lang: 'Language:',
-    currency: 'Currency:',
+    lang: 'Language: ',
+    currency: 'Currency: ',
+    chooselanguage: '--- Choose Language ---',
+    languageplaceholder: 'Choose language',
+    choosecurr: '--- Choose currency ---',
+    currplaceholder: 'Choose currency',
 
     //Logout
     logout: 'Log out',
@@ -49,5 +53,9 @@ export default {
     amountplaceholder: 'Choose the amount of the expense',
     categoryexpense: 'Expense category: ',
     savebutton: 'Add expense',
-    categoryplaceholder: 'Choose category'
+    categoryplaceholder: 'Choose category',
+    currencyplaceholder: 'Choose currency',
+    addcategory: 'Add category',
+    choosecurrency: '--- Choose Currency ---',
+    choosecategory: '--- Choose Category ---'
 }
