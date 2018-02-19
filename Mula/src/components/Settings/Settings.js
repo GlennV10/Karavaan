@@ -88,16 +88,16 @@ export default class Settings extends Component{
                 <TextInput
                     style={styles.inputField}
                     placeholder="Firstname Name"
-                    underlineColorAndroid="transparent"
-                    placeholderTextColor="#fff"
+                    underlineColorAndroid="#ffd185"
+                    placeholderTextColor="#111"
                     returnKeyType="next"
                     onChangeText={(nameText) => this.setState({name: nameText})}
                     onSubmitEditing={() => this.passwordInput.focus()}></TextInput>
                 <TextInput
                     style={styles.inputField}
                     placeholder="Username/Email"
-                    underlineColorAndroid="transparent"
-                    placeholderTextColor="#fff"
+                    underlineColorAndroid="#ffd185"
+                    placeholderTextColor="#111"
                     returnKeyType="next"
                     onChangeText={(usernameText) => this.setState({username: usernameText})}
                     onSubmitEditing={() => this.passwordInput.focus()}></TextInput>
@@ -105,8 +105,8 @@ export default class Settings extends Component{
                     style={styles.inputField}
                     secureTextEntry
                     placeholder="Password"
-                    underlineColorAndroid="transparent"
-                    placeholderTextColor="#fff"
+                    underlineColorAndroid="#ffd185"
+                    placeholderTextColor="#111"
                     returnKeyType="done"
                     onChangeText={(passwordText) => this.setState({password: passwordText})}
                     ref={(input) => this.passwordInput = input}></TextInput>
@@ -144,6 +144,9 @@ const styles = StyleSheet.create({
     },
     profileButton: {
         alignSelf: 'center'
+    },
+    inputField: {
+        padding: 10
     },
     logoutButton: {
         height: 40,

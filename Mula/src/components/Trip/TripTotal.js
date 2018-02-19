@@ -34,17 +34,7 @@ export default class TripTotal extends Component {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: '#d4e8e5'
-    },
-    addTripButton: {
-      backgroundColor: '#3B4859',
-      width: 50,
-      height: 50,
-      borderRadius: 50,
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'absolute',
-      bottom: 10,
-      right: 10,
-  }
+        backgroundColor: '#d4e8e5',
+        padding: 20
+    }
 });
