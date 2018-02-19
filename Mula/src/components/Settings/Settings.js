@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert} from 'react-native';
+import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert, ScrollView} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import I18n from 'react-native-i18n';
 
@@ -81,7 +81,7 @@ export default class Settings extends Component{
 
     render(){
         return(
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <TouchableOpacity style={styles.profileButton}>
                     <Image source={require('../../images/placeholder_user.png')} style={styles.profileImage} />
                 </TouchableOpacity>
@@ -120,11 +120,11 @@ export default class Settings extends Component{
                     <Picker.Item label="Euro" value="Euro" />
                     <Picker.Item label="American Dollar" value="USD" />
                 </Picker>
-                                
+
                 <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
                     <Text style={styles.logoutText}>{I18n.t('logout')}</Text>
                 </TouchableOpacity>
-            </View>
+            </ScrollView>
         )
     }
 
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     profileImage: {
         width: 80,
         height: 80,
-        borderRadius: 40  
+        borderRadius: 40
     },
     profileButton: {
         alignSelf: 'center'
