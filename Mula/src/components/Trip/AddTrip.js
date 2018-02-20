@@ -47,6 +47,7 @@ export default class AddTrip extends Component{
         this.getExchangeRates();
         this.mainFetch();
         
+        
       }
     
 
@@ -59,30 +60,44 @@ export default class AddTrip extends Component{
             },
             body: JSON.stringify({
                 email: this.state.username,
-                title: this.state.title,
-                selectedStartDate: this.state.selectedStartDate,
-                selectedEndDate: this.state.selectedEndDate,
-                users: this.state.selectedItems,
+                tripName: this.state.title, 
+                startDate: this.state.selectedStartDate,
+                endDate: this.state.selectedEndDate,
+                participants: this.state.selectedItems,
+                expenseList: [],
                 baseCurrency: this.state.baseCurrency,
                 currencies: this.state.currencies
             })
             })
             .then((res) => res.json())
+            .then((response) => {
+                console.log("added trip successfully: "+responseJson.addTrip_succes);
+                    if(responseJson.addTrip_succes === "true"){
+                        this.moveOn();
+                    }
+            })
         }
         else{
             AsyncStorage.getItem("trips").then(trips);
             this.setState({tripList: trips});
             tripList.push({
                 email: this.state.username,
-                title: this.state.title, 
-                selectedStartDate: this.state.selectedStartDate,
-                selectedEndDate: this.state.selectedEndDate,
-                users: this.state.selectedItems,
+                tripName: this.state.title, 
+                startDate: this.state.selectedStartDate,
+                endDate: this.state.selectedEndDate,
+                participants: this.state.selectedItems,
+                expenseList: [],
                 baseCurrency: this.state.baseCurrency,
                 currencies: this.state.currencies})
+                this.moveOn();
         }
       }
+      moveOn(){
 
+            console.log('moveOn');
+            this.props.navigation.navigate('DashboardTrips');
+        
+    }
       //////////////////////////////////////////////////////////
       ////////////////////CURRENCY//////////////////////////////
 
@@ -111,7 +126,6 @@ export default class AddTrip extends Component{
             .then((data) => this.parseRates(data));
         }
         console.log(url);
-        console.log(this.state.rates)
     }
     
     parseRates(data){
@@ -143,10 +157,14 @@ export default class AddTrip extends Component{
     }
     renderValutaWithoutRate(rate){
         return Object.keys(rate).map((val)=> {
+                
+                    return(
+                    <Picker.Item value={val} label={val} key={val}/>
+                    )
+                
+
             
-            return(
-                <Picker.Item value={val} label={val} key={val}/>
-            )
+            
         });
     }
 
@@ -161,7 +179,8 @@ export default class AddTrip extends Component{
 
 
     mainFetch(){
-        // Get gerbuikersnaam uit memory
+        // Get ... uit memory
+        
         AsyncStorage.getItem('userName').then((userName, error)=>{
             if(error){
                 console.log(error);
@@ -205,7 +224,7 @@ export default class AddTrip extends Component{
                                 console.log(error);
                             }
                             this.setState({offlineFriends: JSON.parse(friendsJson)});
-                            AsyncStorage.setItem('friends', JSON.parse(friendsJson));
+                           // AsyncStorage.setItem('friends', JSON.parse(friendsJson));
                             console.log("CHECK HERE");
                             console.log(this.state.offlineFriends);
                             console.log(this.state.offlineFriends.friends);
@@ -243,13 +262,15 @@ export default class AddTrip extends Component{
         
         return(
             <ScrollView style={styles.container}>
-            <View >
+            <View style= {styles.separator}>
                 <TextInput
                     placeholder="Trip name"
                     style={styles.inputField}
                     underlineColorAndroid="transparent"
                     placeholderTextColor="#818181"
                     onChangeText={(text)=>console.log(text) & this.setState({title: text})}/>
+            </View>
+            <View  style={{flex: 1, flexDirection: 'row'}}>
                 <TextInput
                     placeholder= "Startdate"
                     value = {this.state.selectedStartDate}
@@ -258,7 +279,6 @@ export default class AddTrip extends Component{
                     placeholderTextColor="#818181"
                     keyboardType= 'numeric'
                     onChangeText={(text)=>console.log(text) & this.setState({selectedStartDate: text})}
-                        
                 />
                 <DatePicker
                     mode='date'
@@ -273,6 +293,9 @@ export default class AddTrip extends Component{
                     style={[styles.input, styles.datePickerStyle]}
                     onDateChange={(date) => this.setState({selectedStartDate: date})}
                     />
+             </View >
+             
+             <View style={[{flex: 1, flexDirection: 'row'},styles.separator]}>
                 <TextInput
                     placeholder= "Enddate"
                     value = {this.state.selectedEndDate}
@@ -298,12 +321,10 @@ export default class AddTrip extends Component{
                 />
 
             </View>
-            <View>
-                <Text></Text>
-            </View>
             
-            <View style={[styles.subItem]}>
-                <Text>Select your travel company</Text>
+            
+            <View style={[styles.subItem, styles.separator]}>
+                <Text style ={styles.textfield}>Select your travel company</Text>
                 <MultiSelect
                 hideTags
                 items={this.state.offlineFriends.friends}
@@ -315,32 +336,32 @@ export default class AddTrip extends Component{
                 searchInputPlaceholderText="Search Items..."
                 onChangeInput={ (item)=> console.log(item)}
                 displayKey="userName"
-                style={backgroundColor = "#d4e8e5" }
-                tagTextColor='#303030'
+                style={backgroundColor = "#d4e8e5"}
                 selectedItemTextColor="#edc14f"
                 selectedItemIconColor="#edc14f"
                 itemTextColor="#303030"
                 searchInputStyle={{ color: '#303030' }}
                 submitButtonColor="#edc14f"
                 submitButtonText="Submit"
-            
+                color="#303030"
                 
                 />
                 
+                
             </View>
-            <View style={[styles.subItem]}>
-                        <Text>Select your base currency</Text>
-                        <Picker style={{flex:.50}}           
-                            onValueChange={currency => this.setState({baseCurrency: currency}) &this.setState({loadRates: true}) & this.getExchangeRatesWithBase(currency) & this.renderValutaToArray(this.state.rates)}
-                            selectedValue={this.state.baseCurrency}>
-                            <Picker.Item value= {this.state.baseCurrency} label={this.state.baseCurrency} key={this.state.baseCurrency}/>
-                            {this.renderValutaWithoutRate(this.state.rates)}
-                        </Picker>
+            <View style={[styles.subItem, styles.separator]}>
+                <Text style ={styles.textfield}>Select your base currency</Text>
+                <Picker style={{flex:.50}}           
+                    onValueChange={currency => this.setState({baseCurrency: currency}) &this.setState({loadRates: true}) & this.getExchangeRatesWithBase(currency) & this.renderValutaToArray(this.state.rates)}
+                    selectedValue={this.state.baseCurrency}>
+                    <Picker.Item value= {this.state.baseCurrency} label={this.state.baseCurrency} key={this.state.baseCurrency}/>
+                    {this.renderValutaWithoutRate(this.state.rates)}
+                </Picker>
             </View>
            
             
-            <View style = {styles.multi}>
-                <Text>Select the other currency you're going to use on the trip</Text>
+            <View style={[styles.subItem]}>
+                <Text style ={styles.textfield}>Select the other currency you're going to use on the trip</Text>
                 <MultiSelect
                     hideTags
                     items={this.state.currencies}
@@ -353,7 +374,6 @@ export default class AddTrip extends Component{
                     onChangeInput={ (item)=> console.log(item)}
                     backgroundColor ="#d4e8e5"
                     displayKey="name"
-                    style={backgroundColor = "#d4e8e5" }
                     tagTextColor='#303030'
                     selectedItemTextColor="#edc14f"
                     selectedItemIconColor="#edc14f"
@@ -362,10 +382,14 @@ export default class AddTrip extends Component{
                     searchInputStyle={{ color: '#303030' }}
                     submitButtonColor="#edc14f"
                     submitButtonText="Submit"
+                    color = "#edc14f"
+                    
+                    
+                    
                 />
                 
             </View>
-            <Button style = {styles.savebutton}
+            <Button color="#edc14f"
                         title="Save"
                         onPress={()=> this.addTrip() & console.log("Waiting for backend...")}
                         
@@ -389,16 +413,24 @@ const styles = StyleSheet.create({
     },
     multi:{
         backgroundColor: '#d4e8e5',
+        margin: 10
     },
-    savebutton:{
-        backgroundColor: '#d4e8e5',
+    parts:{
+      
     },
-    input:{
-        
+    input:{   
         backgroundColor: '#d4e8e5',
-        flex: 0.5
-        
-    }
+        flex: 0.2  
+    },
+    textfield:{
+        paddingBottom: 8
+       
+    },
+    separator: {
+        borderBottomColor: '#bbb',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+      }
+
 
     
     
