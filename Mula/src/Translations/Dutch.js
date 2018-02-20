@@ -32,8 +32,12 @@ export default {
     dutch: 'Nederlands',
     english: 'Engels',
     save: 'Instellingen opslaan',
-    lang: 'Taal:',
-    currency: 'Munteenheid:',
+    lang: 'Taal: ',
+    currency: 'Munteenheid: ',
+    chooselanguage: '--- Kies taal ---',
+    languageplaceholder: 'Kies taal',
+    choosecurr: '--- Kies munteenheid ---',
+    currplaceholder: 'Kies munteenheid',
 
     //Logout
     logout: 'Afmelden',
@@ -50,6 +54,10 @@ export default {
     amountplaceholder: 'Kies een bedrag voor de uitgave',
     categoryexpense: 'Categorie van uitgave: ',
     savebutton: 'Voeg uitgave toe',
-    categoryplaceholder: 'Kies categorie'
+    categoryplaceholder: 'Kies categorie',
+    currencyplaceholder: 'Kies currency',
+    addcategory: 'Voeg categorie toe',
+    choosecurrency: '--- Kies Munteenheid ---',
+    choosecategory: '--- Kies Categorie ---'
 
 }

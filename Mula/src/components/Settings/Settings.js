@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
-import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert} from 'react-native';
+import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert, ScrollView} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import I18n from 'react-native-i18n';
 
-export default class Settings extends Component{
+export default class Settings extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-          name: "",
-          username: "",
-          password: "",
-          language: "",
-          currency: ""
+            name: "",
+            username: "",
+            password: "",
+            language: I18n.t('languageplaceholder'),
+            currency: I18n.t('currplaceholder')
         }
     }
 
@@ -36,13 +36,13 @@ export default class Settings extends Component{
     }
 
     updateLanguage(newLanguage) {
-        this.setState({ language: newLanguage});
+        this.setState({ language: newLanguage });
         AsyncStorage.setItem('language', newLanguage).then(console.log("Language updated to " + newLanguage));
-        if(newLanguage == 'English') {
+        if (newLanguage == 'English') {
             I18n.locale = 'en';
             console.log('en');
         }
-        if(newLanguage == 'Dutch') {
+        if (newLanguage == 'Dutch') {
             I18n.locale = 'nl';
             console.log('nl');
         }
@@ -52,12 +52,12 @@ export default class Settings extends Component{
     }
 
     updateCurrency(newCurrency) {
-        this.setState({ currency: newCurrency});
+        this.setState({ currency: newCurrency });
         AsyncStorage.setItem('currency', newCurrency).then(console.log("Currency updated to " + newCurrency));
     }
 
     logout() {
-        try{
+        try {
             Alert.alert(
                 I18n.t('logout'),
                 I18n.t('logoutmessage'), [{
@@ -70,68 +70,70 @@ export default class Settings extends Component{
                         AsyncStorage.removeItem("userName").then(console.log("Logged out"));
                         this.props.navigation.navigate('Login');
                     }
-                }, ], {
+                },], {
                     cancelable: false
                 }
             )
-        } catch(error){
+        } catch (error) {
             console.log(error);
         }
     }
 
     render(){
         return(
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <TouchableOpacity style={styles.profileButton}>
                     <Image source={require('../../images/placeholder_user.png')} style={styles.profileImage} />
                 </TouchableOpacity>
                 <TextInput
                     style={styles.inputField}
                     placeholder="Firstname Name"
-                    underlineColorAndroid="transparent"
-                    placeholderTextColor="#fff"
+                    underlineColorAndroid="#ffd185"
+                    placeholderTextColor="#111"
                     returnKeyType="next"
-                    onChangeText={(nameText) => this.setState({name: nameText})}
+                    onChangeText={(nameText) => this.setState({ name: nameText })}
                     onSubmitEditing={() => this.passwordInput.focus()}></TextInput>
                 <TextInput
                     style={styles.inputField}
                     placeholder="Username/Email"
-                    underlineColorAndroid="transparent"
-                    placeholderTextColor="#fff"
+                    underlineColorAndroid="#ffd185"
+                    placeholderTextColor="#111"
                     returnKeyType="next"
-                    onChangeText={(usernameText) => this.setState({username: usernameText})}
+                    onChangeText={(usernameText) => this.setState({ username: usernameText })}
                     onSubmitEditing={() => this.passwordInput.focus()}></TextInput>
                 <TextInput
                     style={styles.inputField}
                     secureTextEntry
                     placeholder="Password"
-                    underlineColorAndroid="transparent"
-                    placeholderTextColor="#fff"
+                    underlineColorAndroid="#ffd185"
+                    placeholderTextColor="#111"
                     returnKeyType="done"
-                    onChangeText={(passwordText) => this.setState({password: passwordText})}
+                    onChangeText={(passwordText) => this.setState({ password: passwordText })}
                     ref={(input) => this.passwordInput = input}></TextInput>
-                <Text>{I18n.t('lang')}</Text>
+                <Text>{I18n.t('lang')} {this.state.language} </Text>
                 <Picker selectedValue={this.state.language} onValueChange={(itemValue, itemIndex) => this.updateLanguage(itemValue)}>
-                    <Picker.Item label="Dutch" value="Dutch" />
-                    <Picker.Item label="English" value="English" />
+                    <Picker.Item label={I18n.t('chooselanguage')} value={I18n.t('languageplaceholder')} />
+                    <Picker.Item label={I18n.t('dutch')} value="Dutch" />
+                    <Picker.Item label={I18n.t('english')} value="English" />
                 </Picker>
-                <Text>{I18n.t('currency')}</Text>
+                <Text>{I18n.t('currency')} {this.state.language}</Text>
                 <Picker selectedValue={this.state.currency} onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
+                    <Picker.Item label={I18n.t('choosecurr')} value={I18n.t('currplaceholder')} />
                     <Picker.Item label="Euro" value="Euro" />
                     <Picker.Item label="American Dollar" value="USD" />
                 </Picker>
-                                
+
                 <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
                     <Text style={styles.logoutText}>{I18n.t('logout')}</Text>
                 </TouchableOpacity>
-            </View>
+            </ScrollView>
         )
     }
 
 }
 
 const styles = StyleSheet.create({
-    container:{
+    container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
         alignSelf: 'stretch',
@@ -140,10 +142,13 @@ const styles = StyleSheet.create({
     profileImage: {
         width: 80,
         height: 80,
-        borderRadius: 40  
+        borderRadius: 40
     },
     profileButton: {
         alignSelf: 'center'
+    },
+    inputField: {
+        padding: 10
     },
     logoutButton: {
         height: 40,

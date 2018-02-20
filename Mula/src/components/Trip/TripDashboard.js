@@ -49,6 +49,17 @@ export default class TripDashboard extends React.Component {
           tripID: 1
         },
         {
+          id: 5,
+          name: 'Taxi 2',
+          date: '11 maart 2018',
+          paidBy: 'Glenn',
+          users: [{name:"",amount:0}],
+          category: 'Taxi',
+          currency: 'CAD',
+          amount: 55,
+          tripID: 1
+        },
+        {
           id: 3,
           name: 'Restaurant B',
           date: '21 april 2018',
