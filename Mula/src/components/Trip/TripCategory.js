@@ -18,19 +18,25 @@ export default class TripCategory extends Component {
 
     }
 
+    /*=================================
+      Check currencies,
+      convert to selected currency(?)
+    =================================*/
     calculateCategoryAmount() {
         let categories = [];
         for(expense of this.props.expenses) {
             if(categories.findIndex(i => i.category === expense.category) < 0) {
                 let category = {
                     category: expense.category,
-                    amount: expense.amount
+                    amount: expense.amount,
+                    expenses: 1
                 };
                 categories.push(category);
             } else {
                 for (let j = 0; j < categories.length; j++) {
                     if (categories[j].category === expense.category) {
                         categories[j].amount += expense.amount;
+                        categories[j].expenses++;
                     }
                 }
             }
@@ -73,6 +79,7 @@ export default class TripCategory extends Component {
                     <View style={styles.categoryDetails} key={index}>
                         <View style={{flex: .7}}>
                             <Text style={styles.categoryName}>{ category.category }</Text>
+                            <Text style={styles.categoryExpensesCount}>{ category.expenses } expense(s)</Text>
                         </View>
                         <View style={{flex: .3}}>
                             <Text style={styles.categoryAmount}>{ category.amount.toFixed(2) }</Text>
@@ -127,8 +134,8 @@ const styles = StyleSheet.create({
     color: "#a8a8a8"
   },
   categoryList: {
-    marginLeft: 10,
-    marginRight: 10
+    // marginLeft: 10,
+    // marginRight: 10
   },
   category: {
     flex: 1,
@@ -138,10 +145,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 10,
-    marginTop: 10,
-    borderRadius: 2,
+    marginTop: 8,
+    // borderRadius: 2,
     borderColor: '#d3d3d3',
-    borderWidth: .5
+    borderWidth: .3
   },
   categoryName: {
     fontSize: 16
@@ -152,17 +159,21 @@ const styles = StyleSheet.create({
       padding: 10,
       paddingLeft: 25,
       paddingRight: 25,
-      marginTop: 10,
+      // marginTop: 10,
       backgroundColor: '#f7f7f7',
       alignItems: 'center',
-      borderRadius: 2,
+      // borderRadius: 2,
       borderColor: '#d3d3d3',
-      borderWidth: .5
+      borderWidth: .3
   },
   categoryName: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      opacity: .7
+      fontSize: 16,
+      // fontWeight: 'bold',
+      // opacity: .7
+  },
+  categoryExpensesCount: {
+      fontSize: 12,
+      color: '#bababa'
   },
   categoryAmount: {
       textAlign: 'right'
