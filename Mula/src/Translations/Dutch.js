@@ -28,6 +28,15 @@ export default {
     category: 'Categoriën',
     balance: 'Balans',
 
+    //TripCategory
+    nocategoriesfound: 'GEEN CATEGORIËN GEVONDEN',
+
+    //TripExpenses
+    noexpensesfound: 'GEEN UITGAVEN GEVONDEN',
+
+    //DashboardTrips
+    notripsfound: 'GEEN REIZEN GEVONDEN',
+
     //Settings
     dutch: 'Nederlands',
     english: 'Engels',

@@ -70,7 +70,7 @@ export default class TripCategory extends Component {
         if(this.state.categories.length === 0){
             return(
                 <View style={styles.noCategoriesView}>
-                    <Text style={styles.noCategoriesText}>NO CATEGORIES FOUND</Text>
+                    <Text style={styles.noCategoriesText}>{I18n.t('nocategoriesfound')}</Text>
                 </View>
             )
         } else {
@@ -131,6 +131,8 @@ const styles = StyleSheet.create({
   noCategoriesText: {
     fontSize: 20,
     marginTop: 50,
+    marginLeft: 10,
+    marginRight: 10,
     color: "#a8a8a8"
   },
   categoryList: {

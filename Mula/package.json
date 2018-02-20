@@ -29,6 +29,7 @@
     "react-native-fontawesome": "^5.7.0",
     "react-native-hamburger": "0.0.2",
     "react-native-i18n": "^2.0.12",
+    "react-native-keyboard-aware-scroll-view": "^0.4.4",
     "react-native-multiple-select": "^0.4.1",
     "react-native-prompt": "^1.0.0",
     "react-native-scrollable-tab-view": "^0.8.0",
