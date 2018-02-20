@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker } from 'react-native';
+import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
-import { StackNavigator } from 'react-navigation';
 
 export default class AddExpense extends Component {
     constructor(props) {
@@ -11,9 +11,16 @@ export default class AddExpense extends Component {
             name: "",
             amount: "",
             category: I18n.t('categoryplaceholder'),
-            currency: I18n.t('currencyplaceholder')
+            currency: I18n.t('currencyplaceholder'),
+            // selectedDate: ""
         }
     }
+
+    /*
+      Expense date
+      minDate: trip.startDate,
+      maxDate: trip.endDate
+    */
 
     componentDidMount() {
         console.log(this.props.navigation.state.params.trip);
@@ -62,7 +69,7 @@ export default class AddExpense extends Component {
         this.setState({ amount: newText });
     }
 
-    SaveExpense() {
+    saveExpense() {
 
         //===========================
         //ADD EXPENSE TO DB CODE HERE
@@ -73,6 +80,8 @@ export default class AddExpense extends Component {
     }
 
     render() {
+        const {trip} = this.props.navigation.state.params;
+
         return (
             <View style={styles.container}>
                 <View style={styles.contentView}>
@@ -107,7 +116,7 @@ export default class AddExpense extends Component {
                         {this.renderPickerCurrencies()}
                     </Picker>
 
-                    <TouchableOpacity style={styles.saveButton} onPress={() => this.SaveExpense()}>
+                    <TouchableOpacity style={styles.saveButton} onPress={() => this.saveExpense()}>
                         <Text style={styles.saveText}>{I18n.t('savebutton')}</Text>
                     </TouchableOpacity>
 

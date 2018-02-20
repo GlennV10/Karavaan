@@ -149,18 +149,18 @@ const styles = StyleSheet.create({
         color: "#a8a8a8"
     },
     expenseList: {
-        marginLeft: 10,
-        marginRight: 10
+        // marginLeft: 10,
+        // marginRight: 10
     },
     expense: {
+        flex: 1,
+        flexDirection: 'row',
         backgroundColor: '#f7f7f7',
         padding: 10,
-        marginTop: 10,
-        borderRadius: 2,
+        // marginTop: 5,
+        // borderRadius: 2,
         borderColor: '#d3d3d3',
-        borderWidth: .5,
-        flex: 1,
-        flexDirection: 'row'
+        borderWidth: .3
     },
     expenseName: {
         fontSize: 16
