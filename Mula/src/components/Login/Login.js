@@ -44,7 +44,7 @@ export default class Login extends Component{
             });
             AsyncStorage.getItem('currency').then((currency) => {
                 if(currency!= null) AsyncStorage.setItem('currency', currency).then(console.log("Currency" + currency + " written to memory."));
-                else {AsyncStorage.setItem('currency', "Euro").then(console.log("Currency 'Euro' written to memory."));}
+                else {AsyncStorage.setItem('currency', "EUR").then(console.log("Currency 'Euro' written to memory."));}
             });
         } catch(error){
             console.log(error);
