@@ -210,9 +210,9 @@ export default class AddTrip extends Component{
                         })
                     }).then((response) => response.json())
                     .then((responseJson) => {
-                        
+                        //AsyncStorage.setItem('friends', JSON.parse(responseJson));
                         console.log("Set loadingStates to false #3");
-                        this.setState({isLoading: false, loadJSON: false, onlineFriends: responseJson});
+                        this.setState({isLoading: false, loadJSON: false, onlineFriends: responseJson, offlineFriends: responseJson});
                     }).then(()=>{
                         // =======================================================
                         // get offline data
@@ -224,7 +224,7 @@ export default class AddTrip extends Component{
                                 console.log(error);
                             }
                             this.setState({offlineFriends: JSON.parse(friendsJson)});
-                           // AsyncStorage.setItem('friends', JSON.parse(friendsJson));
+                            
                             console.log("CHECK HERE");
                             console.log(this.state.offlineFriends);
                             console.log(this.state.offlineFriends.friends);
