@@ -66,7 +66,7 @@ export default class TripExpenses extends Component {
       if(this.props.expenses.length === 0){
           return(
               <View style={styles.noExpensesView}>
-                  <Text style={styles.noExpensesText}>NO EXPENSES FOUND</Text>
+                  <Text style={styles.noExpensesText}>{I18n.t('noexpensesfound')}</Text>
               </View>
           )
       } else {
@@ -144,6 +144,8 @@ const styles = StyleSheet.create({
     noExpensesText: {
         fontSize: 20,
         marginTop: 50,
+        marginLeft: 10,
+        marginRight: 10,
         color: "#a8a8a8"
     },
     expenseList: {
