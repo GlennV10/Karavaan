@@ -66,7 +66,6 @@ export default class DashboardTrips extends Component {
             .then(req => JSON.parse(req))
             .then(trips => console.log('Trips loaded from AsyncStorage') & console.log(trips) & this.setState({ trips }))
             .catch(error => console.log('Error loading trips'));
-
     }
 
     _handleBackButton = () => {
