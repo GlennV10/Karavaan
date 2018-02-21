@@ -110,9 +110,15 @@ export default class TripDashboard extends React.Component {
             .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
             .catch(error => console.log('Error loading expenses'));
     }
-    
+
     getTripExpenses() {
-        return this.state.expenses;
+        let tripExpenses = [];
+        for(let expense of this.state.expenses) {
+            if (expense.tripID === this.props.navigation.state.params.trip.id) {
+                tripExpenses.push(expense);
+            }
+        }
+        return tripExpenses;
     }
 
     render() {
