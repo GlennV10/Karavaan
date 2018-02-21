@@ -199,7 +199,7 @@ export default class Login extends Component{
                     <TextInput
                         style={styles.inputField}
                         placeholder={I18n.t('email')}
-                        underlineColorAndroid="#ffd185"
+                        underlineColorAndroid="transparent"
                         placeholderTextColor="#fff"
                         returnKeyType="next"
                         keyboardType="email-address"
@@ -209,7 +209,7 @@ export default class Login extends Component{
                         style={styles.inputField}
                         secureTextEntry
                         placeholder={I18n.t('password')}
-                        underlineColorAndroid="#ffd185"
+                        underlineColorAndroid="transparent"
                         placeholderTextColor="#fff"
                         returnKeyType="go"
                         onChangeText={(passwordText) => this.setState({password: passwordText})}
@@ -256,6 +256,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 2,
         color: '#fff',
+        borderBottomWidth: 0,
         borderRadius: 5
     },inputField:{
         marginLeft: 30,

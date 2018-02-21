@@ -114,7 +114,7 @@ export default class DashboardTrips extends Component {
         if(this.state.trips.length === 0){
             return(
                 <View style={styles.noTripView}>
-                  <Text style={styles.noTripText}>NO TRIPS FOUND</Text>
+                  <Text style={styles.noTripText}>{I18n.t('notripsfound')}</Text>
                 </View>
             )
         } else {
@@ -190,6 +190,8 @@ const styles = StyleSheet.create({
     noTripText:{
         color: "#a8a8a8",
         marginTop: 50,
+        marginLeft: 10,
+        marginRight: 10,
         fontSize: 20
     },
     tripList: {

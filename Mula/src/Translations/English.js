@@ -27,6 +27,15 @@ export default {
     category: 'Categories',
     balance: 'Balance',
 
+    //TripCategory
+    nocategoriesfound: 'NO CATEGORIES FOUND',
+
+    //TripExpenses
+    noexpensesfound: 'NO EXPENSES FOUND',
+
+    //DashboardTrips
+    notripsfound: 'NO TRIPS FOUND',
+
     //Settings
     dutch: 'Dutch',
     english: 'English',
