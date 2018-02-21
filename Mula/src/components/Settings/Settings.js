@@ -17,15 +17,19 @@ export default class Settings extends Component {
         }
     }
 
-    componentDidMount() {
-        AsyncStorage.getItem('userName').then((username) => {
-            this.setState({ username });
-        });
+    componentWillMount() {
         AsyncStorage.getItem('language').then((language) => {
             this.setState({ language });
             if(language == "English") this.setState({ chosenLanguage: "English" });
             if(language == "Dutch") this.setState({ chosenLanguage: "Nederlands" });
         });
+    }
+
+    componentDidMount() {
+        AsyncStorage.getItem('userName').then((username) => {
+            this.setState({ username });
+        });
+        
         AsyncStorage.getItem('currency').then((currency) => {
             this.setState({ currency });
         });
@@ -67,7 +71,7 @@ export default class Settings extends Component {
                 </Picker>
             );
         }
-        else if (this.state.chosenLanguage == 'Nederlands') {
+        else  if (this.state.chosenLanguage == 'Nederlands'){
             return(
                 <Picker selectedValue={this.state.language} onValueChange={(itemValue) => this.updateLanguage(itemValue)}>
                     <Picker.Item label="Nederlands" value="Dutch" />
