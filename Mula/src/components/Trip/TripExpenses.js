@@ -17,6 +17,8 @@ export default class TripExpenses extends Component {
     }
 
     componentWillMount() {
+        console.log(this.props.expenses);
+        this.setState({expenses: this.props.expenses});
         // this.setState({ isLoading: true });
         // this.getAllExpensesByTrip();
     }
@@ -63,14 +65,14 @@ export default class TripExpenses extends Component {
     }
 
     renderExpenses() {
-      if(this.props.expenses.length === 0){
+      if(this.state.expenses.length === 0){
           return(
               <View style={styles.noExpensesView}>
                   <Text style={styles.noExpensesText}>{I18n.t('noexpensesfound')}</Text>
               </View>
           )
       } else {
-          return this.props.expenses.map((expense) => {
+          return this.state.expenses.map((expense) => {
               return(
                   <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={ expense.id }>
                       <View style={[styles.expenseContainer, styles.half]}>

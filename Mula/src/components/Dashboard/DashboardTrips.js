@@ -22,7 +22,7 @@ export default class DashboardTrips extends Component {
         //this.getAllTrips();
 
         /* ================================================================
-                  CODE TO STORE HARDECODED DATA INTO ASYNCSTORAGE
+                  CODE TO STORE HARDCODED DATA INTO ASYNCSTORAGE
                          CHANGE TO DATA FROM SERVER(??)
         ================================================================ */
 
@@ -68,7 +68,6 @@ export default class DashboardTrips extends Component {
             .then(req => JSON.parse(req))
             .then(trips => console.log('Trips loaded from AsyncStorage') & console.log(trips) & this.setState({ trips }))
             .catch(error => console.log('Error loading trips'));
-
     }
 
     _handleBackButton = () => {
