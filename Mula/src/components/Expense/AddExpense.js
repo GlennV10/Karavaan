@@ -103,6 +103,39 @@ export default class AddExpense extends Component {
                         onChangeText={(text) => this.checkAmount(text)}
                         value={this.state.amount} />
 
+
+                    <Text style={styles.label}>Date</Text>
+                    <DatePicker
+                        mode='date'
+                        format='YYYY-MM-DD'
+                        // minDate= {yearbefore}
+                        // maxDate={yearafter}
+                        date={this.state.selectedDate}
+                        showIcon={true}
+                        placeholder="Select date..."
+                        hideText={false}
+                        date={this.state.selectedDate}
+                        style={{width: 200}}
+                        customStyles={{
+                          dateIcon: {
+                            position: 'absolute',
+                            left: 13,
+                            marginLeft: 13
+                          },
+                          dateInput: {
+                            // width: 800,
+                            // flex: 1,
+                            marginLeft: 13,
+                            padding: 10,
+                            borderWidth: 0
+                          },
+                          placeholderText: {
+                            color: "#818181"
+                          }
+                        }}
+                        onDateChange={(date) => this.setState({selectedDate: date})}
+                        />
+
                     <Text style={styles.label}>{I18n.t('categoryexpense')} {this.state.category}</Text>
                     <Picker style={styles.picker} selectedValue={this.state.category} onValueChange={(itemValue, itemIndex) => this.setCategory(itemValue)}>
                         <Picker.Item label={I18n.t('choosecategory')} value={I18n.t('categoryplaceholder')}/>
