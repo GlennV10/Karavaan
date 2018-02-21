@@ -49,25 +49,25 @@ export default class DetailExpense extends Component{
     render(){
         if(this.state.isLoading) {
             return(
-              <View style={styles.containerIndicator}>
-                  <ActivityIndicator />
-                  <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
-                      <Text style={styles.addTripButtonText} >+</Text>
-                  </TouchableOpacity>
-              </View>
+                <View style={styles.containerIndicator}>
+                    <ActivityIndicator />
+                    <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+                        <Text style={styles.addTripButtonText} >+</Text>
+                    </TouchableOpacity>
+                </View>
             )
-          }
+        }
 
-          return(
-            <View style={styles.container}>
-                <ScrollView style={styles.expenseList}>
-                    { this.renderExpenses() }
-                </ScrollView>
-                <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
-                    <Text style={styles.addTripButtonText} >+</Text>
-                </TouchableOpacity>
-            </View>
-          )
+        return(
+          <View style={styles.container}>
+              <ScrollView style={styles.expenseList}>
+                  { this.renderExpenses() }
+              </ScrollView>
+              <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+                  <Text style={styles.addTripButtonText} >+</Text>
+              </TouchableOpacity>
+          </View>
+        )
     }
 }
 
