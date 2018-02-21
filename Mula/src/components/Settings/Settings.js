@@ -57,6 +57,26 @@ export default class Settings extends Component {
         });
     }
 
+    renderLanguagePicker = () => {
+        console.log("chosen: " + this.state.chosenLanguage)
+        if (this.state.chosenLanguage == 'English') {
+            return(
+                <Picker selectedValue={this.state.language} onValueChange={(itemValue) => this.updateLanguage(itemValue)}>
+                    <Picker.Item label="English" value="English" />
+                    <Picker.Item label="Dutch" value="Dutch" />
+                </Picker>
+            );
+        }
+        else if (this.state.chosenLanguage == 'Nederlands') {
+            return(
+                <Picker selectedValue={this.state.language} onValueChange={(itemValue) => this.updateLanguage(itemValue)}>
+                    <Picker.Item label="Nederlands" value="Dutch" />
+                    <Picker.Item label="Engels" value="English" />
+                </Picker>
+            );
+        }
+    }
+
     updateCurrency(newCurrency) {
         this.setState({ currency: newCurrency });
         AsyncStorage.setItem('currency', newCurrency).then(console.log("Currency updated to " + newCurrency));
@@ -117,12 +137,9 @@ export default class Settings extends Component {
                     onChangeText={(passwordText) => this.setState({ password: passwordText })}
                     ref={(input) => this.passwordInput = input}></TextInput>
                 <Text>{I18n.t('lang')} {this.state.chosenLanguage} </Text>
-                <Picker selectedValue={this.state.language} onValueChange={(itemValue, itemIndex) => this.updateLanguage(itemValue)}>
-                    <Picker.Item label="Dutch" value="Dutch" ref={(input) => this.dutchPicker = input}/>
-                    <Picker.Item label="English" value="English" ref={(input) => this.englishPicker = input}/>
-                </Picker>
+                {this.renderLanguagePicker()}
                 <Text>{I18n.t('currency')} {this.state.currency}</Text>
-                <Picker selectedValue={this.state.currency} onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
+                <Picker selectedValue={this.state.currency} onValueChange={(itemValue) => this.updateCurrency(itemValue)}>
                     <Picker.Item label="Euro" value="Euro" />
                     <Picker.Item label="American Dollar" value="USD" />
                 </Picker>
