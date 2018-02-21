@@ -10,7 +10,22 @@ export default class DashboardTrips extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        trips: [{
+        trips: [],
+        username: "",
+        isLoading: false,
+      }
+    }
+
+    componentWillMount() {
+        //this.setState({ isLoading: true });
+        //this.getAllTrips();
+
+        /* ================================================================
+                  CODE TO STORE HARDECODED DATA INTO ASYNCSTORAGE
+                         CHANGE TO DATA FROM SERVER(??)
+        ================================================================ */
+
+        let trips = [{
           id: 1,
           name: 'Amsterdam',
           startDate: '9 maart 2018',
@@ -33,21 +48,25 @@ export default class DashboardTrips extends Component {
           endDate:'23 september 2018',
           currencies: ['USD', 'EUR', 'THD'],
           categories: ['Restaurant', 'Taxi', 'Drank']
-        }],
-        username: "",
-        isLoading: false,
-      }
-    }
+        }]
 
-    componentWillMount() {
-        //this.setState({ isLoading: true });
-        //this.getAllTrips();
+        AsyncStorage.setItem('trips', JSON.stringify(trips))
+            .then(res => console.log('Trips stored in AsyncStorage'))
+            .catch(error => console.log('Error storing trips'));
+
+        /* ============================================================== */
     }
 
     componentDidMount() {
         this.setState({ isLoading: false });
         this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
         this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
+
+        AsyncStorage.getItem('trips')
+            .then(req => JSON.parse(req))
+            .then(trips => console.log('Trips loaded from AsyncStorage') & console.log(trips) & this.setState({ trips }))
+            .catch(error => console.log('Error loading trips'));
+
     }
 
     _handleBackButton = () => {
