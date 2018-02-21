@@ -11,8 +11,9 @@ export default class Settings extends Component {
             name: "",
             username: "",
             password: "",
-            language: I18n.t('languageplaceholder'),
-            currency: I18n.t('currplaceholder')
+            language: "",
+            chosenLanguage: "",
+            currency: ""
         }
     }
 
@@ -22,6 +23,8 @@ export default class Settings extends Component {
         });
         AsyncStorage.getItem('language').then((language) => {
             this.setState({ language });
+            if(language == "English") this.setState({ chosenLanguage: "English" });
+            if(language == "Dutch") this.setState({ chosenLanguage: "Nederlands" });
         });
         AsyncStorage.getItem('currency').then((currency) => {
             this.setState({ currency });
@@ -36,14 +39,17 @@ export default class Settings extends Component {
     }
 
     updateLanguage(newLanguage) {
+        console.log(newLanguage);
         this.setState({ language: newLanguage });
         AsyncStorage.setItem('language', newLanguage).then(console.log("Language updated to " + newLanguage));
         if (newLanguage == 'English') {
             I18n.locale = 'en';
+            this.setState({ chosenLanguage: "English" });
             console.log('en');
         }
-        if (newLanguage == 'Dutch') {
+        else if (newLanguage == 'Dutch') {
             I18n.locale = 'nl';
+            this.setState({ chosenLanguage: "Nederlands" });
             console.log('nl');
         }
         this.props.navigation.setParams({
@@ -110,15 +116,13 @@ export default class Settings extends Component {
                     returnKeyType="done"
                     onChangeText={(passwordText) => this.setState({ password: passwordText })}
                     ref={(input) => this.passwordInput = input}></TextInput>
-                <Text>{I18n.t('lang')} {this.state.language} </Text>
+                <Text>{I18n.t('lang')} {this.state.chosenLanguage} </Text>
                 <Picker selectedValue={this.state.language} onValueChange={(itemValue, itemIndex) => this.updateLanguage(itemValue)}>
-                    <Picker.Item label={I18n.t('chooselanguage')} value={I18n.t('languageplaceholder')} />
-                    <Picker.Item label={I18n.t('dutch')} value="Dutch" />
-                    <Picker.Item label={I18n.t('english')} value="English" />
+                    <Picker.Item label="Dutch" value="Dutch" ref={(input) => this.dutchPicker = input}/>
+                    <Picker.Item label="English" value="English" ref={(input) => this.englishPicker = input}/>
                 </Picker>
-                <Text>{I18n.t('currency')} {this.state.language}</Text>
+                <Text>{I18n.t('currency')} {this.state.currency}</Text>
                 <Picker selectedValue={this.state.currency} onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
-                    <Picker.Item label={I18n.t('choosecurr')} value={I18n.t('currplaceholder')} />
                     <Picker.Item label="Euro" value="Euro" />
                     <Picker.Item label="American Dollar" value="USD" />
                 </Picker>
