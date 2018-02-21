@@ -14,10 +14,6 @@ export default class TripCategory extends Component {
         this.calculateCategoryAmount();
     }
 
-    getAllExpensesByTrip() {
-
-    }
-
     /*=================================
       Check currencies,
       convert to selected currency(?)
@@ -44,27 +40,15 @@ export default class TripCategory extends Component {
         this.setState({ categories });
     }
 
-    // renderCategories() {
-    //   if(this.props.categories.length === 0){
-    //      return(
-    //          <View style={styles.noCategoriesView}>
-    //              <Text style={styles.noCategoriesText}>NO noCategoriesText FOUND</Text>
-    //          </View>
-    //      )
-    //    } else {
-    //     return this.props.categories.map((category) => {
-    //         return(
-    //             <TouchableOpacity style={styles.category} onPress={() => this.props.navigator.navigate('', { category })}>
-    //                 <View style={[styles.categoryContainer, styles.half]}>
-    //                     <View style={styles.splitRow}>
-    //                         <Text style={[styles.categoryName]}>{ category.name }</Text>
-    //                     </View>
-    //                 </View>
-    //             </TouchableOpacity>
-    //         )
-    //     });
-    //   }
-    // }
+    getCategoryExpenses(category) {
+        let expenses = [];
+        for(expense of this.props.expenses) {
+            if(expense.category === category) {
+                expenses.push(expense);
+            }
+        }
+        return expenses;
+    }
 
     renderCategories() {
         if(this.state.categories.length === 0){
@@ -76,31 +60,31 @@ export default class TripCategory extends Component {
         } else {
             return this.state.categories.map((category, index) => {
                 return(
-                    <View style={styles.categoryDetails} key={index}>
-                        <View style={{flex: .7}}>
-                            <Text style={styles.categoryName}>{ category.category }</Text>
-                            <Text style={styles.categoryExpensesCount}>{ category.expenses } expense(s)</Text>
-                        </View>
-                        <View style={{flex: .3}}>
-                            <Text style={styles.categoryAmount}>{ category.amount.toFixed(2) }</Text>
-                        </View>
-                    </View>
+                    <TouchableOpacity style={styles.categoryDetails} onPress={() => this.props.navigator.navigate('TripCategoryExpenses', { category: category.category, expenses: this.getCategoryExpenses(category.category) })} key={ index }>
+                          <View style={{flex: .7}}>
+                              <Text style={styles.categoryName}>{ category.category }</Text>
+                              <Text style={styles.categoryExpensesCount}>{ category.expenses } expense(s)</Text>
+                          </View>
+                          <View style={{flex: .3}}>
+                              <Text style={styles.categoryAmount}>{ category.amount.toFixed(2) }</Text>
+                          </View>
+                    </TouchableOpacity>
                 )
             });
         }
     }
 
     render() {
-      return (
-        <View style={styles.container}>
-            <ScrollView style={styles.categoryList}>
-                { this.renderCategories() }
-            </ScrollView>
-            <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
-                <Text style={styles.addTripButtonText} >+</Text>
-            </TouchableOpacity>
-        </View>
-      )
+        return (
+            <View style={styles.container}>
+                <ScrollView style={styles.categoryList}>
+                    { this.renderCategories() }
+                </ScrollView>
+                <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+                    <Text style={styles.addTripButtonText} >+</Text>
+                </TouchableOpacity>
+            </View>
+        )
     }
 }
 
@@ -143,11 +127,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#f7f7f7',
-    paddingBottom: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 10,
-    marginTop: 8,
+    padding: 10,
+    // marginTop: 5,
     // borderRadius: 2,
     borderColor: '#d3d3d3',
     borderWidth: .3

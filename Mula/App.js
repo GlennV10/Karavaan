@@ -9,7 +9,8 @@ import Login from './src/components/Login/Login';
 import Register from './src/components/Register/Register';
 import Settings from './src/components/Settings/Settings';
 import DashboardTrips from './src/components/Dashboard/DashboardTrips';
-import TripDashboard from './src/components/Trip/TripDashboard'
+import TripDashboard from './src/components/Trip/TripDashboard';
+import TripCategoryExpenses from './src/components/Trip/TripCategoryExpenses';
 import AddTrip from './src/components/Trip/AddTrip';
 import AddExpense from './src/components/Expense/AddExpense';
 import DetailExpense from './src/components/Expense/DetailExpense';
@@ -118,6 +119,21 @@ export default App = StackNavigator({
       }),
       screen: TripDashboard
     },
+    TripCategoryExpenses: {
+      navigationOptions: ({ navigation }) => ({
+        title: navigation.state.params.category,
+        headerStyle:{
+          backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle:{
+            color: '#FFF'
+        },
+        headerBackTitleStyle:{
+            color: "#FFF"
+        },
+      }),
+      screen: TripCategoryExpenses
+    },
     AddTrip: {
       navigationOptions: ({ navigation }) => ({
         title: I18n.t('addEvent'),
@@ -163,7 +179,7 @@ export default App = StackNavigator({
         headerBackTitleStyle: {
            color: "#FFF"
         },
-        headerLeft: 
+        headerLeft:
         <TouchableOpacity onPress={()=>{ navigation.navigate('DashboardTrips') }}>
           <Image source={require('./src/images/chevron_left.png')} style={{width: 35, height: 35, marginLeft: 5}}/>
         </TouchableOpacity>,
