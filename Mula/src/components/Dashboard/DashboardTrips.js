@@ -21,7 +21,7 @@ export default class DashboardTrips extends Component {
         //this.getAllTrips();
 
         /* ================================================================
-                  CODE TO STORE HARDECODED DATA INTO ASYNCSTORAGE
+                  CODE TO STORE HARDCODED DATA INTO ASYNCSTORAGE
                          CHANGE TO DATA FROM SERVER(??)
         ================================================================ */
 
