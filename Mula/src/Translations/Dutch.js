@@ -64,9 +64,16 @@ export default {
     categoryexpense: 'Categorie van uitgave: ',
     savebutton: 'Voeg uitgave toe',
     categoryplaceholder: 'Kies categorie',
-    currencyplaceholder: 'Kies currency',
+    currencyplaceholder: 'Kies munteenheid',
     addcategory: 'Voeg categorie toe',
     choosecurrency: '--- Kies Munteenheid ---',
-    choosecategory: '--- Kies Categorie ---'
+    choosecategory: '--- Kies Categorie ---',
+    split: 'Verdeling:',
+    choosesplit: '--- Kies een optie ---',
+    splitplaceholder: 'Kies optie',
+    ownshare: 'Betaal je eigen deel',
+    bill: 'Betaal door rekening',
+    evensplit: 'Gelijk verdeeld',
+    langtest: 'nl'
 
 }

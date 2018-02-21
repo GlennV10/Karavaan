@@ -25,6 +25,7 @@
     "react-native-autocomplete-input": "^3.4.0",
     "react-native-checkbox-heaven": "^0.1.4",
     "react-native-datepicker": "^1.6.0",
+    "react-native-device-info": "^0.15.3",
     "react-native-elements": "^0.18.2",
     "react-native-fontawesome": "^5.7.0",
     "react-native-hamburger": "0.0.2",

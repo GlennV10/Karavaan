@@ -66,5 +66,12 @@ export default {
     currencyplaceholder: 'Choose currency',
     addcategory: 'Add category',
     choosecurrency: '--- Choose Currency ---',
-    choosecategory: '--- Choose Category ---'
+    choosecategory: '--- Choose Category ---',
+    split: 'Splitting:',
+    choosesplit: '--- Choose option ---',
+    splitplaceholder: 'Choose option',
+    ownshare: 'Pay your own share',
+    bill: 'Pay by bill',
+    evensplit: 'Split equally',
+    langtest: 'en'
 }

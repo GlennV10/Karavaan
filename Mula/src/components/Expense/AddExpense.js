@@ -12,6 +12,8 @@ export default class AddExpense extends Component {
             amount: "",
             category: I18n.t('categoryplaceholder'),
             currency: I18n.t('currencyplaceholder'),
+            wayofsplit: I18n.t('splitplaceholder'),
+            language: I18n.t('langtest'),
             // selectedDate: ""
         }
     }
@@ -50,6 +52,26 @@ export default class AddExpense extends Component {
         }
     }
 
+    setSplitNl(item) {
+        if (item == "Betaal door rekening") {
+            this.setState({ wayofsplit: 'Betaal door rekening' });
+        } else if (item == "Betaal je eigen deel") {
+            this.setState({ wayofsplit: 'Betaal je eigen deel' });
+        } else if (item == "Gelijk verdeeld") {
+            this.setState({ wayofsplit: 'Gelijk verdeeld' });
+        }
+    }
+
+    setSplitEn(item) {
+        if (item == "Pay by bill") {
+            this.setState({ wayofsplit: 'Pay by bill' });
+        } else if (item == "Pay your own share") {
+            this.setState({ wayofsplit: 'Pay your own share' });
+        } else if (item == "Split equally") {
+            this.setState({ wayofsplit: 'Split equally' });
+        }
+    }
+
     checkAmount(text) {
         var newText = '';
         let numbers = '0123456789';
@@ -79,8 +101,32 @@ export default class AddExpense extends Component {
 
     }
 
+    renderSplitPicker = () => {
+        console.log("chosen: " + this.state.wayofsplit)
+        if (this.state.language == 'en') {
+            return (
+                <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplitEn(itemValue)}>
+                    <Picker.Item label='--- Choose option ---' value='Choose option' />
+                    <Picker.Item value='Pay by bill' label='Pay by bill' />
+                    <Picker.Item value='Pay your own share' label='Pay your own share' />
+                    <Picker.Item value='Split equally' label='Split equally' />
+                </Picker>
+            );
+        }
+        else if (this.state.language == 'nl') {
+            return (
+                <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplitNl(itemValue)}>
+                    <Picker.Item label='--- Kies een optie ---' value='Kies optie' />
+                    <Picker.Item value='Betaal door rekening' label='Betaal door rekening' />
+                    <Picker.Item value='Betaal je eigen deel' label='Betaal je eigen deel' />
+                    <Picker.Item value='Gelijk verdeeld' label='Gelijk verdeeld' />
+                </Picker>
+            );
+        }
+    }
+
     render() {
-        const {trip} = this.props.navigation.state.params;
+        const { trip } = this.props.navigation.state.params;
 
         return (
             <View style={styles.container}>
@@ -115,30 +161,30 @@ export default class AddExpense extends Component {
                         placeholder="Select date..."
                         hideText={false}
                         date={this.state.selectedDate}
-                        style={{width: 200}}
+                        style={{ width: 200 }}
                         customStyles={{
-                          dateIcon: {
-                            position: 'absolute',
-                            left: 13,
-                            marginLeft: 13
-                          },
-                          dateInput: {
-                            // width: 800,
-                            // flex: 1,
-                            marginLeft: 13,
-                            padding: 10,
-                            borderWidth: 0
-                          },
-                          placeholderText: {
-                            color: "#818181"
-                          }
+                            dateIcon: {
+                                position: 'absolute',
+                                left: 13,
+                                marginLeft: 13
+                            },
+                            dateInput: {
+                                // width: 800,
+                                // flex: 1,
+                                marginLeft: 13,
+                                padding: 10,
+                                borderWidth: 0
+                            },
+                            placeholderText: {
+                                color: "#818181"
+                            }
                         }}
-                        onDateChange={(date) => this.setState({selectedDate: date})}
-                        />
+                        onDateChange={(date) => this.setState({ selectedDate: date })}
+                    />
 
                     <Text style={styles.label}>{I18n.t('categoryexpense')} {this.state.category}</Text>
                     <Picker style={styles.picker} selectedValue={this.state.category} onValueChange={(itemValue, itemIndex) => this.setCategory(itemValue)}>
-                        <Picker.Item label={I18n.t('choosecategory')} value={I18n.t('categoryplaceholder')}/>
+                        <Picker.Item label={I18n.t('choosecategory')} value={I18n.t('categoryplaceholder')} />
                         {this.renderPickerCategories()}
                         <Picker.Item label={I18n.t('addcategory')} value="add" />
                     </Picker>
@@ -148,6 +194,12 @@ export default class AddExpense extends Component {
                         <Picker.Item label={I18n.t('choosecurrency')} value={I18n.t('currencyplaceholder')} />
                         {this.renderPickerCurrencies()}
                     </Picker>
+
+                    <Text style={styles.label}>{I18n.t('split')} {this.state.wayofsplit}</Text>
+                    {/* <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplit({ itemValue })}> */}
+                        
+                        {this.renderSplitPicker()}
+                    {/* </Picker> */}
 
                     <TouchableOpacity style={styles.saveButton} onPress={() => this.saveExpense()}>
                         <Text style={styles.saveText}>{I18n.t('savebutton')}</Text>

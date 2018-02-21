@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Modal, Switch, ActivityIndicator, BackHandler, Picker, AsyncStorage, Alert} from 'react-native';
 import I18n from 'react-native-i18n';
+
 // ############ Colors ############
 const red = '#C42525';
 const green = '#4F9628';
@@ -58,6 +59,7 @@ export default class DashboardTrips extends Component {
     }
 
     componentDidMount() {
+      
         this.setState({ isLoading: false });
         this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
         this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
