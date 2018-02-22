@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker } from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
@@ -10,19 +10,13 @@ export default class AddExpense extends Component {
         this.state = {
             name: "",
             amount: "",
+            selectedDate: "",
             category: I18n.t('categoryplaceholder'),
             currency: I18n.t('currencyplaceholder'),
             wayofsplit: I18n.t('splitplaceholder'),
-            language: I18n.t('langtest'),
-            // selectedDate: ""
+            language: I18n.t('langtest')
         }
     }
-
-    /*
-      Expense date
-      minDate: trip.startDate,
-      maxDate: trip.endDate
-    */
 
     componentDidMount() {
         console.log(this.props.navigation.state.params.trip);
@@ -92,6 +86,43 @@ export default class AddExpense extends Component {
     }
 
     saveExpense() {
+        let expense = {
+          name: this.state.name,
+          date: this.state.selectedDate,
+          wayofsplit: this.state.wayofsplit,
+          paidBy: '...', //MultiSelect in UI? Can be multiple people
+          users: [{name:"",amount:0}], //Users stored in this.props.navigation.state.params.trip.users, amounts based on wayofsplit
+          category: this.state.category,
+          currency: this.state.currency,
+          amount: parseInt(this.state.amount),
+          tripID: this.props.navigation.state.params.trip.id
+        }
+
+        /* ==============================
+          Add new expense to AsyncStorage
+        ============================== */
+
+        AsyncStorage.getItem('expenses')
+              .then(req => JSON.parse(req))
+              .then((expenses) => {
+                  expenses.push(expense);
+                  AsyncStorage.setItem('expenses', JSON.stringify(expenses))
+                        .then(res => console.log('Expenses stored in AsyncStorage'))
+                        .catch(error => console.log('Error storing expenses'));
+              })
+              .catch(error => console.log('Error loading expenses'));
+
+        // AsyncStorage.getItem('expenses', (err, expenses) => {
+        //     if (expenses !== null) {
+        //       console.log('Data Found', expenses);
+        //       let expenses = JSON.parse(expenses);
+        //       console.log(expenses);
+        //       // AsyncStorage.setItem('savedIds', JSON.stringify(newIds));
+        //     } else {
+        //       console.log('Data Not Found');
+        //       // AsyncStorage.setItem('savedIds', JSON.stringify(id));
+        //     }
+        // });
 
         //===========================
         //ADD EXPENSE TO DB CODE HERE
@@ -153,7 +184,7 @@ export default class AddExpense extends Component {
                     <Text style={styles.label}>Date</Text>
                     <DatePicker
                         mode='date'
-                        format='YYYY-MM-DD'
+                        format='DD/MM/YYYY'
                         // minDate= {yearbefore}
                         // maxDate={yearafter}
                         date={this.state.selectedDate}
@@ -169,14 +200,15 @@ export default class AddExpense extends Component {
                                 marginLeft: 13
                             },
                             dateInput: {
-                                // width: 800,
-                                // flex: 1,
                                 marginLeft: 13,
                                 padding: 10,
                                 borderWidth: 0
                             },
                             placeholderText: {
                                 color: "#818181"
+                            },
+                            dateText: {
+                                marginLeft: 10
                             }
                         }}
                         onDateChange={(date) => this.setState({ selectedDate: date })}
@@ -197,7 +229,7 @@ export default class AddExpense extends Component {
 
                     <Text style={styles.label}>{I18n.t('split')} {this.state.wayofsplit}</Text>
                     {/* <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplit({ itemValue })}> */}
-                        
+
                         {this.renderSplitPicker()}
                     {/* </Picker> */}
 

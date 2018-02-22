@@ -17,98 +17,98 @@ export default class TripDashboard extends React.Component {
     }
 
     componentWillMount() {
-      let expenses = [{
-        id: 1,
-        name: 'Restaurant A',
-        date: '9 maart 2018',
-        paidBy: 'Glenn',
-        users: [{
-            name: "Annelore",
-            amount: 10
-        },
-        {
-            name: "Deni",
-            amount: 10
-        },
-        {
-            name: "Jens",
-            amount: 10
-        },
-        {
-            name: "Glenn",
-            amount: 20
-        }],
-        category: 'Food',
-        currency: 'USD',
-        amount: 50,
-        tripID: 1
-      },
-      {
-        id: 2,
-        name: 'Taxi',
-        date: '10 maart 2018',
-        paidBy: 'Annelore',
-        users: [{name:"",amount:0}],
-        category: 'Taxi',
-        currency: 'CAD',
-        amount: 75,
-        tripID: 1
-      },
-      {
-        id: 6,
-        name: 'Drinks',
-        date: '10 maart 2018',
-        paidBy: 'Annelore',
-        users: [{name:"",amount:0}],
-        category: 'Drinks',
-        currency: 'CAD',
-        amount: 10,
-        tripID: 1
-      },
-      {
-        id: 5,
-        name: 'Taxi 2',
-        date: '11 maart 2018',
-        paidBy: 'Glenn',
-        users: [{name:"",amount:0}],
-        category: 'Taxi',
-        currency: 'CAD',
-        amount: 55,
-        tripID: 1
-      },
-      {
-        id: 3,
-        name: 'Restaurant B',
-        date: '21 april 2018',
-        paidBy: 'Deni',
-        users: [{name:"",amount:0}],
-        category: 'Food',
-        currency: 'AUD',
-        amount: 88,
-        tripID: 2
-      },
-      {
-        id: 4,
-        name: 'Restaurant C',
-        date: '12 september 2018',
-        paidBy: 'Jens',
-        users: [{name:"",amount:0}],
-        category: 'Food',
-        currency: 'EUR',
-        amount: 10,
-        tripID: 3
-      }]
+        let expenses = [{
+            id: 1,
+            name: 'Restaurant A',
+            date: '9 maart 2018',
+            paidBy: 'Glenn',
+            users: [{
+                name: "Annelore",
+                amount: 10
+            },
+            {
+                name: "Deni",
+                amount: 10
+            },
+            {
+                name: "Jens",
+                amount: 10
+            },
+            {
+                name: "Glenn",
+                amount: 20
+            }],
+            category: 'Food',
+            currency: 'USD',
+            amount: 50,
+            tripID: 1
+          },
+          {
+            id: 2,
+            name: 'Taxi',
+            date: '10 maart 2018',
+            paidBy: 'Annelore',
+            users: [{name:"",amount:0}],
+            category: 'Taxi',
+            currency: 'CAD',
+            amount: 75,
+            tripID: 1
+          },
+          {
+            id: 6,
+            name: 'Drinks',
+            date: '10 maart 2018',
+            paidBy: 'Annelore',
+            users: [{name:"",amount:0}],
+            category: 'Drinks',
+            currency: 'CAD',
+            amount: 10,
+            tripID: 1
+          },
+          {
+            id: 5,
+            name: 'Taxi 2',
+            date: '11 maart 2018',
+            paidBy: 'Glenn',
+            users: [{name:"",amount:0}],
+            category: 'Taxi',
+            currency: 'CAD',
+            amount: 55,
+            tripID: 1
+          },
+          {
+            id: 3,
+            name: 'Restaurant B',
+            date: '21 april 2018',
+            paidBy: 'Deni',
+            users: [{name:"",amount:0}],
+            category: 'Food',
+            currency: 'AUD',
+            amount: 88,
+            tripID: 2
+          },
+          {
+            id: 4,
+            name: 'Restaurant C',
+            date: '12 september 2018',
+            paidBy: 'Jens',
+            users: [{name:"",amount:0}],
+            category: 'Food',
+            currency: 'EUR',
+            amount: 10,
+            tripID: 3
+          }]
 
-      AsyncStorage.setItem('expenses', JSON.stringify(expenses))
-            .then(res => console.log('Expenses stored in AsyncStorage'))
-            .catch(error => console.log('Error storing expenses'));
+        AsyncStorage.setItem('expenses', JSON.stringify(expenses))
+              .then(res => console.log('Expenses stored in AsyncStorage'))
+              .catch(error => console.log('Error storing expenses'));
     }
 
     componentDidMount() {
-      AsyncStorage.getItem('expenses')
-            .then(req => JSON.parse(req))
-            .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
-            .catch(error => console.log('Error loading expenses'));
+        AsyncStorage.getItem('expenses')
+              .then(req => JSON.parse(req))
+              .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
+              .catch(error => console.log('Error loading expenses'));
     }
 
     getTripExpenses() {
