@@ -63,7 +63,7 @@ export default class TripCategory extends Component {
                     <TouchableOpacity style={styles.categoryDetails} onPress={() => this.props.navigator.navigate('TripCategoryExpenses', { category: category.category, expenses: this.getCategoryExpenses(category.category) })} key={ index }>
                           <View style={{flex: .7}}>
                               <Text style={styles.categoryName}>{ category.category }</Text>
-                              <Text style={styles.categoryExpensesCount}>{ category.expenses } expense(s)</Text>
+                              <Text style={styles.categoryExpensesCount}>{ category.expenses } {I18n.t('exp')}</Text>
                           </View>
                           <View style={{flex: .3}}>
                               <Text style={styles.categoryAmount}>{ category.amount.toFixed(2) }</Text>

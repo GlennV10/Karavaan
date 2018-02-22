@@ -27,9 +27,11 @@ export default {
     expenses: 'Uitgaven',
     category: 'Categoriën',
     balance: 'Balans',
+    
 
     //TripCategory
     nocategoriesfound: 'GEEN CATEGORIËN GEVONDEN',
+    exp: 'uitgave(n)',
 
     //TripExpenses
     noexpensesfound: 'GEEN UITGAVEN GEVONDEN',
@@ -47,6 +49,17 @@ export default {
     languageplaceholder: 'Kies taal',
     choosecurr: '--- Kies munteenheid ---',
     currplaceholder: 'Kies munteenheid',
+    add: 'Toevoegen als vriend',
+    friendemail: 'MijnNieuweVriend@mula.be',
+    currentpass: 'Huidig wachtwoord',
+    newpass: 'Nieuw wachtwoord',
+    repeatpass: 'Herhaal nieuw wachtwoord',
+    changepass: 'Wijzig wachtwoord',
+    currentemail: 'Huidig emailadres',
+    newemail: 'Niew emailadres',
+    changeemail: 'Wijzig emailadres',
+    notexist: 'Dit account bestaat niet',
+    nomatch: 'Wachtwoorden komen niet overeen',
 
     //Logout
     logout: 'Afmelden',
@@ -71,9 +84,10 @@ export default {
     split: 'Verdeling:',
     choosesplit: '--- Kies een optie ---',
     splitplaceholder: 'Kies optie',
-    ownshare: 'Betaal je eigen deel',
+    ownshare: 'Betaal eigen deel',
     bill: 'Betaal door rekening',
     evensplit: 'Gelijk verdeeld',
-    langtest: 'nl'
+    langtest: 'nl',
+    dateplaceholder: 'Kies datum...',
 
 }

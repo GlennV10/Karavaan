@@ -55,8 +55,8 @@ export default class AddExpense extends Component {
     setSplitNl(item) {
         if (item == "Betaal door rekening") {
             this.setState({ wayofsplit: 'Betaal door rekening' });
-        } else if (item == "Betaal je eigen deel") {
-            this.setState({ wayofsplit: 'Betaal je eigen deel' });
+        } else if (item == "Betaal eigen deel") {
+            this.setState({ wayofsplit: 'Betaal eigen deel' });
         } else if (item == "Gelijk verdeeld") {
             this.setState({ wayofsplit: 'Gelijk verdeeld' });
         }
@@ -65,8 +65,8 @@ export default class AddExpense extends Component {
     setSplitEn(item) {
         if (item == "Pay by bill") {
             this.setState({ wayofsplit: 'Pay by bill' });
-        } else if (item == "Pay your own share") {
-            this.setState({ wayofsplit: 'Pay your own share' });
+        } else if (item == "Pay own share") {
+            this.setState({ wayofsplit: 'Pay own share' });
         } else if (item == "Split equally") {
             this.setState({ wayofsplit: 'Split equally' });
         }
@@ -108,7 +108,7 @@ export default class AddExpense extends Component {
                 <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplitEn(itemValue)}>
                     <Picker.Item label='--- Choose option ---' value='Choose option' />
                     <Picker.Item value='Pay by bill' label='Pay by bill' />
-                    <Picker.Item value='Pay your own share' label='Pay your own share' />
+                    <Picker.Item value='Pay own share' label='Pay own share' />
                     <Picker.Item value='Split equally' label='Split equally' />
                 </Picker>
             );
@@ -118,7 +118,7 @@ export default class AddExpense extends Component {
                 <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplitNl(itemValue)}>
                     <Picker.Item label='--- Kies een optie ---' value='Kies optie' />
                     <Picker.Item value='Betaal door rekening' label='Betaal door rekening' />
-                    <Picker.Item value='Betaal je eigen deel' label='Betaal je eigen deel' />
+                    <Picker.Item value='Betaal eigen deel' label='Betaal eigen deel' />
                     <Picker.Item value='Gelijk verdeeld' label='Gelijk verdeeld' />
                 </Picker>
             );
@@ -136,7 +136,7 @@ export default class AddExpense extends Component {
                         placeholder={I18n.t('nameplaceholder')}
                         style={styles.inputField}
                         underlineColorAndroid="#ffd185"
-                        placeholderTextColor="#818181"
+                        placeholderTextColor="#d9d9d9"
                         onChangeText={(text) => this.setState({ name: text })} />
 
                     <Text style={styles.label}>{I18n.t('amount')}</Text>
@@ -145,7 +145,7 @@ export default class AddExpense extends Component {
                         style={styles.inputField}
                         keyboardType='numeric'
                         underlineColorAndroid="#ffd185"
-                        placeholderTextColor="#818181"
+                        placeholderTextColor="#d9d9d9"
                         onChangeText={(text) => this.checkAmount(text)}
                         value={this.state.amount} />
 
@@ -158,7 +158,7 @@ export default class AddExpense extends Component {
                         // maxDate={yearafter}
                         date={this.state.selectedDate}
                         showIcon={true}
-                        placeholder="Select date..."
+                        placeholder={I18n.t('dateplaceholder')}
                         hideText={false}
                         date={this.state.selectedDate}
                         style={{ width: 200 }}
