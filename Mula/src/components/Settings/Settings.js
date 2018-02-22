@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
-import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert, ScrollView} from 'react-native';
-import {StackNavigator} from 'react-navigation';
+import React, { Component } from 'react';
+import { AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert, ScrollView } from 'react-native';
+import { StackNavigator } from 'react-navigation';
 import I18n from 'react-native-i18n';
+import FloatLabelTextInput from 'react-native-floating-label-text-input';
 
 export default class Settings extends Component {
 
@@ -13,15 +14,21 @@ export default class Settings extends Component {
             password: "",
             language: "",
             chosenLanguage: "",
-            currency: ""
+            currency: "",
+
+            friendtoadd: "",
+
+            currentpass: "",
+            newpass: "",
+            repeatnewpass: ""
         }
     }
 
     componentWillMount() {
         AsyncStorage.getItem('language').then((language) => {
             this.setState({ language });
-            if(language == "English") this.setState({ chosenLanguage: "English" });
-            if(language == "Dutch") this.setState({ chosenLanguage: "Nederlands" });
+            if (language == "English") this.setState({ chosenLanguage: "English" });
+            if (language == "Dutch") this.setState({ chosenLanguage: "Nederlands" });
         });
     }
 
@@ -29,7 +36,7 @@ export default class Settings extends Component {
         AsyncStorage.getItem('userName').then((username) => {
             this.setState({ username });
         });
-        
+
         AsyncStorage.getItem('currency').then((currency) => {
             this.setState({ currency });
         });
@@ -64,15 +71,15 @@ export default class Settings extends Component {
     renderLanguagePicker = () => {
         console.log("chosen: " + this.state.chosenLanguage)
         if (this.state.chosenLanguage == 'English') {
-            return(
+            return (
                 <Picker selectedValue={this.state.language} onValueChange={(itemValue) => this.updateLanguage(itemValue)}>
                     <Picker.Item label="English" value="English" />
                     <Picker.Item label="Dutch" value="Dutch" />
                 </Picker>
             );
         }
-        else  if (this.state.chosenLanguage == 'Nederlands'){
-            return(
+        else if (this.state.chosenLanguage == 'Nederlands') {
+            return (
                 <Picker selectedValue={this.state.language} onValueChange={(itemValue) => this.updateLanguage(itemValue)}>
                     <Picker.Item label="Nederlands" value="Dutch" />
                     <Picker.Item label="Engels" value="English" />
@@ -109,48 +116,127 @@ export default class Settings extends Component {
         }
     }
 
-    render(){
-        return(
+    addFriend() {
+        console.log(this.state.friendtoadd);
+
+        try {
+            return fetch('http://193.191.177.169:8080/mula/Controller?action=addFriend', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: this.state.username,
+                    friend: this.state.friendtoadd
+                })
+            })
+        }
+        catch (error) {
+            alert("Dit account bestaat niet");
+        }
+    }
+
+    changePass() {
+        if (this.state.newpass == this.state.repeatnewpass) {
+            try {
+                return fetch('http://193.191.177.169:8080/mula/Controller?action=changePassword', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: this.state.username,
+                        currentpass: this.currentpass,
+                        newpass: this.state.newpass
+                    })
+                })
+            }
+            catch (error) {
+                alert(I18n.t('notexist'));
+            }
+        } else {
+            alert(I18n.t('nomatch'))
+        }
+    }
+
+    render() {
+        return (
             <ScrollView style={styles.container}>
-                <TouchableOpacity style={styles.profileButton}>
-                    <Image source={require('../../images/placeholder_user.png')} style={styles.profileImage} />
-                </TouchableOpacity>
-                <TextInput
-                    style={styles.inputField}
-                    placeholder="Firstname Name"
-                    underlineColorAndroid="#ffd185"
-                    placeholderTextColor="#111"
-                    returnKeyType="next"
-                    onChangeText={(nameText) => this.setState({ name: nameText })}
-                    onSubmitEditing={() => this.passwordInput.focus()}></TextInput>
-                <TextInput
-                    style={styles.inputField}
-                    placeholder="Username/Email"
-                    underlineColorAndroid="#ffd185"
-                    placeholderTextColor="#111"
-                    returnKeyType="next"
-                    onChangeText={(usernameText) => this.setState({ username: usernameText })}
-                    onSubmitEditing={() => this.passwordInput.focus()}></TextInput>
-                <TextInput
-                    style={styles.inputField}
-                    secureTextEntry
-                    placeholder="Password"
-                    underlineColorAndroid="#ffd185"
-                    placeholderTextColor="#111"
-                    returnKeyType="done"
-                    onChangeText={(passwordText) => this.setState({ password: passwordText })}
-                    ref={(input) => this.passwordInput = input}></TextInput>
+                <View style={styles.profilesettings}>
+                    <TouchableOpacity style={styles.profileButton}>
+                        <Image source={require('../../images/placeholder_user.png')} style={styles.profileImage} />
+                    </TouchableOpacity>
+                </View>
+
                 <Text>{I18n.t('lang')} {this.state.chosenLanguage} </Text>
                 {this.renderLanguagePicker()}
                 <Text>{I18n.t('currency')} {this.state.currency}</Text>
                 <Picker selectedValue={this.state.currency} onValueChange={(itemValue) => this.updateCurrency(itemValue)}>
-                    <Picker.Item label="Euro" value="Euro" />
-                    <Picker.Item label="American Dollar" value="USD" />
+                    <Picker.Item label="EUR" value="EUR" />
+                    <Picker.Item label="USD" value="USD" />
                 </Picker>
 
-                <TouchableOpacity style={styles.logoutButton} onPress={() => this.logout()}>
-                    <Text style={styles.logoutText}>{I18n.t('logout')}</Text>
+                <View style={styles.addFriend}>
+                    <TextInput
+                        style={styles.inputField}
+                        placeholder={I18n.t('friendemail')}
+                        underlineColorAndroid="#ffd185"
+                        placeholderTextColor="#bfbfbf"
+                        returnKeyType="next"
+                        keyboardType='email-address'
+                        onChangeText={(text) => this.setState({ friendtoadd: text })}>
+                    </TextInput>
+
+                    <TouchableOpacity style={styles.button} onPress={() => this.addFriend()}>
+                        <Text style={styles.buttonText}>{I18n.t('add')}</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View>
+                    <TextInput
+                        style={styles.inputField}
+                        placeholder={I18n.t('currentpass')}
+                        secureTextEntry
+                        underlineColorAndroid="#ffd185"
+                        placeholderTextColor="#bfbfbf"
+                        returnKeyType="next"
+                        onChangeText={(current) => this.setState({ currentpass: current })}
+                        ref={(input) => this.currentpassinput = input}
+                        onSubmitEditing={() => this.newpassinput.focus()}></TextInput>
+                    <TextInput
+                        style={styles.inputField}
+                        placeholder={I18n.t('newpass')}
+                        secureTextEntry
+                        underlineColorAndroid="#ffd185"
+                        placeholderTextColor="#bfbfbf"
+                        returnKeyType="next"
+                        onChangeText={(newpas) => this.setState({ newpass: newpas })}
+                        ref={(input) => this.newpassinput = input}
+                        onSubmitEditing={() => this.repeatnewpassinput.focus()}></TextInput>
+                    <TextInput
+                        style={styles.inputField}
+                        secureTextEntry
+                        placeholder={I18n.t('repeatpass')}
+                        underlineColorAndroid="#ffd185"
+                        placeholderTextColor="#bfbfbf"
+                        returnKeyType="done"
+                        ref={(input) => this.repeatnewpassinput = input}
+                        onChangeText={(repeat) => this.setState({ repeatnewpass: repeat })}
+                    ></TextInput>
+
+                    <TouchableOpacity style={styles.button} onPress={() => this.changePass()}>
+                        <Text style={styles.buttonText}>{I18n.t('changepass')}</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+                <TouchableOpacity style={styles.button} onPress={() => this.logout()}>
+                    <Text style={styles.buttonText}>{I18n.t('logout')}</Text>
                 </TouchableOpacity>
+
+                <Text> {'\n'} </Text>
             </ScrollView>
         )
     }
@@ -162,7 +248,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFFFFF',
         alignSelf: 'stretch',
-        padding: 20
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 10,
+        paddingBottom: 25
     },
     profileImage: {
         width: 80,
@@ -170,21 +259,27 @@ const styles = StyleSheet.create({
         borderRadius: 40
     },
     profileButton: {
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginBottom: 10
     },
     inputField: {
         padding: 10
     },
-    logoutButton: {
+    button: {
         height: 40,
         alignItems: 'center',
         backgroundColor: '#ffd185',
-        borderRadius: 5
+        borderRadius: 5,
+        marginTop: 10
     },
-    logoutText: {
+    buttonText: {
         fontSize: 15,
         lineHeight: 28,
         color: '#303030',
         textAlign: 'center'
+    },
+    addFriend: {
+        marginBottom: 10,
+
     }
 });

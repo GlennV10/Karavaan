@@ -29,6 +29,7 @@ export default {
 
     //TripCategory
     nocategoriesfound: 'NO CATEGORIES FOUND',
+    exp: 'expense(s)',
 
     //TripExpenses
     noexpensesfound: 'NO EXPENSES FOUND',
@@ -46,6 +47,17 @@ export default {
     languageplaceholder: 'Choose language',
     choosecurr: '--- Choose currency ---',
     currplaceholder: 'Choose currency',
+    add: 'Add as friend',
+    friendemail: 'MyNewFriend@mula.be',
+    currentpass: 'Current password',
+    newpass: 'New password',
+    repeatpass: 'Repeat new password',
+    changepass: 'Change password',
+    currentemail: 'Current emailadress',
+    newemail: 'New emailadress',
+    changeemail: 'Change emailadress',
+    notexist: 'This account does not exist',
+    nomatch: 'Passwords do not match',
 
     //Logout
     logout: 'Log out',
@@ -70,8 +82,10 @@ export default {
     split: 'Splitting:',
     choosesplit: '--- Choose option ---',
     splitplaceholder: 'Choose option',
-    ownshare: 'Pay your own share',
+    ownshare: 'Pay own share',
     bill: 'Pay by bill',
     evensplit: 'Split equally',
-    langtest: 'en'
+    langtest: 'en',
+    dateplaceholder: 'Select date...',
+    newcategory: 'New category'
 }
