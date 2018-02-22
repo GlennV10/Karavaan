@@ -167,7 +167,7 @@ export default class AddExpense extends Component {
                         placeholder={I18n.t('nameplaceholder')}
                         style={styles.inputField}
                         underlineColorAndroid="#ffd185"
-                        placeholderTextColor="#d9d9d9"
+                        placeholderTextColor="#bfbfbf"
                         onChangeText={(text) => this.setState({ name: text })} />
 
                     <Text style={styles.label}>{I18n.t('amount')}</Text>
@@ -176,7 +176,7 @@ export default class AddExpense extends Component {
                         style={styles.inputField}
                         keyboardType='numeric'
                         underlineColorAndroid="#ffd185"
-                        placeholderTextColor="#d9d9d9"
+                        placeholderTextColor="#bfbfbf"
                         onChangeText={(text) => this.checkAmount(text)}
                         value={this.state.amount} />
 
@@ -240,8 +240,8 @@ export default class AddExpense extends Component {
 
 
                     <Prompt
-                        title="Add categeory"
-                        placeholder="New Category"
+                        title={I18n.t('addcategory')}
+                        placeholder={I18n.t('newcategory')}
                         visible={this.state.promptVisible}
                         onCancel={() => this.setState({
                             promptVisible: false,

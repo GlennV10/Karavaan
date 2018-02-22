@@ -87,4 +87,5 @@ export default {
     evensplit: 'Split equally',
     langtest: 'en',
     dateplaceholder: 'Select date...',
+    newcategory: 'New category'
 }

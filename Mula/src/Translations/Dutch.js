@@ -89,5 +89,6 @@ export default {
     evensplit: 'Gelijk verdeeld',
     langtest: 'nl',
     dateplaceholder: 'Kies datum...',
+    newcategory: 'Nieuwe categorie'
 
 }

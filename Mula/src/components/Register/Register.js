@@ -67,7 +67,7 @@ export default class Register extends React.Component {
                 placeholder={I18n.t('firstname')}
                 style={styles.inputField}
                 underlineColorAndroid="transparent"
-                placeholderTextColor="#d9d9d9"
+                placeholderTextColor="#bfbfbf"
                 onChangeText={(text)=>this.setState({firstName: text})}
                 onSubmitEditing={() => this.lastNameInput.focus()}
                 returnKeyType="go"/>
@@ -75,7 +75,7 @@ export default class Register extends React.Component {
                 placeholder={I18n.t('lastname')}
                 style={styles.inputField}
                 underlineColorAndroid="transparent"
-                placeholderTextColor="#d9d9d9"
+                placeholderTextColor="#bfbfbf"
                 onChangeText={(text)=>this.setState({lastName: text})}
                 ref={(input) => this.lastNameInput = input}
                 onSubmitEditing={() => this.emailInput.focus()}
@@ -84,7 +84,7 @@ export default class Register extends React.Component {
                 placeholder={I18n.t('email')}
                 style={styles.inputField}
                 underlineColorAndroid="transparent"
-                placeholderTextColor="#d9d9d9"
+                placeholderTextColor="#bfbfbf"
                 keyboardType="email-address"
                 onChangeText={(text)=>this.setState({email: text})}
                 ref={(input) => this.emailInput = input}
@@ -95,7 +95,7 @@ export default class Register extends React.Component {
                 style={styles.inputField}
                 secureTextEntry={true}
                 underlineColorAndroid="transparent"
-                placeholderTextColor="#d9d9d9"
+                placeholderTextColor="#bfbfbf"
                 onChangeText={(text)=>this.setState({tempPassword: text})}
                 ref={(input) => this.password1Input = input}
                 onSubmitEditing={() => this.password2Input.focus()}
@@ -105,7 +105,7 @@ export default class Register extends React.Component {
                 style={styles.inputField}
                 secureTextEntry={true}
                 underlineColorAndroid="transparent"
-                placeholderTextColor="#d9d9d9"
+                placeholderTextColor="#bfbfbf"
                 onChangeText={(text)=>this.setState({tempPassword2: text})}
                 ref={(input) => this.password2Input = input}
                 onSubmitEditing={() => this.checkReqs()}/>

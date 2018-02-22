@@ -183,7 +183,7 @@ export default class Settings extends Component {
                         style={styles.inputField}
                         placeholder={I18n.t('friendemail')}
                         underlineColorAndroid="#ffd185"
-                        placeholderTextColor="#d9d9d9"
+                        placeholderTextColor="#bfbfbf"
                         returnKeyType="next"
                         keyboardType='email-address'
                         onChangeText={(text) => this.setState({ friendtoadd: text })}>
@@ -200,7 +200,7 @@ export default class Settings extends Component {
                         placeholder={I18n.t('currentpass')}
                         secureTextEntry
                         underlineColorAndroid="#ffd185"
-                        placeholderTextColor="#d9d9d9"
+                        placeholderTextColor="#bfbfbf"
                         returnKeyType="next"
                         onChangeText={(current) => this.setState({ currentpass: current })}
                         ref={(input) => this.currentpassinput = input}
@@ -210,7 +210,7 @@ export default class Settings extends Component {
                         placeholder={I18n.t('newpass')}
                         secureTextEntry
                         underlineColorAndroid="#ffd185"
-                        placeholderTextColor="#d9d9d9"
+                        placeholderTextColor="#bfbfbf"
                         returnKeyType="next"
                         onChangeText={(newpas) => this.setState({ newpass: newpas })}
                         ref={(input) => this.newpassinput = input}
@@ -220,7 +220,7 @@ export default class Settings extends Component {
                         secureTextEntry
                         placeholder={I18n.t('repeatpass')}
                         underlineColorAndroid="#ffd185"
-                        placeholderTextColor="#d9d9d9"
+                        placeholderTextColor="#bfbfbf"
                         returnKeyType="done"
                         ref={(input) => this.repeatnewpassinput = input}
                         onChangeText={(repeat) => this.setState({ repeatnewpass: repeat })}
