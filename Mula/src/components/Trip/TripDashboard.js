@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid,  TouchableOpacity, ActivityIndicator, ScrollView, AsyncStorage, BackHandler} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid,  TouchableOpacity, ActivityIndicator, ScrollView, AsyncStorage, BackHandler, Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TripExpenses from './TripExpenses'
@@ -17,6 +17,10 @@ export default class TripDashboard extends React.Component {
     }
 
     componentWillMount() {
+
+      this.props.navigation.addListener("didFocus", () => this._handleUpdate());
+      this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
+
         let expenses = [{
             id: 1,
             name: 'Restaurant A',
@@ -99,9 +103,9 @@ export default class TripDashboard extends React.Component {
             tripID: 3
           }]
 
-        AsyncStorage.setItem('expenses', JSON.stringify(expenses))
+        /*AsyncStorage.setItem('expenses', JSON.stringify(expenses))
               .then(res => console.log('Expenses stored in AsyncStorage'))
-              .catch(error => console.log('Error storing expenses'));
+              .catch(error => console.log('Error storing expenses'));*/
     }
 
     componentDidMount() {
@@ -109,7 +113,25 @@ export default class TripDashboard extends React.Component {
               .then(req => JSON.parse(req))
               .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
               .catch(error => console.log('Error loading expenses'));
+              console.log("geluktDash lolilol");
     }
+
+    _handleUpdate = () => {
+      BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
+      console.log("VISIBLE");
+    }
+
+    _handleBackButton = () => {
+      this.props.navigation.navigate("DashboardTrips");
+      return true;
+    }
+
+    /*shouldComponentUpdate(nextProps, nextState) {
+      if (this.props.navigation.params.trip !== nextProps.navigation.params.trip) {
+        return true;
+      }
+      return false;
+    }*/
 
     getTripExpenses() {
         let tripExpenses = [];
@@ -137,7 +159,7 @@ export default class TripDashboard extends React.Component {
             tabBarBackgroundColor={'#e2e8e5'}
             tabBarActiveTextColor={'#303030'}
             tabBarInactiveTextColor={'#303030'}>
-              <TripExpenses tabLabel={I18n.t('expenses')} navigator={nav} expenses={this.getTripExpenses()}/>
+              <TripExpenses tabLabel={I18n.t('expenses')} navigator={nav} update={this.props.navigation.state.params.update} expenses={this.getTripExpenses()}/>
               <TripCategory tabLabel={I18n.t('category')} navigator={nav} expenses={this.getTripExpenses()}/>
               <TripTotal tabLabel={I18n.t('balance')} navigator={nav} expenses={this.getTripExpenses()}/>
           </ScrollableTabView>
