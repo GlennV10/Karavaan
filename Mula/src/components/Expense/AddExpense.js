@@ -18,12 +18,6 @@ export default class AddExpense extends Component {
         }
     }
 
-    /*
-      Expense date
-      minDate: trip.startDate,
-      maxDate: trip.endDate
-    */
-
     componentDidMount() {
         console.log(this.props.navigation.state.params.trip);
     }
