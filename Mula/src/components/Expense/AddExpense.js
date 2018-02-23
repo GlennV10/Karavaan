@@ -49,26 +49,6 @@ export default class AddExpense extends Component {
         }
     }
 
-    setSplitNl(item) {
-        if (item == "Betaal door rekening") {
-            this.setState({ wayofsplit: 'Betaal door rekening' });
-        } else if (item == "Betaal eigen deel") {
-            this.setState({ wayofsplit: 'Betaal eigen deel' });
-        } else if (item == "Gelijk verdeeld") {
-            this.setState({ wayofsplit: 'Gelijk verdeeld' });
-        }
-    }
-
-    setSplitEn(item) {
-        if (item == "Pay by bill") {
-            this.setState({ wayofsplit: 'Pay by bill' });
-        } else if (item == "Pay own share") {
-            this.setState({ wayofsplit: 'Pay own share' });
-        } else if (item == "Split equally") {
-            this.setState({ wayofsplit: 'Split equally' });
-        }
-    }
-
     checkAmount(text) {
         var newText = '';
         let numbers = '0123456789';
@@ -88,16 +68,15 @@ export default class AddExpense extends Component {
         this.setState({ amount: newText });
     }
 
-    saveExpense() {
+    getExpense() {
         let expense = {
             name: this.state.name,
+            amount: parseInt(this.state.amount),
             date: this.state.selectedDate,
-            wayofsplit: this.state.wayofsplit,
-            paidBy: '...', //MultiSelect in UI? Can be multiple people
-            users: [{ name: "", amount: 0 }], //Users stored in this.props.navigation.state.params.trip.users, amounts based on wayofsplit
             category: this.state.category,
             currency: this.state.currency,
-            amount: parseInt(this.state.amount),
+            payers: [],
+            users: [],
             tripID: this.props.navigation.state.params.trip.id
         }
 
@@ -105,57 +84,54 @@ export default class AddExpense extends Component {
           Add new expense to AsyncStorage
         ============================== */
 
-        AsyncStorage.getItem('expenses')
-            .then(req => JSON.parse(req))
-            .then((expenses) => {
-                expenses.push(expense);
-                AsyncStorage.setItem('expenses', JSON.stringify(expenses))
-                    .then(res => console.log('Expenses stored in AsyncStorage'))
-                    .catch(error => console.log('Error storing expenses'));
-            })
-            .catch(error => console.log('Error loading expenses'));
-
-        // AsyncStorage.getItem('expenses', (err, expenses) => {
-        //     if (expenses !== null) {
-        //       console.log('Data Found', expenses);
-        //       let expenses = JSON.parse(expenses);
-        //       console.log(expenses);
-        //       // AsyncStorage.setItem('savedIds', JSON.stringify(newIds));
-        //     } else {
-        //       console.log('Data Not Found');
-        //       // AsyncStorage.setItem('savedIds', JSON.stringify(id));
-        //     }
-        // });
+        // AsyncStorage.getItem('expenses')
+        //       .then(req => JSON.parse(req))
+        //       .then((expenses) => {
+        //           expenses.push(expense);
+        //           AsyncStorage.setItem('expenses', JSON.stringify(expenses))
+        //                 .then(res => console.log('Expenses stored in AsyncStorage'))
+        //                 .catch(error => console.log('Error storing expenses'));
+        //       })
+        //       .catch(error => console.log('Error loading expenses'));
 
         //===========================
         //ADD EXPENSE TO DB CODE HERE
         //===========================
 
-        this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip, update: true });
+        this.props.navigation.navigate('AddExpensePayers', { expense, trip: this.props.navigation.state.params.trip });
 
     }
 
-    renderSplitPicker = () => {
-        console.log("chosen: " + this.state.wayofsplit)
-        if (this.state.language == 'en') {
-            return (
-                <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplitEn(itemValue)}>
-                    <Picker.Item label='--- Choose option ---' value='Choose option' />
-                    <Picker.Item value='Pay by bill' label='Pay by bill' />
-                    <Picker.Item value='Pay own share' label='Pay own share' />
-                    <Picker.Item value='Split equally' label='Split equally' />
-                </Picker>
-            );
+    showAddGroupCostField() {
+        if (this.state.check == false) {
+            alert("test ON");
+            this.setState({ check: !this.state.check });
+            this.addGroupCostField();
         }
-        else if (this.state.language == 'nl') {
+
+        if (this.state.check == true) {
+            alert("test OFF");
+            this.setState({ check: !this.state.check });
+            this.addGroupCostField();
+        }
+    }
+
+    addGroupCostField() {
+        if (this.state.check == true) {
             return (
-                <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplitNl(itemValue)}>
-                    <Picker.Item label='--- Kies een optie ---' value='Kies optie' />
-                    <Picker.Item value='Betaal door rekening' label='Betaal door rekening' />
-                    <Picker.Item value='Betaal eigen deel' label='Betaal eigen deel' />
-                    <Picker.Item value='Gelijk verdeeld' label='Gelijk verdeeld' />
-                </Picker>
-            );
+                <View>
+                    <Text style={styles.label}>{I18n.t('groupexpense')}</Text>
+                    <TextInput
+                        placeholder={I18n.t('amountplaceholder')}
+                        style={styles.inputField}
+                        keyboardType='numeric'
+                        underlineColorAndroid="#ffd185"
+                        placeholderTextColor="#bfbfbf"
+                        onChangeText={(text) => this.checkAmount(text)}
+                        value={this.state.groupAmount}>
+                    </TextInput>
+                </View>
+            )
         }
     }
 
@@ -164,101 +140,102 @@ export default class AddExpense extends Component {
         const { trip } = this.props.navigation.state.params;
 
         return (
-            <ScrollView>
-                <View style={styles.container}>
-                    <View style={styles.contentView}>
-                        <Text style={styles.label}>{I18n.t('name')}</Text>
-                        <TextInput
-                            placeholder={I18n.t('nameplaceholder')}
-                            style={styles.inputField}
-                            underlineColorAndroid="#ffd185"
-                            placeholderTextColor="#bfbfbf"
-                            onChangeText={(text) => this.setState({ name: text })} />
+            <View style={styles.container}>
+                <View style={styles.contentView}>
+                    <Text style={styles.label}>{I18n.t('name')}</Text>
+                    <TextInput
+                        placeholder={I18n.t('nameplaceholder')}
+                        style={styles.inputField}
+                        underlineColorAndroid="#ffd185"
+                        placeholderTextColor="#bfbfbf"
+                        onChangeText={(text) => this.setState({ name: text })} />
 
-                        <Text style={styles.label}>{I18n.t('amount')}</Text>
-                        <TextInput
-                            placeholder={I18n.t('amountplaceholder')}
-                            style={styles.inputField}
-                            keyboardType='numeric'
-                            underlineColorAndroid="#ffd185"
-                            placeholderTextColor="#bfbfbf"
-                            onChangeText={(text) => this.checkAmount(text)}
-                            value={this.state.amount} />
+                    <Text style={styles.label}>{I18n.t('amount')}</Text>
+                    <TextInput
+                        placeholder={I18n.t('amountplaceholder')}
+                        style={styles.inputField}
+                        keyboardType='numeric'
+                        underlineColorAndroid="#ffd185"
+                        placeholderTextColor="#bfbfbf"
+                        onChangeText={(text) => this.checkAmount(text)}
+                        value={this.state.amount} />
 
+                    <Text style={styles.label}>Date</Text>
+                    <DatePicker
+                        mode='date'
+                        format='DD/MM/YYYY'
+                        // minDate= {this.props.navigation.state.params.trip.startDate}
+                        // maxDate={this.props.navigation.state.params.trip.endDate}
+                        date={this.state.selectedDate}
+                        showIcon={true}
+                        placeholder={I18n.t('dateplaceholder')}
+                        hideText={false}
+                        date={this.state.selectedDate}
+                        style={{ width: 200 }}
+                        customStyles={{
+                            dateIcon: {
+                                position: 'absolute',
+                                left: 13,
+                                marginLeft: 13
+                            },
+                            dateInput: {
+                                marginLeft: 13,
+                                padding: 10,
+                                borderWidth: 0
+                            },
+                            placeholderText: {
+                                color: "#818181"
+                            },
+                            dateText: {
+                                marginLeft: 10
+                            }
+                        }}
+                        onDateChange={(date) => this.setState({ selectedDate: date })}
+                    />
 
-                        <Text style={styles.label}>Date</Text>
-                        <DatePicker
-                            mode='date'
-                            format='DD/MM/YYYY'
-                            // minDate= {yearbefore}
-                            // maxDate={yearafter}
-                            date={this.state.selectedDate}
-                            showIcon={true}
-                            placeholder={I18n.t('dateplaceholder')}
-                            hideText={false}
-                            date={this.state.selectedDate}
-                            style={{ width: 200 }}
-                            customStyles={{
-                                dateIcon: {
-                                    position: 'absolute',
-                                    left: 13,
-                                    marginLeft: 13
-                                },
-                                dateInput: {
-                                    marginLeft: 13,
-                                    padding: 10,
-                                    borderWidth: 0
-                                },
-                                placeholderText: {
-                                    color: "#818181"
-                                },
-                                dateText: {
-                                    marginLeft: 10
-                                }
-                            }}
-                            onDateChange={(date) => this.setState({ selectedDate: date })}
+                    <Text style={styles.label}>{I18n.t('categoryexpense')} {this.state.category}</Text>
+                    <Picker style={styles.picker} selectedValue={this.state.category} onValueChange={(itemValue, itemIndex) => this.setCategory(itemValue)}>
+                        <Picker.Item label={I18n.t('choosecategory')} value={I18n.t('categoryplaceholder')} />
+                        {this.renderPickerCategories()}
+                        <Picker.Item label={I18n.t('addcategory')} value="add" />
+                    </Picker>
+
+                    <Text style={styles.label}>{I18n.t('currency')} {this.state.currency}</Text>
+                    <Picker style={styles.picker} selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
+                        <Picker.Item label={I18n.t('choosecurrency')} value={I18n.t('currencyplaceholder')} />
+                        {this.renderPickerCurrencies()}
+                    </Picker>
+
+                    <View style={styles.checker}>
+                        <CheckBox
+                            label={I18n.t('addgroupexpense')}
+                            checked={this.state.check}
+                            onChange={() => this.showAddGroupCostField()}
                         />
-
-                        <Text style={styles.label}>{I18n.t('categoryexpense')} {this.state.category}</Text>
-                        <Picker style={styles.picker} selectedValue={this.state.category} onValueChange={(itemValue, itemIndex) => this.setCategory(itemValue)}>
-                            <Picker.Item label={I18n.t('choosecategory')} value={I18n.t('categoryplaceholder')} />
-                            {this.renderPickerCategories()}
-                            <Picker.Item label={I18n.t('addcategory')} value="add" />
-                        </Picker>
-
-                        <Text style={styles.label}>{I18n.t('currency')} {this.state.currency}</Text>
-                        <Picker style={styles.picker} selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
-                            <Picker.Item label={I18n.t('choosecurrency')} value={I18n.t('currencyplaceholder')} />
-                            {this.renderPickerCurrencies()}
-                        </Picker>
-
-                        <Text style={styles.label}>{I18n.t('split')} {this.state.wayofsplit}</Text>
-                        {/* <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplit({ itemValue })}> */}
-
-                        {this.renderSplitPicker()}
-                        {/* </Picker> */}
-                        
-
-                        <TouchableOpacity style={styles.saveButton} onPress={() => this.saveExpense()}>
-                            <Text style={styles.saveText}>{I18n.t('savebutton')}</Text>
-                        </TouchableOpacity>
-
-                        <Prompt
-                            title={I18n.t('addcategory')}
-                            placeholder={I18n.t('newcategory')}
-                            visible={this.state.promptVisible}
-                            onCancel={() => this.setState({
-                                promptVisible: false,
-                                message: "You cancelled"
-                            })}
-                            onSubmit={(value) => this.setState({
-                                promptVisible: false,
-                                message: `You added "${value}"`,
-                                category: value
-                            })} />
                     </View>
+
+                    {this.addGroupCostField()}
+
+                    <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
+                        <Text style={styles.saveText}>Who paid?</Text>
+                    </TouchableOpacity>
+
+                    <Prompt
+                        title={I18n.t('addcategory')}
+                        placeholder={I18n.t('newcategory')}
+                        visible={this.state.promptVisible}
+                        onCancel={() => this.setState({
+                            promptVisible: false,
+                            message: "You cancelled"
+                        })}
+                        onSubmit={(value) => this.setState({
+                            promptVisible: false,
+                            message: `You added "${value}"`,
+                            category: value
+                        })} />
                 </View>
-            </ScrollView>
+            </View>
+
         )
     }
 }

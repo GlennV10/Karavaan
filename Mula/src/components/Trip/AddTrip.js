@@ -28,9 +28,7 @@ export default class AddTrip extends Component {
             username: "",
             loadJSON: true,
             connectionMode: "",
-            offlineFriends: {
-                friends: []
-            },
+            offlineFriends: {},
             loadTests: true,
             onlineFriends: {},
             isLoading: true,
@@ -176,14 +174,14 @@ export default class AddTrip extends Component {
 
     mainFetch(){
         // Get ... uit memory
-        
-        AsyncStorage.getItem('userName').then((userName, error)=>{
+        console.log( AsyncStorage.getItem('userName'));
+        AsyncStorage.getItem('userName').then((username, error)=>{
             if(error){
                 console.log(error);
             }
             // Set username state
-            this.setState({ username: userName, loadJSON: false });
-            console.log("Setting username state #1");
+            this.setState({ username: username, loadJSON: false });
+            console.log("Setting username state #1"+ this.state.username);
             // Get connection status
             AsyncStorage.getItem('connectionStatus').then((connection, error) => {
                 if (error) {
@@ -208,23 +206,17 @@ export default class AddTrip extends Component {
                         .then((responseJson) => {
 
                             console.log("Set loadingStates to false #3");
-                            this.setState({ isLoading: false, loadJSON: false, onlineFriends: responseJson });
+                            this.setState({ isLoading: false, loadJSON: false, offlineFriends: responseJson });
                         }).then(() => {
                             // =======================================================
-                            // get offline data
+                            // set asyncstorage data
                             // =======================================================
-
-                            console.log("Getting offline friends data #4");
-                            AsyncStorage.getItem('friends').then((friendsJson, error) => {
-                                if (error) {
-                                    console.log(error);
-                                }
-                                this.setState({ offlineFriends: JSON.parse(friendsJson) });
-                                //AsyncStorage.setItem('friends', JSON.parse(friendsJson));
-                                console.log("CHECK HERE");
-                                console.log(this.state.offlineFriends);
-                                console.log(this.state.offlineFriends.friends);
-                            });
+                                AsyncStorage.setItem('friends', JSON.stringify(this.state.offlineFriends.friends));
+                               // AsyncStorage.setItem({'friends': JSON.parse(friendsJson) });
+                               //this.setState({ offlineFriends: JSON.parse(friendsJson) });
+                               
+                                
+                            
                         });
                 } else {
                     // Get offline data en render
@@ -234,6 +226,7 @@ export default class AddTrip extends Component {
                             console.log(error);
                         }
                         // Send JSON to renderfriends
+                        
                         console.log("Parse friends with offline data #8");
                         this.setState({ friends: JSON.parse(friendsJson), offlineFriends: JSON.parse(friendsJson), loadJSON: false, isLoading: false });
                     });
@@ -424,7 +417,7 @@ export default class AddTrip extends Component {
                     />
 
                 </View> */}
-                <View style={[styles.subItem]}>
+                <View style={[styles.subItem, styles.separator]}>
                     <Text>Select your base currency</Text>
                     <Picker style={{ flex: .50 }}
                         onValueChange={currency => this.setState({ baseCurrency: currency }) & this.setState({ loadRates: true }) & this.getExchangeRatesWithBase(currency) & this.renderValutaToArray(this.state.rates)}
@@ -435,8 +428,8 @@ export default class AddTrip extends Component {
                 </View>
 
 
-                <View style={styles.multi}>
-                    <Text>Select the other currency you're going to use on the trip</Text>
+                <View>
+                    <Text style ={styles.textfield}>Select the other currency you're going to use on the trip</Text>
                     <MultiSelect
                         hideTags
                         items={this.state.currencies}

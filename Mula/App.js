@@ -13,6 +13,9 @@ import TripDashboard from './src/components/Trip/TripDashboard';
 import TripCategoryExpenses from './src/components/Trip/TripCategoryExpenses';
 import AddTrip from './src/components/Trip/AddTrip';
 import AddExpense from './src/components/Expense/AddExpense';
+import AddExpensePayers from './src/components/Expense/AddExpensePayers';
+import AddExpenseConsumed from './src/components/Expense/AddExpenseConsumed';
+import AddExpenseShared from './src/components/Expense/AddExpenseShared';
 import DetailExpense from './src/components/Expense/DetailExpense';
 import TripSettings from './src/components/Settings/TripSettings';
 // import DetailEvent from './src/components/Event/DetailEvent';
@@ -170,6 +173,36 @@ export default App = StackNavigator({
         }
       }),
       screen: AddExpense
+    },
+    AddExpensePayers: {
+      navigationOptions: ({ navigation }) => ({
+        title: I18n.t('addExpense'),
+        headerStyle:{
+          backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle:{
+            color: '#FFF'
+        },
+        headerBackTitleStyle:{
+            color: "#FFF"
+        }
+      }),
+      screen: AddExpensePayers
+    },
+    AddExpenseConsumed: {
+      navigationOptions: ({ navigation }) => ({
+        title: I18n.t('addExpense'),
+        headerStyle:{
+          backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle:{
+            color: '#FFF'
+        },
+        headerBackTitleStyle:{
+            color: "#FFF"
+        }
+      }),
+      screen: AddExpenseConsumed
     },
     TripSettings: {
       navigationOptions: ({ navigation }) => ({

@@ -25,14 +25,6 @@ export default class TripExpenses extends Component {
 
     componentDidMount() {
         this.setState({ isLoading: false });
-        console.log("gelukt lolilol");
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.state.expenses !== nextState.expenses) {
-          return true;
-        }
-        return false;
     }
 
     /*
