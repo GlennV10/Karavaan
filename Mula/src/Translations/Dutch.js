@@ -89,6 +89,8 @@ export default {
     evensplit: 'Gelijk verdeeld',
     langtest: 'nl',
     dateplaceholder: 'Kies datum...',
-    newcategory: 'Nieuwe categorie'
+    newcategory: 'Nieuwe categorie',
+    addgroupexpense: 'Voeg gezamenlijke kost toe',
+    groupexpense: 'Gezamenlijke kost'
 
 }

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
+import CheckBox from 'react-native-checkbox';
 
 export default class AddExpense extends Component {
     constructor(props) {
@@ -14,7 +15,9 @@ export default class AddExpense extends Component {
             category: I18n.t('categoryplaceholder'),
             currency: I18n.t('currencyplaceholder'),
             wayofsplit: I18n.t('splitplaceholder'),
-            language: I18n.t('langtest')
+            language: I18n.t('langtest'),
+            check: false,
+            groupAmount: ""
         }
     }
 
@@ -87,15 +90,15 @@ export default class AddExpense extends Component {
 
     saveExpense() {
         let expense = {
-          name: this.state.name,
-          date: this.state.selectedDate,
-          wayofsplit: this.state.wayofsplit,
-          paidBy: '...', //MultiSelect in UI? Can be multiple people
-          users: [{name:"",amount:0}], //Users stored in this.props.navigation.state.params.trip.users, amounts based on wayofsplit
-          category: this.state.category,
-          currency: this.state.currency,
-          amount: parseInt(this.state.amount),
-          tripID: this.props.navigation.state.params.trip.id
+            name: this.state.name,
+            date: this.state.selectedDate,
+            wayofsplit: this.state.wayofsplit,
+            paidBy: '...', //MultiSelect in UI? Can be multiple people
+            users: [{ name: "", amount: 0 }], //Users stored in this.props.navigation.state.params.trip.users, amounts based on wayofsplit
+            category: this.state.category,
+            currency: this.state.currency,
+            amount: parseInt(this.state.amount),
+            tripID: this.props.navigation.state.params.trip.id
         }
 
         /* ==============================
@@ -103,14 +106,14 @@ export default class AddExpense extends Component {
         ============================== */
 
         AsyncStorage.getItem('expenses')
-              .then(req => JSON.parse(req))
-              .then((expenses) => {
-                  expenses.push(expense);
-                  AsyncStorage.setItem('expenses', JSON.stringify(expenses))
-                        .then(res => console.log('Expenses stored in AsyncStorage'))
-                        .catch(error => console.log('Error storing expenses'));
-              })
-              .catch(error => console.log('Error loading expenses'));
+            .then(req => JSON.parse(req))
+            .then((expenses) => {
+                expenses.push(expense);
+                AsyncStorage.setItem('expenses', JSON.stringify(expenses))
+                    .then(res => console.log('Expenses stored in AsyncStorage'))
+                    .catch(error => console.log('Error storing expenses'));
+            })
+            .catch(error => console.log('Error loading expenses'));
 
         // AsyncStorage.getItem('expenses', (err, expenses) => {
         //     if (expenses !== null) {
@@ -156,104 +159,106 @@ export default class AddExpense extends Component {
         }
     }
 
+
     render() {
         const { trip } = this.props.navigation.state.params;
 
         return (
-            <View style={styles.container}>
-                <View style={styles.contentView}>
-                    <Text style={styles.label}>{I18n.t('name')}</Text>
-                    <TextInput
-                        placeholder={I18n.t('nameplaceholder')}
-                        style={styles.inputField}
-                        underlineColorAndroid="#ffd185"
-                        placeholderTextColor="#bfbfbf"
-                        onChangeText={(text) => this.setState({ name: text })} />
+            <ScrollView>
+                <View style={styles.container}>
+                    <View style={styles.contentView}>
+                        <Text style={styles.label}>{I18n.t('name')}</Text>
+                        <TextInput
+                            placeholder={I18n.t('nameplaceholder')}
+                            style={styles.inputField}
+                            underlineColorAndroid="#ffd185"
+                            placeholderTextColor="#bfbfbf"
+                            onChangeText={(text) => this.setState({ name: text })} />
 
-                    <Text style={styles.label}>{I18n.t('amount')}</Text>
-                    <TextInput
-                        placeholder={I18n.t('amountplaceholder')}
-                        style={styles.inputField}
-                        keyboardType='numeric'
-                        underlineColorAndroid="#ffd185"
-                        placeholderTextColor="#bfbfbf"
-                        onChangeText={(text) => this.checkAmount(text)}
-                        value={this.state.amount} />
+                        <Text style={styles.label}>{I18n.t('amount')}</Text>
+                        <TextInput
+                            placeholder={I18n.t('amountplaceholder')}
+                            style={styles.inputField}
+                            keyboardType='numeric'
+                            underlineColorAndroid="#ffd185"
+                            placeholderTextColor="#bfbfbf"
+                            onChangeText={(text) => this.checkAmount(text)}
+                            value={this.state.amount} />
 
 
-                    <Text style={styles.label}>Date</Text>
-                    <DatePicker
-                        mode='date'
-                        format='DD/MM/YYYY'
-                        // minDate= {yearbefore}
-                        // maxDate={yearafter}
-                        date={this.state.selectedDate}
-                        showIcon={true}
-                        placeholder={I18n.t('dateplaceholder')}
-                        hideText={false}
-                        date={this.state.selectedDate}
-                        style={{ width: 200 }}
-                        customStyles={{
-                            dateIcon: {
-                                position: 'absolute',
-                                left: 13,
-                                marginLeft: 13
-                            },
-                            dateInput: {
-                                marginLeft: 13,
-                                padding: 10,
-                                borderWidth: 0
-                            },
-                            placeholderText: {
-                                color: "#818181"
-                            },
-                            dateText: {
-                                marginLeft: 10
-                            }
-                        }}
-                        onDateChange={(date) => this.setState({ selectedDate: date })}
-                    />
+                        <Text style={styles.label}>Date</Text>
+                        <DatePicker
+                            mode='date'
+                            format='DD/MM/YYYY'
+                            // minDate= {yearbefore}
+                            // maxDate={yearafter}
+                            date={this.state.selectedDate}
+                            showIcon={true}
+                            placeholder={I18n.t('dateplaceholder')}
+                            hideText={false}
+                            date={this.state.selectedDate}
+                            style={{ width: 200 }}
+                            customStyles={{
+                                dateIcon: {
+                                    position: 'absolute',
+                                    left: 13,
+                                    marginLeft: 13
+                                },
+                                dateInput: {
+                                    marginLeft: 13,
+                                    padding: 10,
+                                    borderWidth: 0
+                                },
+                                placeholderText: {
+                                    color: "#818181"
+                                },
+                                dateText: {
+                                    marginLeft: 10
+                                }
+                            }}
+                            onDateChange={(date) => this.setState({ selectedDate: date })}
+                        />
 
-                    <Text style={styles.label}>{I18n.t('categoryexpense')} {this.state.category}</Text>
-                    <Picker style={styles.picker} selectedValue={this.state.category} onValueChange={(itemValue, itemIndex) => this.setCategory(itemValue)}>
-                        <Picker.Item label={I18n.t('choosecategory')} value={I18n.t('categoryplaceholder')} />
-                        {this.renderPickerCategories()}
-                        <Picker.Item label={I18n.t('addcategory')} value="add" />
-                    </Picker>
+                        <Text style={styles.label}>{I18n.t('categoryexpense')} {this.state.category}</Text>
+                        <Picker style={styles.picker} selectedValue={this.state.category} onValueChange={(itemValue, itemIndex) => this.setCategory(itemValue)}>
+                            <Picker.Item label={I18n.t('choosecategory')} value={I18n.t('categoryplaceholder')} />
+                            {this.renderPickerCategories()}
+                            <Picker.Item label={I18n.t('addcategory')} value="add" />
+                        </Picker>
 
-                    <Text style={styles.label}>{I18n.t('currency')} {this.state.currency}</Text>
-                    <Picker style={styles.picker} selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
-                        <Picker.Item label={I18n.t('choosecurrency')} value={I18n.t('currencyplaceholder')} />
-                        {this.renderPickerCurrencies()}
-                    </Picker>
+                        <Text style={styles.label}>{I18n.t('currency')} {this.state.currency}</Text>
+                        <Picker style={styles.picker} selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
+                            <Picker.Item label={I18n.t('choosecurrency')} value={I18n.t('currencyplaceholder')} />
+                            {this.renderPickerCurrencies()}
+                        </Picker>
 
-                    <Text style={styles.label}>{I18n.t('split')} {this.state.wayofsplit}</Text>
-                    {/* <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplit({ itemValue })}> */}
+                        <Text style={styles.label}>{I18n.t('split')} {this.state.wayofsplit}</Text>
+                        {/* <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplit({ itemValue })}> */}
 
                         {this.renderSplitPicker()}
-                    {/* </Picker> */}
+                        {/* </Picker> */}
+                        
 
-                    <TouchableOpacity style={styles.saveButton} onPress={() => this.saveExpense()}>
-                        <Text style={styles.saveText}>{I18n.t('savebutton')}</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.saveButton} onPress={() => this.saveExpense()}>
+                            <Text style={styles.saveText}>{I18n.t('savebutton')}</Text>
+                        </TouchableOpacity>
 
-
-
-                    <Prompt
-                        title={I18n.t('addcategory')}
-                        placeholder={I18n.t('newcategory')}
-                        visible={this.state.promptVisible}
-                        onCancel={() => this.setState({
-                            promptVisible: false,
-                            message: "You cancelled"
-                        })}
-                        onSubmit={(value) => this.setState({
-                            promptVisible: false,
-                            message: `You added "${value}"`,
-                            category: value
-                        })} />
+                        <Prompt
+                            title={I18n.t('addcategory')}
+                            placeholder={I18n.t('newcategory')}
+                            visible={this.state.promptVisible}
+                            onCancel={() => this.setState({
+                                promptVisible: false,
+                                message: "You cancelled"
+                            })}
+                            onSubmit={(value) => this.setState({
+                                promptVisible: false,
+                                message: `You added "${value}"`,
+                                category: value
+                            })} />
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }
@@ -287,12 +292,16 @@ const styles = StyleSheet.create({
         height: 40,
         alignItems: 'center',
         backgroundColor: '#ffd185',
-        borderRadius: 5
+        borderRadius: 5,
+        marginTop: 10
     },
     saveText: {
         fontSize: 15,
         lineHeight: 28,
         color: '#303030',
         textAlign: 'center'
+    },
+    checker: {
+        marginLeft: 10
     }
 });

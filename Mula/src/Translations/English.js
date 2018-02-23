@@ -87,5 +87,7 @@ export default {
     evensplit: 'Split equally',
     langtest: 'en',
     dateplaceholder: 'Select date...',
-    newcategory: 'New category'
+    newcategory: 'New category',
+    addgroupexpense: 'Add shared expense',
+    groupexpense: 'Shared expense'
 }
