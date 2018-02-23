@@ -13,7 +13,6 @@ export default class AddExpense extends Component {
             selectedDate: "",
             category: I18n.t('categoryplaceholder'),
             currency: I18n.t('currencyplaceholder'),
-            wayofsplit: I18n.t('splitplaceholder'),
             language: I18n.t('langtest')
         }
     }
@@ -46,26 +45,6 @@ export default class AddExpense extends Component {
         }
     }
 
-    setSplitNl(item) {
-        if (item == "Betaal door rekening") {
-            this.setState({ wayofsplit: 'Betaal door rekening' });
-        } else if (item == "Betaal eigen deel") {
-            this.setState({ wayofsplit: 'Betaal eigen deel' });
-        } else if (item == "Gelijk verdeeld") {
-            this.setState({ wayofsplit: 'Gelijk verdeeld' });
-        }
-    }
-
-    setSplitEn(item) {
-        if (item == "Pay by bill") {
-            this.setState({ wayofsplit: 'Pay by bill' });
-        } else if (item == "Pay own share") {
-            this.setState({ wayofsplit: 'Pay own share' });
-        } else if (item == "Split equally") {
-            this.setState({ wayofsplit: 'Split equally' });
-        }
-    }
-
     checkAmount(text) {
         var newText = '';
         let numbers = '0123456789';
@@ -85,75 +64,38 @@ export default class AddExpense extends Component {
         this.setState({ amount: newText });
     }
 
-    saveExpense() {
+    getExpense() {
         let expense = {
-          name: this.state.name,
-          date: this.state.selectedDate,
-          wayofsplit: this.state.wayofsplit,
-          paidBy: '...', //MultiSelect in UI? Can be multiple people
-          users: [{name:"",amount:0}], //Users stored in this.props.navigation.state.params.trip.users, amounts based on wayofsplit
-          category: this.state.category,
-          currency: this.state.currency,
-          amount: parseInt(this.state.amount),
-          tripID: this.props.navigation.state.params.trip.id
+            name: this.state.name,
+            amount: parseInt(this.state.amount),
+            date: this.state.selectedDate,
+            category: this.state.category,
+            currency: this.state.currency,
+            payers: [],
+            users: [],
+            tripID: this.props.navigation.state.params.trip.id
         }
 
         /* ==============================
           Add new expense to AsyncStorage
         ============================== */
 
-        AsyncStorage.getItem('expenses')
-              .then(req => JSON.parse(req))
-              .then((expenses) => {
-                  expenses.push(expense);
-                  AsyncStorage.setItem('expenses', JSON.stringify(expenses))
-                        .then(res => console.log('Expenses stored in AsyncStorage'))
-                        .catch(error => console.log('Error storing expenses'));
-              })
-              .catch(error => console.log('Error loading expenses'));
-
-        // AsyncStorage.getItem('expenses', (err, expenses) => {
-        //     if (expenses !== null) {
-        //       console.log('Data Found', expenses);
-        //       let expenses = JSON.parse(expenses);
-        //       console.log(expenses);
-        //       // AsyncStorage.setItem('savedIds', JSON.stringify(newIds));
-        //     } else {
-        //       console.log('Data Not Found');
-        //       // AsyncStorage.setItem('savedIds', JSON.stringify(id));
-        //     }
-        // });
+        // AsyncStorage.getItem('expenses')
+        //       .then(req => JSON.parse(req))
+        //       .then((expenses) => {
+        //           expenses.push(expense);
+        //           AsyncStorage.setItem('expenses', JSON.stringify(expenses))
+        //                 .then(res => console.log('Expenses stored in AsyncStorage'))
+        //                 .catch(error => console.log('Error storing expenses'));
+        //       })
+        //       .catch(error => console.log('Error loading expenses'));
 
         //===========================
         //ADD EXPENSE TO DB CODE HERE
         //===========================
 
-        this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip, update: true });
+        this.props.navigation.navigate('AddExpensePayers', { expense, trip: this.props.navigation.state.params.trip });
 
-    }
-
-    renderSplitPicker = () => {
-        console.log("chosen: " + this.state.wayofsplit)
-        if (this.state.language == 'en') {
-            return (
-                <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplitEn(itemValue)}>
-                    <Picker.Item label='--- Choose option ---' value='Choose option' />
-                    <Picker.Item value='Pay by bill' label='Pay by bill' />
-                    <Picker.Item value='Pay own share' label='Pay own share' />
-                    <Picker.Item value='Split equally' label='Split equally' />
-                </Picker>
-            );
-        }
-        else if (this.state.language == 'nl') {
-            return (
-                <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplitNl(itemValue)}>
-                    <Picker.Item label='--- Kies een optie ---' value='Kies optie' />
-                    <Picker.Item value='Betaal door rekening' label='Betaal door rekening' />
-                    <Picker.Item value='Betaal eigen deel' label='Betaal eigen deel' />
-                    <Picker.Item value='Gelijk verdeeld' label='Gelijk verdeeld' />
-                </Picker>
-            );
-        }
     }
 
     render() {
@@ -180,13 +122,12 @@ export default class AddExpense extends Component {
                         onChangeText={(text) => this.checkAmount(text)}
                         value={this.state.amount} />
 
-
                     <Text style={styles.label}>Date</Text>
                     <DatePicker
                         mode='date'
                         format='DD/MM/YYYY'
-                        // minDate= {yearbefore}
-                        // maxDate={yearafter}
+                        // minDate= {this.props.navigation.state.params.trip.startDate}
+                        // maxDate={this.props.navigation.state.params.trip.endDate}
                         date={this.state.selectedDate}
                         showIcon={true}
                         placeholder={I18n.t('dateplaceholder')}
@@ -227,17 +168,9 @@ export default class AddExpense extends Component {
                         {this.renderPickerCurrencies()}
                     </Picker>
 
-                    <Text style={styles.label}>{I18n.t('split')} {this.state.wayofsplit}</Text>
-                    {/* <Picker style={styles.picker} selectedValue={this.state.wayofsplit} onValueChange={(itemValue) => this.setSplit({ itemValue })}> */}
-
-                        {this.renderSplitPicker()}
-                    {/* </Picker> */}
-
-                    <TouchableOpacity style={styles.saveButton} onPress={() => this.saveExpense()}>
-                        <Text style={styles.saveText}>{I18n.t('savebutton')}</Text>
+                    <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
+                        <Text style={styles.saveText}>Who paid?</Text>
                     </TouchableOpacity>
-
-
 
                     <Prompt
                         title={I18n.t('addcategory')}
