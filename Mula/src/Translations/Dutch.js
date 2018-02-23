@@ -27,7 +27,7 @@ export default {
     expenses: 'Uitgaven',
     category: 'Categoriën',
     balance: 'Balans',
-    
+
 
     //TripCategory
     nocategoriesfound: 'GEEN CATEGORIËN GEVONDEN',
@@ -91,6 +91,15 @@ export default {
     dateplaceholder: 'Kies datum...',
     newcategory: 'Nieuwe categorie',
     addgroupexpense: 'Voeg gezamenlijke kost toe',
-    groupexpense: 'Gezamenlijke kost'
+    groupexpense: 'Gezamenlijke kost',
+    whopaid: 'Wie heeft betaald',
+
+    //AddExpensePayers
+    payers: 'Wie heeft er betaald',
+    whoconsumed: 'Wie nam er deel',
+
+    //AddEXpenseConsumed
+    consumers: 'Wie nam er deel in de uitgave',
+    sharedexpense: 'Voeg gezamenlijke kost toe'
 
 }

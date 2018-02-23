@@ -20,11 +20,11 @@ export default class AddExpensePayers extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.contentView}>
-                    <Text style={styles.title}>Who consumed?</Text>
+                    <Text style={styles.title}>{I18n.t('consumers')}</Text>
 
 
                     <TouchableOpacity style={styles.saveButton} onPress={() => console.log(this.state.users)}>
-                        <Text style={styles.saveText}>Shared?</Text>
+                        <Text style={styles.saveText}>{I18n.t('sharedexpense')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

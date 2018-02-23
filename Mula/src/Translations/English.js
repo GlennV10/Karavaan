@@ -89,5 +89,14 @@ export default {
     dateplaceholder: 'Select date...',
     newcategory: 'New category',
     addgroupexpense: 'Add shared expense',
-    groupexpense: 'Shared expense'
+    groupexpense: 'Shared expense',
+    whopaid: 'Who paid',
+
+    //AddExpensePayers
+    payers: 'Who paid for it',
+    whoconsumed: 'Who participated',
+
+    //AddEXpenseConsumed
+    consumers: 'Who participated in the expense',
+    sharedexpense: 'Add shared expense'
 }

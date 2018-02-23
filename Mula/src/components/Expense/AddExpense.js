@@ -217,7 +217,7 @@ export default class AddExpense extends Component {
                     {this.addGroupCostField()}
 
                     <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
-                        <Text style={styles.saveText}>Who paid?</Text>
+                        <Text style={styles.saveText}>{I18n.t('whopaid')}</Text>
                     </TouchableOpacity>
 
                     <Prompt

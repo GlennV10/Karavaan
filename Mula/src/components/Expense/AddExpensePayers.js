@@ -69,11 +69,11 @@ export default class AddExpensePayers extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.contentView}>
-                    <Text style={styles.title}>Who are the payers?</Text>
+                    <Text style={styles.title}>{I18n.t('payers')}</Text>
                     { this.renderPayers() }
 
                     <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
-                        <Text style={styles.saveText}>Who consumed?</Text>
+                        <Text style={styles.saveText}>{I18n.t('whoconsumed')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
