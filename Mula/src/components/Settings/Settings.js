@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert, ScrollView } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import I18n from 'react-native-i18n';
-import FloatLabelTextInput from 'react-native-floating-label-text-input';
 
 export default class Settings extends Component {
 

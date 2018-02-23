@@ -1,0 +1,7 @@
+Wat moet er nog bij:
+
+DeleteTrip (-> enkel reisbegeleider -> check role)
+overzicht exporteren naar pdf (!)
+
+expenses -> Who paid? how? -> who consumed?
+
