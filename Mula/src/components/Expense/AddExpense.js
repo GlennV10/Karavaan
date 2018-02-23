@@ -128,7 +128,7 @@ export default class AddExpense extends Component {
         //ADD EXPENSE TO DB CODE HERE
         //===========================
 
-        this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip, update: true });
+        this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip});
 
     }
 
