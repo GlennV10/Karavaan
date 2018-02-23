@@ -108,30 +108,27 @@ export default class TripDashboard extends React.Component {
               .catch(error => console.log('Error storing expenses'));
     }
 
-    componentDidMount() {
+    /*componentDidMount() {
         AsyncStorage.getItem('expenses')
               .then(req => JSON.parse(req))
               .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
               .catch(error => console.log('Error loading expenses'));
               console.log("geluktDash lolilol");
-    }
+    }*/
 
     _handleUpdate = () => {
       BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
-      console.log("VISIBLE");
+      AsyncStorage.getItem('expenses')
+              .then(req => JSON.parse(req))
+              .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
+              .catch(error => console.log('Error loading expenses'));
+      console.log("UPDATE");
     }
 
     _handleBackButton = () => {
       this.props.navigation.navigate("DashboardTrips");
       return true;
     }
-
-    /*shouldComponentUpdate(nextProps, nextState) {
-      if (this.props.navigation.params.trip !== nextProps.navigation.params.trip) {
-        return true;
-      }
-      return false;
-    }*/
 
     getTripExpenses() {
         let tripExpenses = [];
@@ -159,7 +156,7 @@ export default class TripDashboard extends React.Component {
             tabBarBackgroundColor={'#e2e8e5'}
             tabBarActiveTextColor={'#303030'}
             tabBarInactiveTextColor={'#303030'}>
-              <TripExpenses tabLabel={I18n.t('expenses')} navigator={nav} update={this.props.navigation.state.params.update} expenses={this.getTripExpenses()}/>
+              <TripExpenses tabLabel={I18n.t('expenses')} navigator={nav} expenses={this.getTripExpenses()}/>
               <TripCategory tabLabel={I18n.t('category')} navigator={nav} expenses={this.getTripExpenses()}/>
               <TripTotal tabLabel={I18n.t('balance')} navigator={nav} expenses={this.getTripExpenses()}/>
           </ScrollableTabView>
