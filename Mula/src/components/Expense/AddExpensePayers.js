@@ -13,6 +13,7 @@ export default class AddExpensePayers extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props.navigation.state.params.expense);
         this.populatePayersState();
     }
 
@@ -28,6 +29,16 @@ export default class AddExpensePayers extends Component {
         this.setState({ payers });
     }
 
+    updatePayerAmount(amount, user) {
+        let payers = this.state.payers.slice();
+        for(payer of payers) {
+            if(payer.user === user) {
+                payer.amount = parseInt(amount);
+            }
+        }
+        this.setState({ payers });
+    }
+
     renderPayers() {
         console.log(this.state.payers);
         return this.state.payers.map((payer, index) => {
@@ -36,26 +47,19 @@ export default class AddExpensePayers extends Component {
                     <Text style={styles.label}>{ payer.user }</Text>
                     <TextInput
                         placeholder="Amound paid..."
+                        keyboardType="numeric"
                         style={styles.inputField}
                         underlineColorAndroid="#ffd185"
                         placeholderTextColor="#bfbfbf"
-                        onChangeText={(amount) => console.log(amount)} />
+                        onChangeText={(amount) => this.updatePayerAmount(amount, payer.user)} />
                 </View>
             )
         });
     }
 
     getExpense() {
-        let expense = {
-            name: this.state.name,
-            amount: parseInt(this.state.amount),
-            date: this.state.selectedDate,
-            category: this.state.category,
-            currency: this.state.currency,
-            payers: this.state.payers,
-            users: [],
-            tripID: this.props.navigation.state.params.trip.id
-        }
+        let expense = this.props.navigation.state.params.expense;
+        expense.payers = this.state.payers;
 
         this.props.navigation.navigate('AddExpenseConsumed', { expense, trip: this.props.navigation.state.params.trip });
 
