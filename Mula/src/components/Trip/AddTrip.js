@@ -28,8 +28,7 @@ export default class AddTrip extends Component {
             username: "",
             loadJSON: true,
             connectionMode: "",
-            offlineFriends: {
-            },
+            offlineFriends: {},
             loadTests: true,
             onlineFriends: {},
             isLoading: true,
@@ -207,23 +206,17 @@ export default class AddTrip extends Component {
                         .then((responseJson) => {
 
                             console.log("Set loadingStates to false #3");
-                            this.setState({ isLoading: false, loadJSON: false, onlineFriends: responseJson });
+                            this.setState({ isLoading: false, loadJSON: false, offlineFriends: responseJson });
                         }).then(() => {
                             // =======================================================
-                            // get offline data
+                            // set asyncstorage data
                             // =======================================================
-
-                            console.log("Getting offline friends data #4" );
-                            AsyncStorage.getItem('friends').then((friendsJson, error) => {
-                                if (error) {
-                                    console.log(error);
-                                }
-                                this.setState({ offlineFriends: JSON.parse(friendsJson) });
-                                //AsyncStorage.setItem('friends', JSON.parse(friendsJson));
-                                console.log("CHECK HERE");
-                                console.log(this.state.offlineFriends);
-                                console.log(this.state.offlineFriends.friends);
-                            });
+                                AsyncStorage.setItem('friends', JSON.stringify(this.state.offlineFriends.friends));
+                               // AsyncStorage.setItem({'friends': JSON.parse(friendsJson) });
+                               //this.setState({ offlineFriends: JSON.parse(friendsJson) });
+                               
+                                
+                            
                         });
                 } else {
                     // Get offline data en render
@@ -233,6 +226,7 @@ export default class AddTrip extends Component {
                             console.log(error);
                         }
                         // Send JSON to renderfriends
+                        
                         console.log("Parse friends with offline data #8");
                         this.setState({ friends: JSON.parse(friendsJson), offlineFriends: JSON.parse(friendsJson), loadJSON: false, isLoading: false });
                     });

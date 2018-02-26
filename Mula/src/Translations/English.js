@@ -87,5 +87,19 @@ export default {
     evensplit: 'Split equally',
     langtest: 'en',
     dateplaceholder: 'Select date...',
-    newcategory: 'New category'
+    newcategory: 'New category',
+    addgroupexpense: 'Add shared expense',
+    groupexpense: 'Shared expense',
+    whopaid: 'Who paid',
+    date: 'Datum',
+
+    //AddExpensePayers
+    payers: 'Who paid for it',
+    whoconsumed: 'Who participated',
+    back: 'Delete expense',
+    backmessage: 'Are you sure you want to delete this expense?', 
+
+    //AddEXpenseConsumed
+    consumers: 'Who participated in the expense',
+    sharedexpense: 'Add shared expense'
 }

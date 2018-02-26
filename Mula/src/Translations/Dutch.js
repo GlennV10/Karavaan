@@ -27,7 +27,7 @@ export default {
     expenses: 'Uitgaven',
     category: 'Categoriën',
     balance: 'Balans',
-    
+
 
     //TripCategory
     nocategoriesfound: 'GEEN CATEGORIËN GEVONDEN',
@@ -89,6 +89,20 @@ export default {
     evensplit: 'Gelijk verdeeld',
     langtest: 'nl',
     dateplaceholder: 'Kies datum...',
-    newcategory: 'Nieuwe categorie'
+    newcategory: 'Nieuwe categorie',
+    addgroupexpense: 'Voeg gezamenlijke kost toe',
+    groupexpense: 'Gezamenlijke kost',
+    whopaid: 'Wie heeft betaald',
+    date: 'Datum',
+
+    //AddExpensePayers
+    payers: 'Wie heeft er betaald',
+    whoconsumed: 'Wie nam er deel',
+    back: 'Verwijder uitgave',
+    backmessage: 'Bent u zeker dat u de uitgave wil verwijderen?', 
+
+    //AddEXpenseConsumed
+    consumers: 'Wie nam er deel in de uitgave',
+    sharedexpense: 'Voeg gezamenlijke kost toe'
 
 }

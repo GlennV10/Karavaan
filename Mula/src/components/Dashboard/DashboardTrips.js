@@ -32,7 +32,8 @@ export default class DashboardTrips extends Component {
       startDate: '9 maart 2018',
       endDate: '11 maart 2018',
       currencies: ['USD', 'CAD'],
-      categories: ['Restaurant', 'Taxi', 'Drank']
+      categories: ['Restaurant', 'Taxi', 'Drank'],
+      users: ['Glenn', 'Annelore', 'Deni', 'Jens']
     },
     {
       id: 2,
@@ -40,7 +41,8 @@ export default class DashboardTrips extends Component {
       startDate: '20 april 2018',
       endDate: '22 april 2018',
       currencies: ['AUD', 'NZD'],
-      categories: ['Restaurant', 'Taxi', 'Drank']
+      categories: ['Restaurant', 'Taxi', 'Drank'],
+      users: ['Glenn', 'Annelore', 'Deni']
     },
     {
       id: 3,
@@ -48,7 +50,8 @@ export default class DashboardTrips extends Component {
       startDate: '8 september 2018',
       endDate: '23 september 2018',
       currencies: ['USD', 'EUR', 'THD'],
-      categories: ['Restaurant', 'Taxi', 'Drank']
+      categories: ['Restaurant', 'Taxi', 'Drank'],
+      users: ['Glenn']
     }]
 
     AsyncStorage.setItem('trips', JSON.stringify(trips))
