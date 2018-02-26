@@ -38,9 +38,27 @@ export default class AddExpensePayers extends Component {
 
     getExpense() {
         let expense = this.props.navigation.state.params.expense;
-        expense.consumers = this.state.consumers;
+        // expense.consumers = this.state.consumers;
 
-        this.props.navigation.navigate('AddExpenseShared', { expense, trip: this.props.navigation.state.params.trip });
+        /* ==============================
+          Add new expense to AsyncStorage
+        ============================== */
+
+        AsyncStorage.getItem('expenses')
+              .then(req => JSON.parse(req))
+              .then((expenses) => {
+                  expenses.push(expense);
+                  AsyncStorage.setItem('expenses', JSON.stringify(expenses))
+                        .then(res => console.log('Expenses stored in AsyncStorage'))
+                        .catch(error => console.log('Error storing expenses'));
+              })
+              .catch(error => console.log('Error loading expenses'));
+
+        //===========================
+        //ADD EXPENSE TO DB CODE HERE
+        //===========================
+
+        this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip });
 
     }
 
@@ -50,7 +68,7 @@ export default class AddExpensePayers extends Component {
                 <View style={styles.contentView}>
                     <Text style={styles.title}>Shared</Text>
 
-                    <TouchableOpacity style={styles.saveButton} onPress={() => console.log("SHARED")}>
+                    <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
                         <Text style={styles.saveText}>{I18n.t('sharedexpense')}</Text>
                     </TouchableOpacity>
                 </View>
