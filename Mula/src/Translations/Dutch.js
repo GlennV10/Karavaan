@@ -98,7 +98,7 @@ export default {
     payers: 'Wie heeft er betaald',
     whoconsumed: 'Wie nam er deel',
     back: 'Verwijder uitgave',
-    backmessage: 'Bent u zeker dat u de uitgave wil verwijderen?',
+    backmessage: 'Bent u zeker dat u de uitgave wil verwijderen?', 
 
     //AddEXpenseConsumed
     consumers: 'Wie nam er deel in de uitgave',

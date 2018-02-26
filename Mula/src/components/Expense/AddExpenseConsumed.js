@@ -23,7 +23,7 @@ export default class AddExpensePayers extends Component {
         Alert.alert(
             I18n.t('back'),
             I18n.t('backmessage'), [{
-            text: 'Cancel',
+            text: 'Cancel', 
             onPress: () => console.log('Cancel Pressed'),
             style: 'cancel'
           }, {
