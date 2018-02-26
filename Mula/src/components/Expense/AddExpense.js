@@ -91,7 +91,7 @@ export default class AddExpense extends Component {
     getExpense() {
         let expense = {
             name: this.state.name,
-            amount: parseInt(this.state.amount),
+            amount: parseFloat(this.state.amount),
             date: this.state.selectedDate,
             category: this.state.category,
             currency: this.state.currency,
