@@ -8,7 +8,8 @@ export default class TripCategory extends Component {
       this.state = {
         user: "",
         categories: [],
-        currency: "USD"
+        currency: "USD",
+        rates: []
       }
     }
 
@@ -25,8 +26,24 @@ export default class TripCategory extends Component {
       convert to selected currency(?)
     =================================*/
 
+    renderValuta(rate) {
+        return Object.keys(rate).map((val) => {
+            var label = val + "(" + rate[val] + ")";
+            return label;
+        });
+
+    }
+
+    parseRates(data) {
+        console.log(data.rates)
+        //if (this.state.loadRates) {
+            this.setState({ rates: data.rates });
+            this.renderValutaToArray(data.rates);
+        //}
+    }
+
     getExchangeRatesWithBase(baseCurrency) {
-        console.log("Rates met base wordt uitgevoerd"+ baseCurrency)
+        console.log("Rates met base wordt uitgevoerd " + baseCurrency)
         var url = "https://api.fixer.io/latest?base=" + baseCurrency;
         //if (this.state.loadRates) {
             return fetch(url)
