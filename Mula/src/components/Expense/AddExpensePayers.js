@@ -54,7 +54,7 @@ export default class AddExpensePayers extends Component {
         let payers = this.state.payers.slice();
         for (payer of payers) {
             if (payer.user === user) {
-                payer.amount = parseInt(amount);
+                payer.amount = parseFloat(amount);
             }
         }
         this.setState({ payers });
