@@ -24,8 +24,23 @@ export default class TripCategory extends Component {
       Check currencies,
       convert to selected currency(?)
     =================================*/
+
+    getExchangeRatesWithBase(baseCurrency) {
+        console.log("Rates met base wordt uitgevoerd"+ baseCurrency)
+        var url = "https://api.fixer.io/latest?base=" + baseCurrency;
+        //if (this.state.loadRates) {
+            return fetch(url)
+                .then((resp) => resp.json() )
+                .then((data) => this.parseRates(data));
+        //}
+        console.log(url);
+    }
+
     calculateCategoryAmount() {
         let categories = [];
+        
+        let data = this.getExchangeRatesWithBase(this.state.currency);
+        console.log(data);
         for(expense of this.props.expenses) {
             if(categories.findIndex(i => i.category === expense.category) < 0) {
                 let category = {
