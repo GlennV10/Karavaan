@@ -23,8 +23,8 @@ export default class AddExpensePayers extends Component {
 
     _handleBackButton = () => {
         Alert.alert(
-          I18n.t('closeapp'),
-          I18n.t('closeappmessage'), [{
+          I18n.t('back'),
+          I18n.t('backmessage'), [{
             text: 'Cancel',
             onPress: () => console.log('Cancel Pressed'),
             style: 'cancel'
