@@ -3,7 +3,7 @@ import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, Touchabl
 import {StackNavigator} from 'react-navigation';
 import I18n from 'react-native-i18n';
 
-export default class TripSettings extends Component{
+export default class CategorySettings extends Component{
 
     constructor(props) {
         super(props);
@@ -32,7 +32,7 @@ export default class TripSettings extends Component{
 
     updateCurrency(newCurrency) {
         this.setState({ currency: newCurrency});
-        AsyncStorage.setItem('currency', newCurrency).then(console.log("Currency updated to " + newCurrency));
+        AsyncStorage.setItem('categoryCurrency', newCurrency).then(console.log("Currency updated to " + newCurrency));
     }
 
     render(){
