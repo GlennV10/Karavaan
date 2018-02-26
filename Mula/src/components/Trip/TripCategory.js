@@ -132,13 +132,13 @@ export default class TripCategory extends Component {
                             selectedValue={this.state.selected}
                             onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
                             {trip.currencies.map((item, index) => {
-                                return (<Item label={item} value={index} key={index}/>) 
+                                return (<Item label={item} value={index} key={index}/>)
                             })}
                         </Picker>
                     )
                 }
             }
-            
+
         }
         else return null;
     }
