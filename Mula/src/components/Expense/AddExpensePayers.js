@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
@@ -23,20 +23,20 @@ export default class AddExpensePayers extends Component {
 
     _handleBackButton = () => {
         Alert.alert(
-          I18n.t('back'),
-          I18n.t('backmessage'), [{
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel'
-          }, {
-            text: 'OK',
-            onPress: () => this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip })
-          },], {
-            cancelable: false
-          }
+            I18n.t('back'),
+            I18n.t('backmessage'), [{
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+            }, {
+                text: 'OK',
+                onPress: () => this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip })
+            },], {
+                cancelable: false
+            }
         )
         return true;
-      }
+    }
 
     populatePayersState() {
         let payers = this.state.payers.slice();
@@ -88,16 +88,18 @@ export default class AddExpensePayers extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <View style={styles.contentView}>
-                    <Text style={styles.title}>{I18n.t('payers')}</Text>
-                    {this.renderPayers()}
+            <ScrollView style={styles.container}>
+                <View>
+                    <View style={styles.contentView}>
+                        <Text style={styles.title}>{I18n.t('payers')}</Text>
+                        {this.renderPayers()}
 
-                    <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
-                        <Text style={styles.saveText}>{I18n.t('whoconsumed')}</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
+                            <Text style={styles.saveText}>{I18n.t('whoconsumed')}</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }

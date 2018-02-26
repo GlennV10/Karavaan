@@ -91,6 +91,7 @@ export default {
     addgroupexpense: 'Add shared expense',
     groupexpense: 'Shared expense',
     whopaid: 'Who paid',
+    date: 'Datum',
 
     //AddExpensePayers
     payers: 'Who paid for it',

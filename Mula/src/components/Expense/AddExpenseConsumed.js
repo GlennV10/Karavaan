@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
@@ -24,18 +24,18 @@ export default class AddExpensePayers extends Component {
         Alert.alert(
             I18n.t('back'),
             I18n.t('backmessage'), [{
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel'
-          }, {
-            text: 'OK',
-            onPress: () => this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip })
-          },], {
-            cancelable: false
-          }
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+            }, {
+                text: 'OK',
+                onPress: () => this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip })
+            },], {
+                cancelable: false
+            }
         )
         return true;
-      }
+    }
 
     populateConsumersState() {
         let consumers = this.state.consumers.slice();
@@ -87,16 +87,18 @@ export default class AddExpensePayers extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <View style={styles.contentView}>
-                    <Text style={styles.title}>{I18n.t('consumers')}</Text>
-                    {this.renderConsumers()}
+            <ScrollView style={styles.container}>
+                <View>
+                    <View style={styles.contentView}>
+                        <Text style={styles.title}>{I18n.t('consumers')}</Text>
+                        {this.renderConsumers()}
 
-                    <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
-                        <Text style={styles.saveText}>{I18n.t('sharedexpense')}</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
+                            <Text style={styles.saveText}>{I18n.t('sharedexpense')}</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }

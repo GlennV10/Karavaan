@@ -178,7 +178,7 @@ export default class AddExpense extends Component {
                         onChangeText={(text) => this.checkAmount(text)}
                         value={this.state.amount} />
 
-                    <Text style={styles.label}>Date</Text>
+                    <Text style={styles.label}>{I18n.t('date')}</Text>
                     <DatePicker
                         mode='date'
                         format='DD/MM/YYYY'
