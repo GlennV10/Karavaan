@@ -8,14 +8,15 @@ export default class TripCategory extends Component {
       this.state = {
         user: "",
         categories: [],
+        currency: "USD"
       }
     }
 
-    componentDidMount() {
-        AsyncStorage.getItem('expenses')
+    componentWillMount() {
+        /*AsyncStorage.getItem('expenses')
               .then(req => JSON.parse(req))
               .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
-              .catch(error => console.log('Error loading expenses'));
+              .catch(error => console.log('Error loading expenses'));*/
         this.calculateCategoryAmount();
     }
 
@@ -43,6 +44,10 @@ export default class TripCategory extends Component {
             }
         }
         this.setState({ categories });
+    }
+
+    updateCurrency(newCurrency) {
+        this.setState({ currency: newCurrency});
     }
 
     getCategoryExpenses(category) {
@@ -79,9 +84,37 @@ export default class TripCategory extends Component {
         }
     }
 
+    renderPicker() {
+        if(this.props.expenses.length !== 0) {
+            let myTrips = [];
+            let currencies = null;
+            AsyncStorage.getItem('trips')
+              .then(req => JSON.parse(req))
+              .then(trips => console.log('Trips loaded from AsyncStorage') & console.log(trips) & (myTrips = trips))
+              .catch(error => console.log('Error loading trips'));
+            for(trip of myTrips) {
+                if(trip.id == this.props.expenses[0].tripID) {
+                    return(
+                        <Picker
+                            mode="dropdown"
+                            selectedValue={this.state.selected}
+                            onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
+                            {trip.currencies.map((item, index) => {
+                                return (<Item label={item} value={index} key={index}/>) 
+                            })}
+                        </Picker>
+                    )
+                }
+            }
+            
+        }
+        else return null;
+    }
+
     render() {
         return (
             <View style={styles.container}>
+                { this.renderPicker() }
                 <ScrollView style={styles.categoryList}>
                     { this.renderCategories() }
                 </ScrollView>
