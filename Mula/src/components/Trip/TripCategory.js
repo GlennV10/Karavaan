@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Picker } from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Picker, AsyncStorage } from 'react-native';
 import I18n from 'react-native-i18n';
 
 export default class TripCategory extends Component {
@@ -100,13 +100,13 @@ export default class TripCategory extends Component {
                             selectedValue={this.state.selected}
                             onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
                             {trip.currencies.map((item, index) => {
-                                return (<Item label={item} value={index} key={index}/>) 
+                                return (<Item label={item} value={index} key={index}/>)
                             })}
                         </Picker>
                     )
                 }
             }
-            
+
         }
         else return null;
     }
