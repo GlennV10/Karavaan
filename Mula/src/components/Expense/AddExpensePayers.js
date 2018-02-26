@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
@@ -15,11 +15,32 @@ export default class AddExpensePayers extends Component {
     componentDidMount() {
         console.log(this.props.navigation.state.params.expense);
         this.populatePayersState();
+
+        this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
+        this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
+
     }
+
+    _handleBackButton = () => {
+        Alert.alert(
+          I18n.t('closeapp'),
+          I18n.t('closeappmessage'), [{
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+          }, {
+            text: 'OK',
+            onPress: () => this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip })
+          },], {
+            cancelable: false
+          }
+        )
+        return true;
+      }
 
     populatePayersState() {
         let payers = this.state.payers.slice();
-        for(user of this.props.navigation.state.params.trip.users) {
+        for (user of this.props.navigation.state.params.trip.users) {
             let payer = {
                 user: user,
                 amount: 0
@@ -31,8 +52,8 @@ export default class AddExpensePayers extends Component {
 
     updatePayerAmount(amount, user) {
         let payers = this.state.payers.slice();
-        for(payer of payers) {
-            if(payer.user === user) {
+        for (payer of payers) {
+            if (payer.user === user) {
                 payer.amount = parseInt(amount);
             }
         }
@@ -42,9 +63,9 @@ export default class AddExpensePayers extends Component {
     renderPayers() {
         console.log(this.state.payers);
         return this.state.payers.map((payer, index) => {
-            return(
+            return (
                 <View key={index}>
-                    <Text style={styles.label}>{ payer.user }</Text>
+                    <Text style={styles.label}>{payer.user}</Text>
                     <TextInput
                         placeholder="Amound paid..."
                         keyboardType="numeric"
@@ -70,7 +91,7 @@ export default class AddExpensePayers extends Component {
             <View style={styles.container}>
                 <View style={styles.contentView}>
                     <Text style={styles.title}>{I18n.t('payers')}</Text>
-                    { this.renderPayers() }
+                    {this.renderPayers()}
 
                     <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
                         <Text style={styles.saveText}>{I18n.t('whoconsumed')}</Text>

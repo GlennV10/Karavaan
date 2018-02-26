@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
@@ -14,7 +14,27 @@ export default class AddExpensePayers extends Component {
 
     componentDidMount() {
         console.log(this.props.navigation.state.params.expense);
+
+        this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
+        this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
     }
+
+    _handleBackButton = () => {
+        Alert.alert(
+          I18n.t('closeapp'),
+          I18n.t('closeappmessage'), [{
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+          }, {
+            text: 'OK',
+            onPress: () => this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip })
+          },], {
+            cancelable: false
+          }
+        )
+        return true;
+      }
 
     render() {
         return (

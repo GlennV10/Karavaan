@@ -170,7 +170,8 @@ export default App = StackNavigator({
         },
         headerBackTitleStyle:{
             color: "#FFF"
-        }
+        },
+        headerLeft: null,
       }),
       screen: AddExpense
     },
@@ -185,7 +186,8 @@ export default App = StackNavigator({
         },
         headerBackTitleStyle:{
             color: "#FFF"
-        }
+        },
+        headerLeft: null,
       }),
       screen: AddExpensePayers
     },
@@ -200,7 +202,8 @@ export default App = StackNavigator({
         },
         headerBackTitleStyle:{
             color: "#FFF"
-        }
+        },
+        headerLeft: null,
       }),
       screen: AddExpenseConsumed
     },
