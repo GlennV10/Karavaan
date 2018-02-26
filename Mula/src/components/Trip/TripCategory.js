@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Picker } from 'react-native';
 import I18n from 'react-native-i18n';
 
 export default class TripCategory extends Component {
     constructor(props) {
       super(props);
       this.state = {
+        user: "",
         categories: [],
       }
     }
 
     componentDidMount() {
+        AsyncStorage.getItem('expenses')
+              .then(req => JSON.parse(req))
+              .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
+              .catch(error => console.log('Error loading expenses'));
         this.calculateCategoryAmount();
     }
 
