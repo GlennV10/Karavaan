@@ -88,7 +88,7 @@ export default {
     langtest: 'en',
     dateplaceholder: 'Select date...',
     newcategory: 'New category',
-    addgroupexpense: 'Add shared expense',
+    addgroupexpense: 'Shared expense (on top of amount)',
     groupexpense: 'Shared expense',
     whopaid: 'Who paid',
     date: 'Datum',

@@ -88,6 +88,25 @@ export default class AddExpense extends Component {
         this.setState({ amount: newText });
     }
 
+    checkGroupAmount(text) {
+        var newText = '';
+        let numbers = '0123456789';
+
+        for (var i = 0; i < text.length; i++) {
+            if (numbers.indexOf(text[i]) > -1) {
+                newText = newText + text[i];
+            }
+            if (text[i] === ',') {
+                newText = newText + '.';
+            }
+            if (text[i] === '.') {
+                newText = newText + '.';
+            }
+        }
+
+        this.setState({ groupAmount: newText });
+    }
+
     getExpense() {
         let expense = {
             name: this.state.name,
@@ -145,7 +164,7 @@ export default class AddExpense extends Component {
                         keyboardType='numeric'
                         underlineColorAndroid="#ffd185"
                         placeholderTextColor="#bfbfbf"
-                        onChangeText={(text) => this.checkAmount(text)}
+                        onChangeText={(text) => this.checkGroupAmount(text)}
                         value={this.state.groupAmount}>
                     </TextInput>
                 </View>
