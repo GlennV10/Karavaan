@@ -43,7 +43,8 @@ export default class AddExpensePayers extends Component {
         for (user of this.props.navigation.state.params.trip.users) {
             let payer = {
                 user: user,
-                amount: 0
+                amount: 0,
+                checkamount: ""
             }
             payers.push(payer);
         }
@@ -54,7 +55,8 @@ export default class AddExpensePayers extends Component {
         let payers = this.state.payers.slice();
         for (payer of payers) {
             if (payer.user === user) {
-                payer.amount = amount;
+                payer.amount = parseFloat(amount);
+                payer.checkamount = amount
             }
         }
         this.setState({ payers });
@@ -85,10 +87,10 @@ export default class AddExpensePayers extends Component {
         var total = expense.amount;
         var payertotal = 0;
         for (payer of this.state.payers) {
-            if (payer.amount == "") {
+            if (payer.checkamount == "") {
                 payertotal = payertotal + 0;
             } else {
-                payertotal = payertotal + parseInt(payer.amount);
+                payertotal = payertotal + parseFloat(payer.amount);
             }
         }
 

@@ -26,20 +26,20 @@ export default class TripDashboard extends React.Component {
             name: 'Restaurant A',
             date: '9 maart 2018',
             paidBy: 'Glenn',
-            users: [{
-                name: "Annelore",
+            consumers: [{
+                user: "Annelore",
                 amount: 10
             },
             {
-                name: "Deni",
+                user: "Deni",
                 amount: 10
             },
             {
-                name: "Jens",
+                user: "Jens",
                 amount: 10
             },
             {
-                name: "Glenn",
+                user: "Glenn",
                 amount: 20
             }],
             category: 'Food',
@@ -52,7 +52,7 @@ export default class TripDashboard extends React.Component {
             name: 'Taxi',
             date: '10 maart 2018',
             paidBy: 'Annelore',
-            users: [{name:"",amount:0}],
+            consumers: [{user:"",amount:0}],
             category: 'Taxi',
             currency: 'CAD',
             amount: 75,
@@ -63,7 +63,7 @@ export default class TripDashboard extends React.Component {
             name: 'Drinks',
             date: '10 maart 2018',
             paidBy: 'Annelore',
-            users: [{name:"",amount:0}],
+            consumers: [{user:"",amount:0}],
             category: 'Drinks',
             currency: 'CAD',
             amount: 10,
@@ -74,7 +74,7 @@ export default class TripDashboard extends React.Component {
             name: 'Taxi 2',
             date: '11 maart 2018',
             paidBy: 'Glenn',
-            users: [{name:"",amount:0}],
+            consumers: [{user:"",amount:0}],
             category: 'Taxi',
             currency: 'CAD',
             amount: 55,
@@ -85,7 +85,7 @@ export default class TripDashboard extends React.Component {
             name: 'Restaurant B',
             date: '21 april 2018',
             paidBy: 'Deni',
-            users: [{name:"",amount:0}],
+            consumers: [{user:"",amount:0}],
             category: 'Food',
             currency: 'AUD',
             amount: 88,
@@ -96,7 +96,7 @@ export default class TripDashboard extends React.Component {
             name: 'Restaurant C',
             date: '12 september 2018',
             paidBy: 'Jens',
-            users: [{name:"",amount:0}],
+            consumers: [{user:"",amount:0}],
             category: 'Food',
             currency: 'EUR',
             amount: 10,

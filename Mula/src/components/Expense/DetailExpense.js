@@ -13,14 +13,14 @@ export default class DetailExpense extends Component{
     }
 
     renderUsers() {
-      return this.props.navigation.state.params.expense.users.map((user, index) => {
+      return this.props.navigation.state.params.expense.consumers.map((consumer, index) => {
         return (
           <View style={styles.userDetails} key={index}>
               <View style={styles.userNameContainer}>
-                  <Text style={styles.userName}>{ user.name }</Text>
+                  <Text style={styles.userName}>{ consumer.user }</Text>
               </View>
               <View style={{flex: .3}}>
-                  <Text style={styles.userAmount}>{ user.amount.toFixed(2) }</Text>
+                  <Text style={styles.userAmount}>{ consumer.amount.toFixed(2) }</Text>
                   <Text style={styles.expenseCurrency}>{ this.props.navigation.state.params.expense.currency }</Text>
               </View>
           </View>

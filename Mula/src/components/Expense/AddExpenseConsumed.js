@@ -48,7 +48,8 @@ export default class AddExpensePayers extends Component {
         for (user of this.props.navigation.state.params.trip.users) {
             let consumer = {
                 user: user,
-                amount: this.props.navigation.state.params.expense.amount / counter + ""
+                amount: this.props.navigation.state.params.expense.amount / counter + "",
+                checkamount: ""
             }
             consumers.push(consumer);
         }
@@ -59,7 +60,8 @@ export default class AddExpensePayers extends Component {
         let consumers = this.state.consumers.slice();
         for (consumer of consumers) {
             if (consumer.user === user) {
-                consumer.amount = amount;
+                consumer.amount = parseFloat(amount);
+                consumer.checkamount = amount
             }
         }
 
@@ -92,10 +94,10 @@ export default class AddExpensePayers extends Component {
         var total = expense.amount;
         var consumertotal = 0;
         for (consumer of this.state.consumers) {
-            if (consumer.amount == "") {
+            if (consumer.checkamount == "") {
                 consumertotal = consumertotal + 0;
             } else {
-                consumertotal = consumertotal + parseInt(consumer.amount);
+                consumertotal = consumertotal + parseFloat(consumer.amount);
             }
         }
 

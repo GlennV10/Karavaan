@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Picker, AsyncStorage } from 'react-native';
 import I18n from 'react-native-i18n';
 
 export default class TripCategory extends Component {
     constructor(props) {
       super(props);
       this.state = {
+        user: "",
         categories: [],
+        currency: "USD"
       }
     }
 
-    componentDidMount() {
+    componentWillMount() {
+        /*AsyncStorage.getItem('expenses')
+              .then(req => JSON.parse(req))
+              .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
+              .catch(error => console.log('Error loading expenses'));*/
         this.calculateCategoryAmount();
     }
 
@@ -18,8 +24,23 @@ export default class TripCategory extends Component {
       Check currencies,
       convert to selected currency(?)
     =================================*/
+
+    getExchangeRatesWithBase(baseCurrency) {
+        console.log("Rates met base wordt uitgevoerd"+ baseCurrency)
+        var url = "https://api.fixer.io/latest?base=" + baseCurrency;
+        //if (this.state.loadRates) {
+            return fetch(url)
+                .then((resp) => resp.json() )
+                .then((data) => this.parseRates(data));
+        //}
+        console.log(url);
+    }
+
     calculateCategoryAmount() {
         let categories = [];
+        
+        let data = this.getExchangeRatesWithBase(this.state.currency);
+        console.log(data);
         for(expense of this.props.expenses) {
             if(categories.findIndex(i => i.category === expense.category) < 0) {
                 let category = {
@@ -38,6 +59,10 @@ export default class TripCategory extends Component {
             }
         }
         this.setState({ categories });
+    }
+
+    updateCurrency(newCurrency) {
+        this.setState({ currency: newCurrency});
     }
 
     getCategoryExpenses(category) {
@@ -74,9 +99,37 @@ export default class TripCategory extends Component {
         }
     }
 
+    renderPicker() {
+        if(this.props.expenses.length !== 0) {
+            let myTrips = [];
+            let currencies = null;
+            AsyncStorage.getItem('trips')
+              .then(req => JSON.parse(req))
+              .then(trips => console.log('Trips loaded from AsyncStorage') & console.log(trips) & (myTrips = trips))
+              .catch(error => console.log('Error loading trips'));
+            for(trip of myTrips) {
+                if(trip.id == this.props.expenses[0].tripID) {
+                    return(
+                        <Picker
+                            mode="dropdown"
+                            selectedValue={this.state.selected}
+                            onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
+                            {trip.currencies.map((item, index) => {
+                                return (<Item label={item} value={index} key={index}/>)
+                            })}
+                        </Picker>
+                    )
+                }
+            }
+
+        }
+        else return null;
+    }
+
     render() {
         return (
             <View style={styles.container}>
+                { this.renderPicker() }
                 <ScrollView style={styles.categoryList}>
                     { this.renderCategories() }
                 </ScrollView>

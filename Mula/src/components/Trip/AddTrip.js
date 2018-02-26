@@ -32,9 +32,10 @@ export default class AddTrip extends Component {
             loadTests: true,
             onlineFriends: {},
             isLoading: true,
-            tripList: []
+            trips: []
 
         };
+        
 
     }
 
@@ -50,7 +51,12 @@ export default class AddTrip extends Component {
     
 
     addTrip(){
-        if(this.state.connectionMode == "online"){
+        /*this.validate({
+            tripName: {minlength:3, maxlength:7, required: true},
+            startDate: {date: 'YYYY-MM-DD', minDate:this.yearbefore, maxDate: this.yearafter},
+            endDate: {date: 'YYYY-MM-DD', minDate:this.state.startDate, maxDate: this.yearafter}
+          });*/
+        if(this.state.connectionMode == "pony"){
             return fetch('url',{
             method: 'POST',
             header:{
@@ -76,9 +82,7 @@ export default class AddTrip extends Component {
             })
         }
         else {
-            AsyncStorage.getItem("trips").then(trips);
-            this.setState({ tripList: trips });
-            tripList.push({
+            let trp = {
                 email: this.state.username,
                 tripName: this.state.title, 
                 startDate: this.state.selectedStartDate,
@@ -86,19 +90,29 @@ export default class AddTrip extends Component {
                 participants: this.state.selectedItems,
                 expenseList: [],
                 baseCurrency: this.state.baseCurrency,
-                currencies: this.state.currencies})
-                this.moveOn();
+                currencies: this.state.currencies
+            }
+            AsyncStorage.getItem('trips')
+                .then(req => JSON.parse(req))
+                .then((trips) => {
+                    trips.push(trp);
+                    console.log(trips);
+                    AsyncStorage.setItem('trips', JSON.stringify(trips))
+                        .then(res => console.log('trips stored in AsyncStorage'))
+                        .catch(error => console.log('Error storing trips'));
+                })
+                .catch(error => console.log('Error loading trips'));
+            
+            this.moveOn();
         }
       }
-      moveOn(){
-
-            console.log('moveOn');
-            this.props.navigation.navigate('DashboardTrips');
-        
-    }
       //////////////////////////////////////////////////////////
       ////////////////////CURRENCY//////////////////////////////
-
+    moveOn(){
+                    console.log('moveOn');
+                    this.props.navigation.navigate('DashboardTrips');       
+    }
+     
     onSelectedCurrencyChange = selectedCurrencies => {
         this.setState({ selectedCurrencies });
         console.log(selectedCurrencies);
@@ -116,20 +130,22 @@ export default class AddTrip extends Component {
         }
     }
     getExchangeRatesWithBase(baseCurrency) {
+        console.log("Rates met base wordt uitgevoerd"+ baseCurrency)
         var url = "https://api.fixer.io/latest?base=" + baseCurrency;
-        console.log(this.state.loadRates)
-        if (this.state.loadRates) {
+        //if (this.state.loadRates) {
             return fetch(url)
-                .then((resp) => resp.json())
+                .then((resp) => resp.json() )
                 .then((data) => this.parseRates(data));
-        }
+        //}
         console.log(url);
     }
 
     parseRates(data) {
-        if (this.state.loadRates) {
-            this.setState({ loadRates: false, rates: data.rates });
-        }
+        console.log(data.rates)
+        //if (this.state.loadRates) {
+            this.setState({ rates: data.rates });
+            this.renderValutaToArray(data.rates);
+        //}
     }
     renderValuta(rate) {
         return Object.keys(rate).map((val) => {
@@ -212,10 +228,6 @@ export default class AddTrip extends Component {
                             // set asyncstorage data
                             // =======================================================
                                 AsyncStorage.setItem('friends', JSON.stringify(this.state.offlineFriends.friends));
-                               // AsyncStorage.setItem({'friends': JSON.parse(friendsJson) });
-                               //this.setState({ offlineFriends: JSON.parse(friendsJson) });
-                               
-                                
                             
                         });
                 } else {
@@ -246,215 +258,141 @@ export default class AddTrip extends Component {
         var yearb = new Date().getFullYear() - 1;
         var yearbefore = "" + yearb + "-" + month + "-" + new Date().getUTCDate();
         var yearafter = "" + yeara + "-" + month + "-" + new Date().getUTCDate();
+        
 
         console.log();
         
         return(
             <ScrollView style={styles.container}>
-            <View style= {styles.separator}>
-                <TextInput
-                    placeholder="Trip name"
-                    style={styles.inputField}
-                    underlineColorAndroid="transparent"
-                    placeholderTextColor="#818181"
-                    onChangeText={(text)=>console.log(text) & this.setState({title: text})}/>
-            </View>
-            <View  style={{flex: 1, flexDirection: 'row'}}>
-                <TextInput
-                    placeholder= "Startdate"
-                    value = {this.state.selectedStartDate}
-                    style={styles.input}
-                    underlineColorAndroid="transparent"
-                    placeholderTextColor="#818181"
-                    keyboardType= 'numeric'
-                    onChangeText={(text)=>console.log(text) & this.setState({selectedStartDate: text})}
-                />
-                <DatePicker
-                    mode='date'
-                    format='YYYY-MM-DD'
-                    minDate= {yearbefore}
-                    maxDate={yearafter}
-                    date={this.state.selectedStartDate}
-                    showIcon={true}
-                    placeholder="Select date..."
-                    hideText={true}
-                    // date={this.state.selectedDate}
-                    style={[styles.input, styles.datePickerStyle]}
-                    onDateChange={(date) => this.setState({selectedStartDate: date})}
-                    />
-             </View >
-             
-             <View style={[{flex: 1, flexDirection: 'row'},styles.separator]}>
-                <TextInput
-                    placeholder= "Enddate"
-                    value = {this.state.selectedEndDate}
-                    style={styles.input}
-                    underlineColorAndroid="transparent"
-                    placeholderTextColor="#818181"
-                    keyboardType= 'numeric'
-                    onChangeText={(text)=>console.log(text) & this.setState({selectedEndDate: text})}
+                
+                    <View style= {styles.separator}>
+                        <TextInput
+                            ref="tripName"
+                            placeholder="Trip name"
+                            style={styles.inputField}
+                            underlineColorAndroid="transparent"
+                            placeholderTextColor="#818181"
+                            onChangeText={(text)=>console.log(text) & this.setState({title: text})}/>
+                    </View>
+                
+                    <View  style={{flex: 1, flexDirection: 'row'}}>
+                        <TextInput
+                            ref="startDate"
+                            placeholder= "Startdate"
+                            value = {this.state.selectedStartDate}
+                            style={styles.input}
+                            underlineColorAndroid="transparent"
+                            placeholderTextColor="#818181"
+                            keyboardType= 'numeric'
+                            onChangeText={(text)=>console.log(text) & this.setState({selectedStartDate: text})}
+                        />
+                        {/*this.isFieldInError('startDate') && this.getErrorsInField('startDate').map(errorMessage => <Text>{errorMessage}</Text>) */}
                         
-                />
-                <DatePicker
-                    mode='date'
-                    format='YYYY-MM-DD'
-                    minDate={this.state.selectedStartDate}
-                    maxDate={yearafter}
-                    date={this.state.selectedEndDate}
-                    showIcon={true}
-                    placeholder="Select date..."
-                    hideText={true}
-                    // date={this.state.selectedDate}
-                    style={[styles.input, styles.datePickerStyle]}
-                    onDateChange={(date) => this.setState({selectedEndDate: date})}
-                />
+                        <DatePicker
+                            mode='date'
+                            format='YYYY-MM-DD'
+                            minDate= {yearbefore}
+                            maxDate={yearafter}
+                            date={this.state.selectedStartDate}
+                            showIcon={true}
+                            placeholder="Select date..."
+                            hideText={true}
+                            // date={this.state.selectedDate}
+                            style={[styles.input, styles.datePickerStyle]}
+                            onDateChange={(date) => this.setState({selectedStartDate: date})}
+                            />
+                    </View >
+                    
+                        <View style={[{flex: 1, flexDirection: 'row'},styles.separator]}>
+                            <TextInput
+                                placeholder= "Enddate"
+                                value = {this.state.selectedEndDate}
+                                style={styles.input}
+                                underlineColorAndroid="transparent"
+                                placeholderTextColor="#818181"
+                                keyboardType= 'numeric'
+                                onChangeText={(text)=>console.log(text) & this.setState({selectedEndDate: text})}
+                                    
+                            />
+                            <DatePicker
+                                mode='date'
+                                format='YYYY-MM-DD'
+                                minDate={this.state.selectedStartDate}
+                                maxDate={yearafter}
+                                date={this.state.selectedEndDate}
+                                showIcon={true}
+                                placeholder="Select date..."
+                                hideText={true}
+                                // date={this.state.selectedDate}
+                                style={[styles.input, styles.datePickerStyle]}
+                                onDateChange={(date) => this.setState({selectedEndDate: date})}
+                            />
 
-            </View>
+                        </View>
             
-            
-            <View style={[styles.subItem, styles.separator]}>
-                <Text style ={styles.textfield}>Select your travel company</Text>
-                <MultiSelect
-                hideTags
-                items={this.state.offlineFriends.friends}
-                uniqueKey="email"
-                ref={(component) => { this.multiSelect = component }}
-                selectedItems={selectedItems}
-                onSelectedItemsChange={this.onSelectedItemsChange}
-                selectText="Pick Items"
-                searchInputPlaceholderText="Search Items..."
-                onChangeInput={ (item)=> console.log(item)}
-                displayKey="userName"
-                style={backgroundColor = "#d4e8e5"}
-                selectedItemTextColor="#edc14f"
-                selectedItemIconColor="#edc14f"
-                itemTextColor="#303030"
-                searchInputStyle={{ color: '#303030' }}
-                submitButtonColor="#edc14f"
-                submitButtonText="Submit"
-                color="#303030" />
-               </View> 
-                {/* <View >
-                    <TextInput
-                        placeholder="Trip name"
-                        style={styles.inputField}
-                        underlineColorAndroid="transparent"
-                        placeholderTextColor="#818181"
-                        onChangeText={(text) => console.log(text) & this.setState({ title: text })} />
-                    <TextInput
-                        placeholder="Startdate"
-                        value={this.state.selectedStartDate}
-                        style={styles.input}
-                        underlineColorAndroid="transparent"
-                        placeholderTextColor="#818181"
-                        keyboardType='numeric'
-                        onChangeText={(text) => console.log(text) & this.setState({ selectedStartDate: text })}
-
-                    />
-                    <DatePicker
-                        mode='date'
-                        format='YYYY-MM-DD'
-                        minDate={yearbefore}
-                        maxDate={yearafter}
-                        date={this.state.selectedStartDate}
-                        showIcon={true}
-                        placeholder="Select date..."
-                        hideText={true}
-                        // date={this.state.selectedDate}
-                        style={[styles.input, styles.datePickerStyle]}
-                        onDateChange={(date) => this.setState({ selectedStartDate: date })}
-                    />
-                    <TextInput
-                        placeholder="Enddate"
-                        value={this.state.selectedEndDate}
-                        style={styles.input}
-                        underlineColorAndroid="transparent"
-                        placeholderTextColor="#818181"
-                        keyboardType='numeric'
-                        onChangeText={(text) => console.log(text) & this.setState({ selectedEndDate: text })}
-
-                    />
-                    <DatePicker
-                        mode='date'
-                        format='YYYY-MM-DD'
-                        minDate={this.state.selectedStartDate}
-                        maxDate={yearafter}
-                        date={this.state.selectedEndDate}
-                        showIcon={true}
-                        placeholder="Select date..."
-                        hideText={true}
-                        // date={this.state.selectedDate}
-                        style={[styles.input, styles.datePickerStyle]}
-                        onDateChange={(date) => this.setState({ selectedEndDate: date })}
-                    />
-
-                </View>
-                <View>
-                    <Text></Text>
-                </View>
-
-                <View style={[styles.subItem]}>
-                    <Text>Select your travel company</Text>
-                    <MultiSelect
-                        hideTags
-                        items={this.state.offlineFriends.friends}
-                        uniqueKey="email"
-                        ref={(component) => { this.multiSelect = component }}
-                        selectedItems={selectedItems}
-                        onSelectedItemsChange={this.onSelectedItemsChange}
-                        selectText="Pick Items"
-                        searchInputPlaceholderText="Search Items..."
-                        onChangeInput={(item) => console.log(item)}
-                        displayKey="userName"
-                        style={backgroundColor = "#d4e8e5"}
-                        tagTextColor='#303030'
-                        selectedItemTextColor="#edc14f"
-                        selectedItemIconColor="#edc14f"
-                        itemTextColor="#303030"
-                        searchInputStyle={{ color: '#303030' }}
-                        submitButtonColor="#edc14f"
-                        submitButtonText="Submit"
-                    />
-
-                </View> */}
-                <View style={[styles.subItem, styles.separator]}>
-                    <Text>Select your base currency</Text>
-                    <Picker style={{ flex: .50 }}
-                        onValueChange={currency => this.setState({ baseCurrency: currency }) & this.setState({ loadRates: true }) & this.getExchangeRatesWithBase(currency) & this.renderValutaToArray(this.state.rates)}
-                        selectedValue={this.state.baseCurrency}>
-                        <Picker.Item value={this.state.baseCurrency} label={this.state.baseCurrency} key={this.state.baseCurrency} />
-                        {this.renderValutaWithoutRate(this.state.rates)}
-                    </Picker>
-                </View>
+                        <View style={[styles.subItem, styles.separator]}>
+                            <Text style ={styles.textfield}>Select your travel company</Text>
+                            <MultiSelect
+                            hideTags
+                            items={this.state.offlineFriends.friends}
+                            uniqueKey="email"
+                            ref={(component) => { this.multiSelect = component }}
+                            selectedItems={selectedItems}
+                            onSelectedItemsChange={this.onSelectedItemsChange}
+                            selectText="Pick Items"
+                            searchInputPlaceholderText="Search Items..."
+                            onChangeInput={ (item)=> console.log(item)}
+                            displayKey="userName"
+                            style={backgroundColor = "#d4e8e5"}
+                            selectedItemTextColor="#edc14f"
+                            selectedItemIconColor="#edc14f"
+                            itemTextColor="#303030"
+                            searchInputStyle={{ color: '#303030' }}
+                            submitButtonColor="#edc14f"
+                            submitButtonText="Submit"
+                            color="#303030" />
+                        </View> 
+                    
+                            
+                        <View style={[styles.subItem, styles.separator]}>
+                            <Text>Select your base currency</Text>
+                            <Picker style={{ flex: .50 }}
+                                onValueChange={currency => this.setState({ baseCurrency: currency })  & this.setState({ loadRates: true }) & this.getExchangeRatesWithBase(currency) }
+                                selectedValue={this.state.baseCurrency}>
+                                <Picker.Item value= "EUR" label="EUR" key="EUR"/>
+                                <Picker.Item value= "USD" label="USD" key="USD"/>
+                            </Picker>
+                        </View>
 
 
-                <View>
-                    <Text style ={styles.textfield}>Select the other currency you're going to use on the trip</Text>
-                    <MultiSelect
-                        hideTags
-                        items={this.state.currencies}
-                        uniqueKey="id"
-                        ref={(component) => { this.multiSelect = component }}
-                        selectedItems={selectedCurrencies}
-                        onSelectedItemsChange={this.onSelectedCurrencyChange}
-                        selectText="Pick your currencies"
-                        searchInputPlaceholderText="Search currency..."
-                        onChangeInput={(item) => console.log(item)}
-                        backgroundColor="#d4e8e5"
-                        displayKey="name"
-                        style={backgroundColor = "#d4e8e5"}
-                        tagTextColor='#303030'
-                        selectedItemTextColor="#edc14f"
-                        selectedItemIconColor="#edc14f"
-                        itemTextColor="#303030"
-                        displayKey="name"
-                        searchInputStyle={{ color: '#303030' }}
-                        submitButtonColor="#edc14f"
-                        submitButtonText="Submit"
-                    />
+                        <View>
+                            <Text style ={styles.textfield}>Select the other currency you're going to use on the trip</Text>
+                            <MultiSelect
+                                hideTags
+                                items={this.state.currencies}
+                                uniqueKey="id"
+                                ref={(component) => { this.multiSelect = component }}
+                                selectedItems={selectedCurrencies}
+                                onSelectedItemsChange={this.onSelectedCurrencyChange}
+                                selectText="Pick your currencies"
+                                searchInputPlaceholderText="Search currency..."
+                                onChangeInput={(item) => console.log(item)}
+                                backgroundColor="#d4e8e5"
+                                displayKey="name"
+                                style={backgroundColor = "#d4e8e5"}
+                                tagTextColor='#303030'
+                                selectedItemTextColor="#edc14f"
+                                selectedItemIconColor="#edc14f"
+                                itemTextColor="#303030"
+                                displayKey="name"
+                                searchInputStyle={{ color: '#303030' }}
+                                submitButtonColor="#edc14f"
+                                submitButtonText="Submit"
+                            />
                 
                 
             </View>
+           
             {/* <View style={[styles.subItem, styles.separator]}>
                 <Text style ={styles.textfield}>Select your base currency</Text>
                 <Picker style={{flex:.50}}           
@@ -500,7 +438,8 @@ export default class AddTrip extends Component {
                         onPress={()=> this.addTrip() & console.log("Waiting for backend...")}
                         
             />
-            
+               
+
             
             </ScrollView>
             

@@ -3,7 +3,7 @@ import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, Touchabl
 import {StackNavigator} from 'react-navigation';
 import I18n from 'react-native-i18n';
 
-export default class Settings extends Component{
+export default class TripSettings extends Component{
 
     constructor(props) {
         super(props);
