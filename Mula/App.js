@@ -207,6 +207,22 @@ export default App = StackNavigator({
       }),
       screen: AddExpenseConsumed
     },
+    AddExpenseShared: {
+      navigationOptions: ({ navigation }) => ({
+        title: I18n.t('addExpense'),
+        headerStyle:{
+          backgroundColor: '#6fc2b0'
+        },
+        headerTitleStyle:{
+            color: '#FFF'
+        },
+        headerBackTitleStyle:{
+            color: "#FFF"
+        },
+        headerLeft: null,
+      }),
+      screen: AddExpenseShared
+    },
     TripSettings: {
       navigationOptions: ({ navigation }) => ({
         title: I18n.t('tripsettings'),

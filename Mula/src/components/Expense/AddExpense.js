@@ -32,7 +32,7 @@ export default class AddExpense extends Component {
         Alert.alert(
             I18n.t('back'),
             I18n.t('backmessage'), [{
-                text: 'Cancel', 
+                text: 'Cancel',
                 onPress: () => console.log('Cancel Pressed'),
                 style: 'cancel'
             }, {
@@ -96,7 +96,7 @@ export default class AddExpense extends Component {
             category: this.state.category,
             currency: this.state.currency,
             payers: [],
-            users: [],
+            consumers: [],
             tripID: this.props.navigation.state.params.trip.id
         }
 

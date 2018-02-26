@@ -8,12 +8,13 @@ export default class AddExpensePayers extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            users: []
+            consumers: []
         }
     }
 
     componentDidMount() {
         console.log(this.props.navigation.state.params.expense);
+        this.populateConsumersState();
 
         this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
         this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
@@ -23,7 +24,7 @@ export default class AddExpensePayers extends Component {
         Alert.alert(
             I18n.t('back'),
             I18n.t('backmessage'), [{
-            text: 'Cancel', 
+            text: 'Cancel',
             onPress: () => console.log('Cancel Pressed'),
             style: 'cancel'
           }, {
@@ -36,14 +37,62 @@ export default class AddExpensePayers extends Component {
         return true;
       }
 
+    populateConsumersState() {
+        let consumers = this.state.consumers.slice();
+        for (user of this.props.navigation.state.params.trip.users) {
+            let consumer = {
+                user: user,
+                amount: 0
+            }
+            consumers.push(consumer);
+        }
+        this.setState({ consumers });
+    }
+
+    updateConsumerAmount(amount, user) {
+        let consumers = this.state.consumers.slice();
+        for (consumer of consumers) {
+            if (consumer.user === user) {
+                consumer.amount = parseInt(amount);
+            }
+        }
+        this.setState({ consumers });
+    }
+
+    renderConsumers() {
+        console.log(this.state.consumers);
+        return this.state.consumers.map((consumer, index) => {
+            return (
+                <View key={index}>
+                    <Text style={styles.label}>{consumer.user}</Text>
+                    <TextInput
+                        placeholder="Amount consumed..."
+                        keyboardType="numeric"
+                        style={styles.inputField}
+                        underlineColorAndroid="#ffd185"
+                        placeholderTextColor="#bfbfbf"
+                        onChangeText={(amount) => this.updateConsumerAmount(amount, consumer.user)} />
+                </View>
+            )
+        });
+    }
+
+    getExpense() {
+        let expense = this.props.navigation.state.params.expense;
+        expense.consumers = this.state.consumers;
+
+        this.props.navigation.navigate('AddExpenseShared', { expense, trip: this.props.navigation.state.params.trip });
+
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.contentView}>
                     <Text style={styles.title}>{I18n.t('consumers')}</Text>
+                    {this.renderConsumers()}
 
-
-                    <TouchableOpacity style={styles.saveButton} onPress={() => console.log(this.state.users)}>
+                    <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
                         <Text style={styles.saveText}>{I18n.t('sharedexpense')}</Text>
                     </TouchableOpacity>
                 </View>
