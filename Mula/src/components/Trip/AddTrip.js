@@ -8,7 +8,6 @@ import CheckBox from 'react-native-checkbox-heaven';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import MultiSelect from 'react-native-multiple-select';
 import I18n from 'react-native-i18n';
-import ValidationComponent from 'react-native-form-validator';
 
 
 export default class AddTrip extends Component {
@@ -33,7 +32,7 @@ export default class AddTrip extends Component {
             loadTests: true,
             onlineFriends: {},
             isLoading: true,
-            tripList: []
+            trips: []
 
         };
         
@@ -83,9 +82,7 @@ export default class AddTrip extends Component {
             })
         }
         else {
-            AsyncStorage.getItem("trips").then(trips);
-            this.setState({ tripList: trips });
-            tripList.push({
+            let trp = {
                 email: this.state.username,
                 tripName: this.state.title, 
                 startDate: this.state.selectedStartDate,
@@ -93,19 +90,29 @@ export default class AddTrip extends Component {
                 participants: this.state.selectedItems,
                 expenseList: [],
                 baseCurrency: this.state.baseCurrency,
-                currencies: this.state.currencies})
-                this.moveOn();
+                currencies: this.state.currencies
+            }
+            AsyncStorage.getItem('trips')
+                .then(req => JSON.parse(req))
+                .then((trips) => {
+                    trips.push(trp);
+                    console.log(trips);
+                    AsyncStorage.setItem('trips', JSON.stringify(trips))
+                        .then(res => console.log('trips stored in AsyncStorage'))
+                        .catch(error => console.log('Error storing trips'));
+                })
+                .catch(error => console.log('Error loading trips'));
+            
+            this.moveOn();
         }
       }
-      moveOn(){
-
-            console.log('moveOn');
-            this.props.navigation.navigate('DashboardTrips');
-        
-    }
       //////////////////////////////////////////////////////////
       ////////////////////CURRENCY//////////////////////////////
-
+    moveOn(){
+                    console.log('moveOn');
+                    this.props.navigation.navigate('DashboardTrips');       
+    }
+     
     onSelectedCurrencyChange = selectedCurrencies => {
         this.setState({ selectedCurrencies });
         console.log(selectedCurrencies);
