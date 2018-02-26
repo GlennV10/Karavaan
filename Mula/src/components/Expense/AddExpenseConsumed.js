@@ -23,18 +23,18 @@ export default class AddExpensePayers extends Component {
         Alert.alert(
             I18n.t('back'),
             I18n.t('backmessage'), [{
-            text: 'Cancel', 
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel'
-          }, {
-            text: 'OK',
-            onPress: () => this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip })
-          },], {
-            cancelable: false
-          }
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+            }, {
+                text: 'OK',
+                onPress: () => this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip })
+            },], {
+                cancelable: false
+            }
         )
         return true;
-      }
+    }
 
     render() {
         return (

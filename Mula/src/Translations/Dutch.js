@@ -93,6 +93,7 @@ export default {
     addgroupexpense: 'Voeg gezamenlijke kost toe',
     groupexpense: 'Gezamenlijke kost',
     whopaid: 'Wie heeft betaald',
+    date: 'Datum',
 
     //AddExpensePayers
     payers: 'Wie heeft er betaald',

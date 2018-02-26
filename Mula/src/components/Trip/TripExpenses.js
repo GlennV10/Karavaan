@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage } from 'react-native';
 import I18n from 'react-native-i18n';
 // ############ Colors ############
 const red = '#C42525';
@@ -8,17 +8,17 @@ const green = '#4F9628';
 
 export default class TripExpenses extends Component {
     constructor(props) {
-      super(props);
-      this.state = {
-        expenses: [],
-        username: "",
-        isLoading: false
-      }
+        super(props);
+        this.state = {
+            expenses: [],
+            username: "",
+            isLoading: false
+        }
     }
 
     componentWillMount() {
         console.log(this.props.expenses);
-        this.setState({expenses: this.props.expenses});
+        this.setState({ expenses: this.props.expenses });
         // this.setState({ isLoading: true });
         // this.getAllExpensesByTrip();
     }
@@ -31,87 +31,87 @@ export default class TripExpenses extends Component {
       GET-request to get all Expenses from one trip
       trip-id(?) = this.props.navigation.state.params.trip(??)
     */
-    getAllExpensesByTrip(){
+    getAllExpensesByTrip() {
         try {
-          AsyncStorage.getItem('userName').then((username) => {
-              this.setState({ username });
+            AsyncStorage.getItem('userName').then((username) => {
+                this.setState({ username });
             })
-            .then(res => {
-              return fetch('http://193.191.177.169:8080/mula/Controller?action=getBills', {
-                method: 'POST',
-                header:{
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  email: this.state.username
-                })
-              })
-              .then((res) => res.json())
-              .then((response) => {
-                this.setState({ expenses: response.bills })
-              });
-            });
-        } catch(error) {
-          console.log(error);
+                .then(res => {
+                    return fetch('http://193.191.177.169:8080/mula/Controller?action=getBills', {
+                        method: 'POST',
+                        header: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: this.state.username
+                        })
+                    })
+                        .then((res) => res.json())
+                        .then((response) => {
+                            this.setState({ expenses: response.bills })
+                        });
+                });
+        } catch (error) {
+            console.log(error);
         }
     }
 
     renderExpenses() {
-      if(this.state.expenses.length === 0){
-          return(
-              <View style={styles.noExpensesView}>
-                  <Text style={styles.noExpensesText}>{I18n.t('noexpensesfound')}</Text>
-              </View>
-          )
-      } else {
-          return this.state.expenses.map((expense) => {
-              return(
-                  <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={ expense.id }>
-                      <View style={[styles.expenseContainer, styles.half]}>
-                          <View style={styles.splitRow}>
-                              <Text style={[styles.expenseName]}>{ expense.name }</Text>
-                          </View>
-                          <View style={styles.splitRow}>
-                              <Text style={styles.expenseDate}>{ expense.date }</Text>
-                          </View>
-                      </View>
-                      <View style={[styles.expenseAmountContainer, styles.half]}>
-                          <View style={styles.splitRow}>
-                              <Text style={styles.expenseAmount}>{ expense.amount.toFixed(2) }</Text>
-                          </View>
-                          <View style={styles.splitRow}>
-                              <Text style={styles.expenseCurrency}>{ expense.currency }</Text>
-                          </View>
-                      </View>
-                  </TouchableOpacity>
-              )
-          });
-      }
+        if (this.state.expenses.length === 0) {
+            return (
+                <View style={styles.noExpensesView}>
+                    <Text style={styles.noExpensesText}>{I18n.t('noexpensesfound')}</Text>
+                </View>
+            )
+        } else {
+            return this.state.expenses.map((expense) => {
+                return (
+                    <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={expense.id}>
+                        <View style={[styles.expenseContainer, styles.half]}>
+                            <View style={styles.splitRow}>
+                                <Text style={[styles.expenseName]}>{expense.name}</Text>
+                            </View>
+                            <View style={styles.splitRow}>
+                                <Text style={styles.expenseDate}>{expense.date}</Text>
+                            </View>
+                        </View>
+                        <View style={[styles.expenseAmountContainer, styles.half]}>
+                            <View style={styles.splitRow}>
+                                <Text style={styles.expenseAmount}>{expense.amount.toFixed(2)}</Text>
+                            </View>
+                            <View style={styles.splitRow}>
+                                <Text style={styles.expenseCurrency}>{expense.currency}</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                )
+            });
+        }
     }
 
     render() {
-      if(this.state.isLoading) {
-        return(
-          <View style={styles.containerIndicator}>
-              <ActivityIndicator />
-              <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
-                  <Text style={styles.addTripButtonText} >+</Text>
-              </TouchableOpacity>
-          </View>
-        )
-      }
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.containerIndicator}>
+                    <ActivityIndicator />
+                    <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', { trip: this.props.navigator.state.params.trip })}>
+                        <Text style={styles.addTripButtonText} >+</Text>
+                    </TouchableOpacity>
+                </View>
+            )
+        }
 
-      return(
-        <View style={styles.container}>
-            <ScrollView style={styles.expenseList}>
-                { this.renderExpenses() }
-            </ScrollView>
-            <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
-                <Text style={styles.addTripButtonText} >+</Text>
-            </TouchableOpacity>
-        </View>
-      )
+        return (
+            <View style={styles.container}>
+                <ScrollView style={styles.expenseList}>
+                    {this.renderExpenses()}
+                </ScrollView>
+                <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', { trip: this.props.navigator.state.params.trip })}>
+                    <Text style={styles.addTripButtonText} >+</Text>
+                </TouchableOpacity>
+            </View>
+        )
     }
 }
 
