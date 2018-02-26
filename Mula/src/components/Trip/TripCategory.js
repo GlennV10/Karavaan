@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Picker } from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Picker, AsyncStorage } from 'react-native';
 import I18n from 'react-native-i18n';
 
 export default class TripCategory extends Component {
@@ -24,8 +24,23 @@ export default class TripCategory extends Component {
       Check currencies,
       convert to selected currency(?)
     =================================*/
+
+    getExchangeRatesWithBase(baseCurrency) {
+        console.log("Rates met base wordt uitgevoerd"+ baseCurrency)
+        var url = "https://api.fixer.io/latest?base=" + baseCurrency;
+        //if (this.state.loadRates) {
+            return fetch(url)
+                .then((resp) => resp.json() )
+                .then((data) => this.parseRates(data));
+        //}
+        console.log(url);
+    }
+
     calculateCategoryAmount() {
         let categories = [];
+        
+        let data = this.getExchangeRatesWithBase(this.state.currency);
+        console.log(data);
         for(expense of this.props.expenses) {
             if(categories.findIndex(i => i.category === expense.category) < 0) {
                 let category = {
