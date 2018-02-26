@@ -88,8 +88,8 @@ export default class AddExpensePayers extends Component {
 
     render() {
         return (
-            <ScrollView>
-                <View style={styles.container}>
+            <ScrollView style={styles.container}>
+                <View>
                     <View style={styles.contentView}>
                         <Text style={styles.title}>{I18n.t('payers')}</Text>
                         {this.renderPayers()}
