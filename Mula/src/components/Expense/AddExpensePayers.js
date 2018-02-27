@@ -89,7 +89,7 @@ export default class AddExpensePayers extends Component {
             payerTotal += parseFloat(payer.amount);
         }
 
-        if (payerTotal == expense.amount) {
+        if (payerTotal == (expense.amount + expense.groupcost)) {
             for(let i = this.state.payers.length - 1; i >= 0; i--) {
                 if (this.state.payers[i].amount == 0) {
                     this.state.payers.splice(i, 1);

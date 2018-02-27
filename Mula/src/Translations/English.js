@@ -101,5 +101,17 @@ export default {
 
     //AddEXpenseConsumed
     consumers: 'Who participated in the expense',
-    sharedexpense: 'Add shared expense'
+    sharedexpense: 'Add shared expense',
+
+    //AddTrip
+    tripname: 'Destination',
+    startdate: 'Start date',
+    enddate: 'End date',
+    company: 'Select your travel company',
+    tripcurrency: 'Select your base currency',
+    othercurrency: 'Select other usefull currencies',
+    pickcurrency: 'Pick your currencies',
+    savetrip: 'Add trip',
+    selectdate: 'Select date',
+    submit: 'Submit'
 }
