@@ -32,7 +32,8 @@ export default class AddTrip extends Component {
             loadTests: true,
             onlineFriends: {},
             isLoading: true,
-            trips: []
+            trips: [],
+            teller: 0
 
         };
         
@@ -45,17 +46,26 @@ export default class AddTrip extends Component {
 
         this.getExchangeRates();
         this.mainFetch();
-        
-        
+        AsyncStorage.getItem('id_teller')
+            .then(req => JSON.parse(req))
+            .then((id_teller) => {
+            this.setState({teller : id_teller})
+        })
+        .catch(error => console.log('Error loading teller'));
+        console.log("MMMMm"+this.state.teller);
+
       }
     
 
     addTrip(){
+        
         /*this.validate({
             tripName: {minlength:3, maxlength:7, required: true},
             startDate: {date: 'YYYY-MM-DD', minDate:this.yearbefore, maxDate: this.yearafter},
             endDate: {date: 'YYYY-MM-DD', minDate:this.state.startDate, maxDate: this.yearafter}
           });*/
+          
+          console.log(this.state.teller)
         if(this.state.connectionMode == "pony"){
             return fetch('url',{
             method: 'POST',
@@ -64,10 +74,10 @@ export default class AddTrip extends Component {
             },
             body: JSON.stringify({
                 email: this.state.username,
-                tripName: this.state.title, 
+                name: this.state.title, 
                 startDate: this.state.selectedStartDate,
                 endDate: this.state.selectedEndDate,
-                participants: this.state.selectedItems,
+                users: this.state.selectedItems,
                 expenseList: [],
                 baseCurrency: this.state.baseCurrency,
                 currencies: this.state.currencies
@@ -82,26 +92,33 @@ export default class AddTrip extends Component {
             })
         }
         else {
+            console.log("NOOOOO"+ this.state.teller)
             let trp = {
+                tripID: this.state.teller,
                 email: this.state.username,
-                tripName: this.state.title, 
+                name: this.state.title, 
                 startDate: this.state.selectedStartDate,
                 endDate: this.state.selectedEndDate,
-                participants: this.state.selectedItems,
+                users: this.state.selectedItems,
                 expenseList: [],
                 baseCurrency: this.state.baseCurrency,
-                currencies: this.state.currencies
+                currencies: this.state.selectedCurrencies
             }
             AsyncStorage.getItem('trips')
                 .then(req => JSON.parse(req))
                 .then((trips) => {
                     trips.push(trp);
-                    console.log(trips);
                     AsyncStorage.setItem('trips', JSON.stringify(trips))
-                        .then(res => console.log('trips stored in AsyncStorage'))
+                        .then(res => console.log(trips))
                         .catch(error => console.log('Error storing trips'));
                 })
                 .catch(error => console.log('Error loading trips'));
+            var tel = parseInt(this.state.teller) +1;
+            console.log("TEL:"+ tel);
+            
+            AsyncStorage.setItem('id_teller',JSON.stringify(tel))
+                .then(res => console.log(teller))
+                .catch(error => console.log('Error storing teller BBBB'));
             
             this.moveOn();
         }
