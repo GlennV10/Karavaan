@@ -120,6 +120,16 @@ export default class AddExpense extends Component {
             tripID: this.props.navigation.state.params.trip.id
         }
 
+        if(expense.name === "" ||
+              expense.date === "" ||
+              expense.category === "Choose category" ||
+              expense.currency === "Choose currency" ||
+              expense.amount < 0 || isNaN(expense.amount)) {
+                alert("Velden mogen niet leeg zijn");
+        } else {
+            this.props.navigation.navigate('AddExpensePayers', { expense, trip: this.props.navigation.state.params.trip });
+        }
+
         /* ==============================
           Add new expense to AsyncStorage
         ============================== */
@@ -138,7 +148,6 @@ export default class AddExpense extends Component {
         //ADD EXPENSE TO DB CODE HERE
         //===========================
 
-        this.props.navigation.navigate('AddExpensePayers', { expense, trip: this.props.navigation.state.params.trip });
 
     }
 

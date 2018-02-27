@@ -40,15 +40,10 @@ export default class AddExpensePayers extends Component {
     populateConsumersState() {
         let consumers = this.state.consumers.slice();
 
-        var counter = 0;
-        for (user of this.props.navigation.state.params.trip.users) {
-            counter = counter + 1;
-        }
-
         for (user of this.props.navigation.state.params.trip.users) {
             let consumer = {
                 user: user,
-                amount: this.props.navigation.state.params.expense.amount / counter + "",
+                amount: this.props.navigation.state.params.expense.amount / this.props.navigation.state.params.trip.users.length,
                 checkamount: ""
             }
             consumers.push(consumer);
@@ -94,7 +89,7 @@ export default class AddExpensePayers extends Component {
         var total = expense.amount;
         var consumertotal = 0;
         for (consumer of this.state.consumers) {
-            if (consumer.checkamount == "") {
+            if (consumer.amount == "") {
                 consumertotal = consumertotal + 0;
             } else {
                 consumertotal = consumertotal + parseFloat(consumer.amount);
