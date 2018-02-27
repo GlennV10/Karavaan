@@ -13,12 +13,13 @@ export default class TripCategory extends Component {
       }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         /*AsyncStorage.getItem('expenses')
               .then(req => JSON.parse(req))
               .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
               .catch(error => console.log('Error loading expenses'));*/
         this.calculateCategoryAmount();
+        
     }
 
     renderValutaToArray(rate) {
@@ -26,18 +27,16 @@ export default class TripCategory extends Component {
         return Object.keys(rate).map((val) => {
             var label = val + "(" + rate[val] + ")";
             array.push({
-                id: val,
-                name: label,
-                rate: rate[val]
+                name: val,
+                value: rate[val]
             })
-            this.setState({ currencies: array });
+            this.setState({ rates: array });
         });
     }
 
     parseRates(data) {
         console.log(data.rates)
         //if (this.state.loadRates) {
-            this.setState({ rates: data.rates });
             this.renderValutaToArray(data.rates);
         //}
     }
@@ -50,29 +49,49 @@ export default class TripCategory extends Component {
                 .then((resp) => resp.json() )
                 .then((data) => this.parseRates(data));
         //}
-        console.log(url);
     }
 
-    
-
-    calculateCategoryAmount() {
+    async calculateCategoryAmount() {
         let categories = [];
         
-        this.getExchangeRatesWithBase(this.state.currency);
-        console.log(data);
+        await this.getExchangeRatesWithBase(this.state.currency);
         for(expense of this.props.expenses) {
             if(categories.findIndex(i => i.category === expense.category) < 0) {
-                let category = {
-                    category: expense.category,
-                    amount: expense.amount,
-                    expenses: 1
-                };
-                categories.push(category);
+                if(expense.currency == this.state.currency){
+                    let category = {
+                        category: expense.category,
+                        amount: expense.amount,
+                        expenses: 1
+                    };
+                    categories.push(category);
+                }
+                for(currency of this.state.rates) {
+                    if(expense.currency == currency.name) {
+                        let category = {
+                            category: expense.category,
+                            amount: expense.amount/currency.value,
+                            expenses: 1
+                        };
+                        categories.push(category);
+                    }
+                }
             } else {
                 for (let j = 0; j < categories.length; j++) {
                     if (categories[j].category === expense.category) {
-                        categories[j].amount += expense.amount;
-                        categories[j].expenses++;
+                        if(expense.currency == this.state.currency){
+                            let category = {
+                                category: expense.category,
+                                amount: expense.amount,
+                                expenses: 1
+                            };
+                            categories.push(category);
+                        }
+                        for(currency of this.state.rates) {
+                            if(expense.currency == currency.name) {
+                                categories[j].amount += (expense.amount/currency.value);
+                                categories[j].expenses++;
+                            }
+                        }
                     }
                 }
             }
@@ -105,13 +124,22 @@ export default class TripCategory extends Component {
             return this.state.categories.map((category, index) => {
                 return(
                     <TouchableOpacity style={styles.categoryDetails} onPress={() => this.props.navigator.navigate('TripCategoryExpenses', { category: category.category, expenses: this.getCategoryExpenses(category.category) })} key={ index }>
-                          <View style={{flex: .7}}>
-                              <Text style={styles.categoryName}>{ category.category }</Text>
-                              <Text style={styles.categoryExpensesCount}>{ category.expenses } {I18n.t('exp')}</Text>
-                          </View>
-                          <View style={{flex: .3}}>
-                              <Text style={styles.categoryAmount}>{ category.amount.toFixed(2) }</Text>
-                          </View>
+                        <View tyle={[styles.categoryContainer, styles.half]}>
+                            <View style={styles.splitRow}>
+                                <Text style={[styles.categoryName]}>{category.category}</Text>
+                            </View>
+                            <View style={styles.splitRow}>
+                                <Text style={styles.categoryExpensesCount}>{ category.expenses } {I18n.t('exp')}</Text>
+                            </View>
+                        </View>
+                        <View style={[styles.categoryAmountContainer, styles.half]}>
+                            <View style={styles.splitRow}>
+                                <Text style={styles.categoryAmount}>{category.amount.toFixed(2)}</Text>
+                            </View>
+                            <View style={styles.splitRow}>
+                                <Text style={styles.categoryCurrency}>{this.state.currency}</Text>
+                            </View>
+                        </View>
                     </TouchableOpacity>
                 )
             });
@@ -161,24 +189,24 @@ export default class TripCategory extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#d4e8e5'
-  },
-  addTripButton: {
-    backgroundColor: '#3B4859',
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
-  },
-  addTripButtonText: {
-    color: '#fff'
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#d4e8e5'
+    },
+    addTripButton: {
+        backgroundColor: '#3B4859',
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+    },
+    addTripButtonText: {
+        color: '#fff'
+    },
   noCategoriesView: {
     flex: 1,
     alignItems: "center",
@@ -216,7 +244,6 @@ const styles = StyleSheet.create({
       paddingRight: 25,
       // marginTop: 10,
       backgroundColor: '#f7f7f7',
-      alignItems: 'center',
       // borderRadius: 2,
       borderColor: '#d3d3d3',
       borderWidth: .3
@@ -232,5 +259,25 @@ const styles = StyleSheet.create({
   },
   categoryAmount: {
       textAlign: 'right'
-  }
+  },
+  categoryAmountContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center'
+  },
+  splitRow: {
+    flexDirection: 'row'
+  },
+  half: {
+    flex: .5
+  },
+  categoryContainer: {
+    flex: .5,
+    paddingLeft: 10
+  },
+  categoryCurrency: {
+    fontSize: 12,
+    color: '#bababa',
+    textAlign: 'right'
+},
 });
