@@ -21,17 +21,17 @@ export default class TripCategory extends Component {
         this.calculateCategoryAmount();
     }
 
-    /*=================================
-      Check currencies,
-      convert to selected currency(?)
-    =================================*/
-
-    renderValuta(rate) {
+    renderValutaToArray(rate) {
+        var array = [];
         return Object.keys(rate).map((val) => {
             var label = val + "(" + rate[val] + ")";
-            return label;
+            array.push({
+                id: val,
+                name: label,
+                rate: rate[val]
+            })
+            this.setState({ currencies: array });
         });
-
     }
 
     parseRates(data) {
@@ -53,10 +53,12 @@ export default class TripCategory extends Component {
         console.log(url);
     }
 
+    
+
     calculateCategoryAmount() {
         let categories = [];
         
-        let data = this.getExchangeRatesWithBase(this.state.currency);
+        this.getExchangeRatesWithBase(this.state.currency);
         console.log(data);
         for(expense of this.props.expenses) {
             if(categories.findIndex(i => i.category === expense.category) < 0) {
