@@ -89,7 +89,8 @@ export default class AddExpensePayers extends Component {
             payerTotal += parseFloat(payer.amount);
         }
 
-        if (payerTotal == expense.amount) {
+        var expenseAmount = expense.amount + expense.groupcost
+        if (payerTotal == expenseAmount) {
             this.props.navigation.navigate('AddExpenseConsumed', { expense, trip: this.props.navigation.state.params.trip });
         } else if (payerTotal > expense.amount) {
             alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
