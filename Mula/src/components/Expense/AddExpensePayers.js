@@ -43,7 +43,8 @@ export default class AddExpensePayers extends Component {
         for (user of this.props.navigation.state.params.trip.users) {
             let payer = {
                 user: user,
-                amount: 0
+                amount: 0,
+                checkamount: ""
             }
             payers.push(payer);
         }
@@ -55,6 +56,7 @@ export default class AddExpensePayers extends Component {
         for (payer of payers) {
             if (payer.user === user) {
                 payer.amount = parseFloat(amount);
+                payer.checkamount = amount
             }
         }
         this.setState({ payers });
@@ -82,8 +84,21 @@ export default class AddExpensePayers extends Component {
         let expense = this.props.navigation.state.params.expense;
         expense.payers = this.state.payers;
 
-        this.props.navigation.navigate('AddExpenseConsumed', { expense, trip: this.props.navigation.state.params.trip });
+        var total = expense.amount;
+        var payertotal = 0;
+        for (payer of this.state.payers) {
+            if (payer.checkamount == "") {
+                payertotal = payertotal + 0;
+            } else {
+                payertotal = payertotal + parseFloat(payer.amount);
+            }
+        }
 
+        if (total == payertotal) {
+            this.props.navigation.navigate('AddExpenseConsumed', { expense, trip: this.props.navigation.state.params.trip });
+        } else {
+            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave");
+        }
     }
 
     render() {

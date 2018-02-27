@@ -90,7 +90,7 @@ export default {
     langtest: 'nl',
     dateplaceholder: 'Kies datum...',
     newcategory: 'Nieuwe categorie',
-    addgroupexpense: 'Voeg gezamenlijke kost toe',
+    addgroupexpense: 'Gezamenlijke kost (bovenop bedrag)',
     groupexpense: 'Gezamenlijke kost',
     whopaid: 'Wie heeft betaald',
     date: 'Datum',

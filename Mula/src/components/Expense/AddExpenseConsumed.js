@@ -8,12 +8,12 @@ export default class AddExpensePayers extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            consumers: []
+            consumers: [],
         }
     }
 
     componentDidMount() {
-        console.log(this.props.navigation.state.params.expense);
+        console.log(this.props.navigation.state.params.expense);;
         this.populateConsumersState();
 
         this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
@@ -39,10 +39,17 @@ export default class AddExpensePayers extends Component {
 
     populateConsumersState() {
         let consumers = this.state.consumers.slice();
+
+        var counter = 0;
+        for (user of this.props.navigation.state.params.trip.users) {
+            counter = counter + 1;
+        }
+
         for (user of this.props.navigation.state.params.trip.users) {
             let consumer = {
                 user: user,
-                amount: 0
+                amount: this.props.navigation.state.params.expense.amount / counter + "",
+                checkamount: ""
             }
             consumers.push(consumer);
         }
@@ -54,8 +61,10 @@ export default class AddExpensePayers extends Component {
         for (consumer of consumers) {
             if (consumer.user === user) {
                 consumer.amount = parseFloat(amount);
+                consumer.checkamount = amount
             }
         }
+
         this.setState({ consumers });
     }
 
@@ -66,12 +75,13 @@ export default class AddExpensePayers extends Component {
                 <View key={index}>
                     <Text style={styles.label}>{consumer.user}</Text>
                     <TextInput
-                        placeholder="Amount consumed..."
+                        placeholder="Amount consumed"
                         keyboardType="numeric"
                         style={styles.inputField}
                         underlineColorAndroid="#ffd185"
                         placeholderTextColor="#bfbfbf"
-                        onChangeText={(amount) => this.updateConsumerAmount(amount, consumer.user)} />
+                        onChangeText={(amount) => this.updateConsumerAmount(amount, consumer.user)}
+                        value={consumer.amount} />
                 </View>
             )
         });
@@ -81,7 +91,21 @@ export default class AddExpensePayers extends Component {
         let expense = this.props.navigation.state.params.expense;
         expense.consumers = this.state.consumers;
 
-        this.props.navigation.navigate('AddExpenseShared', { expense, trip: this.props.navigation.state.params.trip });
+        var total = expense.amount;
+        var consumertotal = 0;
+        for (consumer of this.state.consumers) {
+            if (consumer.checkamount == "") {
+                consumertotal = consumertotal + 0;
+            } else {
+                consumertotal = consumertotal + parseFloat(consumer.amount);
+            }
+        }
+
+        if (total == consumertotal) {
+            this.props.navigation.navigate('AddExpenseShared', { expense, trip: this.props.navigation.state.params.trip });
+        } else {
+            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave");
+        }
 
     }
 
