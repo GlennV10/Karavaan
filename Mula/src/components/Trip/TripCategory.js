@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Picker, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Picker, ActivityIndicator, AsyncStorage } from 'react-native';
 import I18n from 'react-native-i18n';
 
 export default class TripCategory extends Component {
@@ -9,7 +9,9 @@ export default class TripCategory extends Component {
         user: "",
         categories: [],
         currency: "USD",
-        rates: []
+        rates: [],
+        pickerRate: 0,
+        isLoading: true
       }
     }
 
@@ -25,12 +27,13 @@ export default class TripCategory extends Component {
     renderValutaToArray(rate) {
         var array = [];
         return Object.keys(rate).map((val) => {
-            var label = val + "(" + rate[val] + ")";
             array.push({
                 name: val,
                 value: rate[val]
             })
-            this.setState({ rates: array });
+            if(array.length == 1) {
+                this.setState({ pickerRate: rate[val] });
+            } else this.setState({ rates: array });
         });
     }
 
@@ -44,6 +47,16 @@ export default class TripCategory extends Component {
     getExchangeRatesWithBase(baseCurrency) {
         console.log("Rates met base wordt uitgevoerd " + baseCurrency)
         var url = "https://api.fixer.io/latest?base=" + baseCurrency;
+        //if (this.state.loadRates) {
+            return fetch(url)
+                .then((resp) => resp.json() )
+                .then((data) => this.parseRates(data));
+        //}
+    }
+
+    getExchangeRatesWithBasePicker(newCurrency) {
+        console.log("Rates met base wordt uitgevoerd " + this.state.currency)
+        var url = "https://api.fixer.io/latest?symbols=" + newCurrency + "&base=" + this.state.currency;
         //if (this.state.loadRates) {
             return fetch(url)
                 .then((resp) => resp.json() )
@@ -97,9 +110,16 @@ export default class TripCategory extends Component {
             }
         }
         this.setState({ categories });
+        this.setState({ isLoading: false})
     }
 
     updateCurrency(newCurrency) {
+        this.getExchangeRatesWithBasePicker(newCurrency);
+        let categories = this.state.categories;
+        for(category of categories) {
+            category.amount = category.amount*this.state.pickerRate;
+        }
+        this.setState(categories);
         this.setState({ currency: newCurrency});
     }
 
@@ -114,62 +134,63 @@ export default class TripCategory extends Component {
     }
 
     renderCategories() {
-        if(this.state.categories.length === 0){
+        if(this.state.isLoading) {
             return(
-                <View style={styles.noCategoriesView}>
-                    <Text style={styles.noCategoriesText}>{I18n.t('nocategoriesfound')}</Text>
-                </View>
+              <View style={styles.containerIndicator}>
+                <ActivityIndicator />
+              </View>
             )
         } else {
-            return this.state.categories.map((category, index) => {
+            if(this.state.categories.length === 0){
                 return(
-                    <TouchableOpacity style={styles.categoryDetails} onPress={() => this.props.navigator.navigate('TripCategoryExpenses', { category: category.category, expenses: this.getCategoryExpenses(category.category) })} key={ index }>
-                        <View tyle={[styles.categoryContainer, styles.half]}>
-                            <View style={styles.splitRow}>
-                                <Text style={[styles.categoryName]}>{category.category}</Text>
-                            </View>
-                            <View style={styles.splitRow}>
-                                <Text style={styles.categoryExpensesCount}>{ category.expenses } {I18n.t('exp')}</Text>
-                            </View>
-                        </View>
-                        <View style={[styles.categoryAmountContainer, styles.half]}>
-                            <View style={styles.splitRow}>
-                                <Text style={styles.categoryAmount}>{category.amount.toFixed(2)}</Text>
-                            </View>
-                            <View style={styles.splitRow}>
-                                <Text style={styles.categoryCurrency}>{this.state.currency}</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                    <View style={styles.noCategoriesView}>
+                        <Text style={styles.noCategoriesText}>{I18n.t('nocategoriesfound')}</Text>
+                    </View>
                 )
-            });
+            } else {
+                return this.state.categories.map((category, index) => {
+                    return(
+                        <TouchableOpacity style={styles.category} onPress={() => this.props.navigator.navigate('TripCategoryExpenses', { category: category.category, expenses: this.getCategoryExpenses(category.category) })} key={ index }>
+                            <View style={[styles.categoryContainer, styles.half]}>
+                                <View style={styles.splitRow}>
+                                    <Text style={[styles.categoryName]}>{category.category}</Text>
+                                </View>
+                                <View style={styles.splitRow}>
+                                    <Text style={styles.categoryExpensesCount}>{ category.expenses } {I18n.t('exp')}</Text>
+                                </View>
+                            </View>
+                            <View style={[styles.categoryAmountContainer, styles.half]}>
+                                <View style={styles.splitRow}>
+                                    <Text style={styles.categoryAmount}>{category.amount.toFixed(2)}</Text>
+                                </View>
+                                <View style={styles.splitRow}>
+                                    <Text style={styles.categoryCurrency}>{this.state.currency}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    )
+                });
+            }
         }
     }
 
     renderPicker() {
-        if(this.props.expenses.length !== 0) {
-            let myTrips = [];
-            let currencies = null;
-            AsyncStorage.getItem('trips')
-              .then(req => JSON.parse(req))
-              .then(trips => console.log('Trips loaded from AsyncStorage') & console.log(trips) & (myTrips = trips))
-              .catch(error => console.log('Error loading trips'));
-            for(trip of myTrips) {
-                if(trip.id == this.props.expenses[0].tripID) {
+        let trip = this.props.navigator.state.params.trip;
+        if(this.props.expenses.length > 0) {
+            let currencies = null;  
+                if(trip.id == this.props.expenses[0].tripID) {                  
                     return(
                         <Picker
-                            mode="dropdown"
-                            selectedValue={this.state.selected}
+                            style={styles.currencyPicker}
+                            selectedValue={this.state.currency}
                             onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
                             {trip.currencies.map((item, index) => {
-                                return (<Item label={item} value={index} key={index}/>)
+                                return (<Picker.Item label={item} value={item} key={index}/>)
                             })}
                         </Picker>
                     )
                 }
             }
-
-        }
         else return null;
     }
 
@@ -193,6 +214,63 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#d4e8e5'
     },
+    splitRow: {
+        flexDirection: 'row'
+    },
+    half: {
+        flex: .5
+    },
+    noCategoriesView: {
+        flex: 1,
+        alignItems: "center",
+        paddingTop: 10
+    },
+    noCategoriesText: {
+        fontSize: 20,
+        marginTop: 50,
+        marginLeft: 10,
+        marginRight: 10,
+        color: "#a8a8a8"
+    },
+    categoryList: {
+        // marginLeft: 10,
+        // marginRight: 10
+    },
+    category: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: '#f7f7f7',
+        padding: 10,
+        // marginTop: 5,
+        // borderRadius: 2,
+        borderColor: '#d3d3d3',
+        borderWidth: .3
+    },
+    categoryName: {
+        fontSize: 16
+    },
+    categoryExpensesCount: {
+      fontSize: 12,
+      color: '#bababa'
+    },
+    categoryAmount: {
+        fontSize: 16,
+        textAlign: 'right'
+    },
+    categoryCurrency: {
+        fontSize: 12,
+        color: '#bababa',
+        textAlign: 'right'
+    },
+    categoryContainer: {
+        flex: .5,
+        paddingLeft: 10
+    },
+    categoryAmountContainer: {
+        flex: .5,
+        alignItems: 'flex-end',
+        justifyContent: 'center'
+    },
     addTripButton: {
         backgroundColor: '#3B4859',
         width: 50,
@@ -207,77 +285,12 @@ const styles = StyleSheet.create({
     addTripButtonText: {
         color: '#fff'
     },
-  noCategoriesView: {
-    flex: 1,
-    alignItems: "center",
-    paddingTop: 10
-  },
-  noCategoriesText: {
-    fontSize: 20,
-    marginTop: 50,
-    marginLeft: 10,
-    marginRight: 10,
-    color: "#a8a8a8"
-  },
-  categoryList: {
-    // marginLeft: 10,
-    // marginRight: 10
-  },
-  category: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#f7f7f7',
-    padding: 10,
-    // marginTop: 5,
-    // borderRadius: 2,
-    borderColor: '#d3d3d3',
-    borderWidth: .3
-  },
-  categoryName: {
-    fontSize: 16
-  },
-  categoryDetails: {
-      flex: 1,
-      flexDirection: 'row',
-      padding: 10,
-      paddingLeft: 25,
-      paddingRight: 25,
-      // marginTop: 10,
-      backgroundColor: '#f7f7f7',
-      // borderRadius: 2,
-      borderColor: '#d3d3d3',
-      borderWidth: .3
-  },
-  categoryName: {
-      fontSize: 16,
-      // fontWeight: 'bold',
-      // opacity: .7
-  },
-  categoryExpensesCount: {
-      fontSize: 12,
-      color: '#bababa'
-  },
-  categoryAmount: {
-      textAlign: 'right'
-  },
-  categoryAmountContainer: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'center'
-  },
-  splitRow: {
-    flexDirection: 'row'
-  },
-  half: {
-    flex: .5
-  },
-  categoryContainer: {
-    flex: .5,
-    paddingLeft: 10
-  },
-  categoryCurrency: {
-    fontSize: 12,
-    color: '#bababa',
-    textAlign: 'right'
-},
+    currencyPicker: {
+        backgroundColor: "white",
+    },
+    containerIndicator: {
+        flex: 1,
+        paddingTop: 5,
+        backgroundColor: '#d4e8e5'
+    },
 });
