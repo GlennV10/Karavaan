@@ -51,11 +51,11 @@ export default class DashboardTrips extends Component {
       users: ['Glenn']
     }]
 
-    /*AsyncStorage.setItem('trips', JSON.stringify(trips))
+    AsyncStorage.setItem('trips', JSON.stringify(trips))
       .then(res => console.log('Trips stored in AsyncStorage'))
       .catch(error => console.log('Error storing trips'));
-    
-    AsyncStorage.setItem('id_teller','4')
+
+    /*AsyncStorage.setItem('id_teller','4')
         .then(res => console.log('baseTeller stored in AsyncStorage'))
         .catch(error => console.log('Error storing teller AAAAA'));*/
 

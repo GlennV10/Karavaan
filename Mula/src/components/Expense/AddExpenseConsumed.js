@@ -13,7 +13,7 @@ export default class AddExpensePayers extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.navigation.state.params.expense);;
+        console.log(this.props.navigation.state.params.expense);
         this.populateConsumersState();
 
         this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
@@ -39,32 +39,51 @@ export default class AddExpensePayers extends Component {
 
     populateConsumersState() {
         let consumers = this.state.consumers.slice();
-
         for (user of this.props.navigation.state.params.trip.users) {
             let consumer = {
                 user: user,
-                amount: this.props.navigation.state.params.expense.amount / this.props.navigation.state.params.trip.users.length,
-                checkamount: ""
+                amount: this.props.navigation.state.params.expense.amount / this.props.navigation.state.params.trip.users.length
             }
             consumers.push(consumer);
         }
         this.setState({ consumers });
     }
 
+    checkAmount(amount, user) {
+        var newText = '';
+        let numbers = '0123456789';
+
+        for (var i = 0; i < amount.length; i++) {
+            if (numbers.indexOf(amount[i]) > -1) {
+                newText = newText + amount[i];
+            }
+            if (amount[i] === ',') {
+                newText = newText + '.';
+            }
+            if (amount[i] === '.') {
+                newText = newText + '.';
+            }
+        }
+
+        this.updateConsumerAmount(newText, user);
+    }
+
     updateConsumerAmount(amount, user) {
         let consumers = this.state.consumers.slice();
         for (consumer of consumers) {
             if (consumer.user === user) {
-                consumer.amount = parseFloat(amount);
-                consumer.checkamount = amount
+                if (amount !== "") {
+                    consumer.amount = parseFloat(amount);
+                } else {
+                    consumer.amount = 0;
+                }
             }
         }
-
+        console.log(consumers);
         this.setState({ consumers });
     }
 
     renderConsumers() {
-        console.log(this.state.consumers);
         return this.state.consumers.map((consumer, index) => {
             return (
                 <View key={index}>
@@ -75,8 +94,8 @@ export default class AddExpensePayers extends Component {
                         style={styles.inputField}
                         underlineColorAndroid="#ffd185"
                         placeholderTextColor="#bfbfbf"
-                        onChangeText={(amount) => this.updateConsumerAmount(amount, consumer.user)}
-                        value={consumer.amount} />
+                        onChangeText={(amount) => this.checkAmount(amount, consumer.user)/*this.updateConsumerAmount(amount, consumer.user)*/}
+                        value={consumer.amount.toString()} />
                 </View>
             )
         });
@@ -84,24 +103,25 @@ export default class AddExpensePayers extends Component {
 
     getExpense() {
         let expense = this.props.navigation.state.params.expense;
-        expense.consumers = this.state.consumers;
 
-        var total = expense.amount;
-        var consumertotal = 0;
+        let consumerTotal = 0;
         for (consumer of this.state.consumers) {
-            if (consumer.amount == "") {
-                consumertotal = consumertotal + 0;
-            } else {
-                consumertotal = consumertotal + parseFloat(consumer.amount);
+            consumerTotal += parseFloat(consumer.amount);
+        }
+
+        if (consumerTotal == expense.amount) {
+            for(let i = this.state.consumers.length - 1; i >= 0; i--) {
+                if (this.state.consumers[i].amount == 0) {
+                    this.state.consumers.splice(i, 1);
+                }
             }
-        }
-
-        if (total == consumertotal) {
+            expense.consumers = this.state.consumers;
             this.props.navigation.navigate('AddExpenseShared', { expense, trip: this.props.navigation.state.params.trip });
+        } else if (consumerTotal > expense.amount) {
+            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {
-            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave");
+            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
         }
-
     }
 
     render() {
