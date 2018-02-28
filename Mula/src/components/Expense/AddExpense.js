@@ -47,7 +47,9 @@ export default class AddExpense extends Component {
     }
 
     renderPickerCurrencies() {
-        return this.props.navigation.state.params.trip.currencies.map((currency, index) => {
+        const currencies = Object.keys(this.props.navigation.state.params.trip.rates);
+
+        return currencies.map((currency, index) => {
             return (
                 <Picker.Item value={currency} label={currency} key={index} />
             )
@@ -188,9 +190,9 @@ export default class AddExpense extends Component {
         const { trip } = this.props.navigation.state.params;
 
         return (
-            
+
                 <ScrollView style={styles.container}>
-                
+
                     <View style={styles.contentView}>
                         <View style={styles.separator}>
                             <Text style={styles.label}>{I18n.t('name')}</Text>
@@ -227,8 +229,8 @@ export default class AddExpense extends Component {
                             <DatePicker
                                 mode='date'
                                 format='DD/MM/YYYY'
-                                // minDate= {this.props.navigation.state.params.trip.startDate}
-                                // maxDate={this.props.navigation.state.params.trip.endDate}
+                                minDate= {trip.startDate.dayOfMonth + "/" + (trip.startDate.month + 1) + "/" + trip.startDate.year}
+                                maxDate={trip.endDate.dayOfMonth + "/" + (trip.endDate.month + 1) + "/" + trip.endDate.year}
                                 date={this.state.selectedDate}
                                 showIcon={true}
                                 placeholder={I18n.t('dateplaceholder')}
@@ -268,6 +270,7 @@ export default class AddExpense extends Component {
                             <Text style={styles.label}>{I18n.t('currency')} {this.state.currency}</Text>
                             <Picker style={styles.picker} selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
                                 <Picker.Item label={I18n.t('choosecurrency')} value={I18n.t('currencyplaceholder')} />
+                                <Picker.Item label={trip.baseCurrency} value={trip.baseCurrency} />
                                 {this.renderPickerCurrencies()}
                             </Picker>
                         </View>
@@ -291,7 +294,7 @@ export default class AddExpense extends Component {
                             })} />
                     </View >
                 </ScrollView >
-            
+
         )
     }
 }
