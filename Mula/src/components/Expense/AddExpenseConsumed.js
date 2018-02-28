@@ -42,7 +42,7 @@ export default class AddExpensePayers extends Component {
         for (user of this.props.navigation.state.params.trip.users) {
             let consumer = {
                 user: user,
-                amount: this.props.navigation.state.params.expense.amount / this.props.navigation.state.params.trip.users.length
+                amount: this.props.navigation.state.params.payerTotal / this.props.navigation.state.params.trip.users.length
             }
             consumers.push(consumer);
         }
