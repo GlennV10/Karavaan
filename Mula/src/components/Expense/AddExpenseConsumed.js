@@ -39,47 +39,28 @@ export default class AddExpensePayers extends Component {
 
     populateConsumersState() {
         let consumers = this.state.consumers.slice();
-        for (user of this.props.navigation.state.params.trip.users) {
+        for (participant of this.props.navigation.state.params.trip.participants) {
             let consumer = {
-                user: user,
-                amount: this.props.navigation.state.params.payerTotal / this.props.navigation.state.params.trip.users.length
+                participant: participant[0],
+                amount: 0 //this.props.navigation.state.params.expense.total / this.props.navigation.state.params.trip.participants.length
             }
             consumers.push(consumer);
         }
         this.setState({ consumers });
     }
 
-    checkAmount(amount, user) {
-        var newText = '';
-        let numbers = '0123456789';
-
-        for (var i = 0; i < amount.length; i++) {
-            if (numbers.indexOf(amount[i]) > -1) {
-                newText = newText + amount[i];
-            }
-            if (amount[i] === ',') {
-                newText = newText + '.';
-            }
-            if (amount[i] === '.') {
-                newText = newText + '.';
-            }
-        }
-
-        this.updateConsumerAmount(newText, user);
-    }
-
-    updateConsumerAmount(amount, user) {
+    updateConsumerAmount(amount, participant) {
         let consumers = this.state.consumers.slice();
         for (consumer of consumers) {
-            if (consumer.user === user) {
+            if (consumer.participant === participant) {
                 if (amount !== "") {
                     consumer.amount = parseFloat(amount);
                 } else {
                     consumer.amount = 0;
                 }
             }
+            console.log(consumers);
         }
-        console.log(consumers);
         this.setState({ consumers });
     }
 
@@ -87,15 +68,14 @@ export default class AddExpensePayers extends Component {
         return this.state.consumers.map((consumer, index) => {
             return (
                 <View key={index}>
-                    <Text style={styles.label}>{consumer.user}</Text>
+                    <Text style={styles.label}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
                     <TextInput
                         placeholder="Amount consumed"
                         keyboardType="numeric"
                         style={styles.inputField}
                         underlineColorAndroid="#ffd185"
                         placeholderTextColor="#bfbfbf"
-                        onChangeText={(amount) => this.checkAmount(amount, consumer.user)/*this.updateConsumerAmount(amount, consumer.user)*/}
-                        value={consumer.amount.toString()} />
+                        onChangeText={(amount) => this.updateConsumerAmount(amount, consumer.participant)} />
                 </View>
             )
         });

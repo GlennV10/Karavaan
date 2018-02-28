@@ -97,7 +97,7 @@ export default class AddExpensePayers extends Component {
                 }
             }
             expense.payers = this.state.payers;
-            this.props.navigation.navigate('AddExpenseConsumed', { payerTotal, expense, trip: this.props.navigation.state.params.trip });
+            this.props.navigation.navigate('AddExpenseConsumed', { expense, trip: this.props.navigation.state.params.trip });
         } else if (payerTotal > expense.amount) {
             alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {
