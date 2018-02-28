@@ -109,7 +109,7 @@ export default App = StackNavigator({
     },
     TripDashboard: {
       navigationOptions: ({ navigation }) => ({
-        title: navigation.state.params.trip.name + I18n.t('tripdetails'),
+        title: navigation.state.params.trip.tripName + I18n.t('tripdetails'),
         headerStyle:{
           backgroundColor: '#6fc2b0'
         },
