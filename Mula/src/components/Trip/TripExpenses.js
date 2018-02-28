@@ -39,10 +39,10 @@ export default class TripExpenses extends Component {
                         </View>
                         <View style={[styles.expenseAmountContainer, styles.half]}>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseAmount}>50</Text>
+                                <Text style={styles.expenseAmount}>{ expense.total.toFixed(2) }</Text>
                             </View>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseCurrency}>TEST</Text>
+                                <Text style={styles.expenseCurrency}>{ expense.currency }</Text>
                             </View>
                         </View>
                     </TouchableOpacity>

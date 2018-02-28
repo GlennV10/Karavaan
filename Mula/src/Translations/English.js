@@ -113,5 +113,8 @@ export default {
     pickcurrency: 'Pick your currencies',
     savetrip: 'Add trip',
     selectdate: 'Select date',
-    submit: 'Submit'
+    submit: 'Submit',
+
+    //TripSettings
+    delete: 'Delete trip'
 }
