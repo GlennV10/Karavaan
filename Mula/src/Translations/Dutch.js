@@ -115,6 +115,9 @@ export default {
     pickcurrency: 'Kies munteenheden',
     savetrip: 'Voeg reis toe',
     selectdate: 'Kies datum',
-    submit: 'Kies'
+    submit: 'Kies',
+
+    //TripSettings
+    delete: 'Verwijder reis'
 
 }
