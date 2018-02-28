@@ -112,22 +112,27 @@ export default class AddExpense extends Component {
 
     getExpense() {
         let expense = {
-            name: this.state.name,
-            amount: parseFloat(this.state.amount),
-            date: this.state.selectedDate,
+            tripName: this.state.name,
+            total: parseFloat(this.state.amount),
+            date: {
+                dayOfMonth: parseInt(this.state.selectedDate.substring(0, 2)),
+                month: parseInt(this.state.selectedDate.substring(3, 5)),
+                year: parseInt(this.state.selectedDate.substring(6))
+            },
             category: this.state.category,
             currency: this.state.currency,
             payers: [],
             consumers: [],
-            tripID: this.props.navigation.state.params.trip.id,
-            groupcost: parseFloat(this.state.groupAmount)
+            loans: []
         }
 
-        if (expense.name === "" ||
-            expense.date === "" ||
+        if (expense.tripName === "" ||
+            isNaN(expense.date.dayOfMonth) ||
+            isNaN(expense.date.month) ||
+            isNaN(expense.date.year) ||
             expense.category === "Choose category" ||
             expense.currency === "Choose currency" ||
-            expense.amount < 0 || isNaN(expense.amount)) {
+            expense.total < 0 || isNaN(expense.total)) {
             alert("Velden mogen niet leeg zijn");
         } else {
             this.props.navigation.navigate('AddExpensePayers', { expense, trip: this.props.navigation.state.params.trip });

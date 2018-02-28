@@ -14,9 +14,9 @@ export default class DetailExpense extends Component{
         this.setState({ consumers: Object.keys(this.props.navigation.state.params.expense.consumers) })
     }
 
-    componentDidMount() {
-        console.log(this.props.navigation.state.params.expense);
-    }
+    // componentDidMount() {
+    //     console.log(this.props.navigation.state.params.expense);
+    // }
 
     renderUsers() {
         const amounts = Object.values(this.props.navigation.state.params.expense.consumers);
