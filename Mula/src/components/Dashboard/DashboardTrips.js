@@ -18,42 +18,42 @@ export default class DashboardTrips extends Component {
   }
 
   componentWillMount() {
-    //this.setState({ isLoading: true });
-    //this.getAllTrips();
+    this.setState({ isLoading: true });
+    this.getAllTrips();
 
     /* ================================================================
               CODE TO STORE HARDCODED DATA INTO ASYNCSTORAGE
                      CHANGE TO DATA FROM SERVER(??)
     ================================================================ */
 
-    let trips = [{
-      id: 1,
-      name: 'Amsterdam',
-      startDate: '9 maart 2018',
-      endDate: '11 maart 2018',
-      currencies: ['USD', 'CAD'],
-      users: ['Glenn', 'Annelore', 'Deni', 'Jens']
-    },
-    {
-      id: 2,
-      name: 'Ardennen',
-      startDate: '20 april 2018',
-      endDate: '22 april 2018',
-      currencies: ['AUD', 'NZD'],
-      users: ['Glenn', 'Annelore', 'Deni']
-    },
-    {
-      id: 3,
-      name: 'Thailand',
-      startDate: '8 september 2018',
-      endDate: '23 september 2018',
-      currencies: ['USD', 'EUR', 'THD'],
-      users: ['Glenn']
-    }]
-
-    AsyncStorage.setItem('trips', JSON.stringify(trips))
-      .then(res => console.log('Trips stored in AsyncStorage'))
-      .catch(error => console.log('Error storing trips'));
+    // let trips = [{
+    //   id: 1,
+    //   name: 'Amsterdam',
+    //   startDate: '9 maart 2018',
+    //   endDate: '11 maart 2018',
+    //   currencies: ['USD', 'CAD'],
+    //   users: ['Glenn', 'Annelore', 'Deni', 'Jens']
+    // },
+    // {
+    //   id: 2,
+    //   name: 'Ardennen',
+    //   startDate: '20 april 2018',
+    //   endDate: '22 april 2018',
+    //   currencies: ['AUD', 'NZD'],
+    //   users: ['Glenn', 'Annelore', 'Deni']
+    // },
+    // {
+    //   id: 3,
+    //   name: 'Thailand',
+    //   startDate: '8 september 2018',
+    //   endDate: '23 september 2018',
+    //   currencies: ['USD', 'EUR', 'THD'],
+    //   users: ['Glenn']
+    // }]
+    //
+    // AsyncStorage.setItem('trips', JSON.stringify(trips))
+    //   .then(res => console.log('Trips stored in AsyncStorage'))
+    //   .catch(error => console.log('Error storing trips'));
 
     /*AsyncStorage.setItem('id_teller','4')
         .then(res => console.log('baseTeller stored in AsyncStorage'))
@@ -63,15 +63,14 @@ export default class DashboardTrips extends Component {
   }
 
   componentDidMount() {
-
     this.setState({ isLoading: false });
     this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
     this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
 
-    AsyncStorage.getItem('trips')
-      .then(req => JSON.parse(req))
-      .then(trips => console.log('Trips loaded from AsyncStorage') & console.log(trips) & this.setState({ trips }))
-      .catch(error => console.log('Error loading trips'));
+    // AsyncStorage.getItem('trips')
+    //   .then(req => JSON.parse(req))
+    //   .then(trips => console.log('Trips loaded from AsyncStorage') & console.log(trips) & this.setState({ trips }))
+    //   .catch(error => console.log('Error loading trips'));
   }
 
   _handleBackButton = () => {
@@ -109,29 +108,17 @@ export default class DashboardTrips extends Component {
   }
 
   getAllTrips() {
-    try {
-      AsyncStorage.getItem('userName').then((username) => {
-        this.setState({ username });
-      })
-        .then(res => {
-          return fetch('http://193.191.177.169:8080/mula/Controller?action=getBills', {
-            method: 'POST',
-            header: {
-              'Accept': 'application/json',
+      return fetch('http://193.191.177.73:8080/karafinREST/allTrips', {
+          method: 'GET',
+          header: {
               'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              email: this.state.username
-            })
-          })
-            .then((res) => res.json())
-            .then((response) => {
-              this.setState({ trips: response.bills })
-            });
-        });
-    } catch (error) {
-      console.log(error);
-    }
+          }
+      })
+      .then((res) => res.json())
+      .then((trips) => {
+          console.log(trips);
+          this.setState({ trips, isLoading: false })
+      });
   }
 
   renderTrips() {
@@ -146,10 +133,10 @@ export default class DashboardTrips extends Component {
         return (
           <TouchableOpacity style={styles.trip} onLongPress={() => this.props.navigation.navigate('TripSettings', { trip })} onPress={() => this.props.navigation.navigate('TripDashboard', { trip })} key={trip.id}>
             <View style={styles.splitRow}>
-              <Text style={styles.tripName}>{trip.name}</Text>
+              <Text style={styles.tripName}>{trip.tripName}</Text>
             </View>
             <View style={styles.splitRow}>
-              <Text style={styles.tripDate}>{trip.startDate} - {trip.endDate}</Text>
+              <Text style={styles.tripDate}>{trip.startDate.dayOfMonth}/{trip.startDate.month}/{trip.startDate.year} - {trip.endDate.dayOfMonth}/{trip.endDate.month}/{trip.endDate.year}</Text>
             </View>
             <View style={styles.progressBarContainer}>
               <View style={{ backgroundColor: barStyle(trip.startDate, trip.endDate) }}></View>
