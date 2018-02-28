@@ -1,40 +1,53 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView} from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView } from 'react-native';
 import I18n from 'react-native-i18n';
+import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 
 export default class TripTotal extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {}
-    }
+  constructor(props) {
+    super(props);
+    this.state = {}
+  }
 
-    componentDidMount() {
+  componentDidMount() {
 
-    }
+  }
 
-    getAllExpensesByTrip(){
+  getAllExpensesByTrip() {
 
-    }
+  }
 
-    renderExpenses() {
+  renderExpenses() {
 
-    }
+  }
 
-    render() {
-      return(
-        <View style={styles.container}>
-          <Text>Hier moet de balans van elke user getoond worden => Jos heeft al 600 euro betaald (in totaal betaald), 200 euro daarvan heeft hij zelf
-          gebruikt (aan drank en eten bv) => de Jos moet nog 400 euro terugkrijgen
-          </Text>
-        </View>
-      )
-    }
+  render() {
+    const tableData = [
+      ['Payer', 'Payed', 'Consumed'],
+      ['Glenn', 'b', 'c'],
+      ['Annelore', '2', '3'],
+      ['Deni', 'b', 'c'],
+      ['Jens', '4', '5']
+    ];
+
+    return (
+      <View style={styles.container}>
+        <Table>
+          <Rows data={tableData} style={styles.row} textStyle={styles.text} />
+        </Table>
+      </View>
+
+    )
+  }
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        backgroundColor: '#d4e8e5',
-        padding: 20
-    }
+  container: {
+    flex: 1,
+    backgroundColor: '#d4e8e5',
+  },
+  text: { marginLeft: 5, padding: 5 },
+  row: { height: 30 },
+  btn: { width: 58, height: 18, backgroundColor: '#ccc', marginLeft: 15 },
+  btnText: { textAlign: 'center', color: '#fff' }
 });

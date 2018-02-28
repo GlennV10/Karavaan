@@ -13,6 +13,7 @@ export default class AddExpensePayers extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props.navigation.state.params.expense);
         this.populatePayersState();
 
         this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
@@ -82,15 +83,20 @@ export default class AddExpensePayers extends Component {
 
     getExpense() {
         let expense = this.props.navigation.state.params.expense;
-        expense.payers = this.state.payers;
 
         let payerTotal = 0;
         for (payer of this.state.payers) {
             payerTotal += parseFloat(payer.amount);
         }
 
-        if (payerTotal == expense.amount) {
-            this.props.navigation.navigate('AddExpenseConsumed', { expense, trip: this.props.navigation.state.params.trip });
+        if (payerTotal == (expense.amount + expense.groupcost)) {
+            for(let i = this.state.payers.length - 1; i >= 0; i--) {
+                if (this.state.payers[i].amount == 0) {
+                    this.state.payers.splice(i, 1);
+                }
+            }
+            expense.payers = this.state.payers;
+            this.props.navigation.navigate('AddExpenseConsumed', { payerTotal, expense, trip: this.props.navigation.state.params.trip });
         } else if (payerTotal > expense.amount) {
             alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {

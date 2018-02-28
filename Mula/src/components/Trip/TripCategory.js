@@ -26,15 +26,15 @@ export default class TripCategory extends Component {
 
     renderValutaToArray(rate) {
         var array = [];
-        return Object.keys(rate).map((val) => {
+        Object.keys(rate).map((val) => {
             array.push({
                 name: val,
                 value: rate[val]
             })
-            if(array.length == 1) {
-                this.setState({ pickerRate: rate[val] });
-            } else this.setState({ rates: array });
         });
+        if(array.length == 1) {
+            this.setState({ pickerRate: array[0].value });
+        } else this.setState({ rates: array });
     }
 
     parseRates(data) {
@@ -45,7 +45,7 @@ export default class TripCategory extends Component {
     }
 
     getExchangeRatesWithBase(baseCurrency) {
-        console.log("Rates met base wordt uitgevoerd " + baseCurrency)
+        console.log("Rates met base '" + baseCurrency + "' wordt uitgevoerd ")
         var url = "https://api.fixer.io/latest?base=" + baseCurrency;
         //if (this.state.loadRates) {
             return fetch(url)
@@ -55,7 +55,8 @@ export default class TripCategory extends Component {
     }
 
     getExchangeRatesWithBasePicker(newCurrency) {
-        console.log("Rates met base wordt uitgevoerd " + this.state.currency)
+        console.log(newCurrency + " en current: " + this.state.currency);
+        console.log("Rates met base '" + this.state.currency + "' wordt uitgevoerd ")
         var url = "https://api.fixer.io/latest?symbols=" + newCurrency + "&base=" + this.state.currency;
         //if (this.state.loadRates) {
             return fetch(url)
@@ -113,9 +114,10 @@ export default class TripCategory extends Component {
         this.setState({ isLoading: false})
     }
 
-    updateCurrency(newCurrency) {
-        this.getExchangeRatesWithBasePicker(newCurrency);
+    async updateCurrency(newCurrency) {
+        await this.getExchangeRatesWithBasePicker(newCurrency);
         let categories = this.state.categories;
+        console.log(this.state.pickerRate);
         for(category of categories) {
             category.amount = category.amount*this.state.pickerRate;
         }

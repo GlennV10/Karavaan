@@ -21,7 +21,7 @@ export default class TripDashboard extends React.Component {
       this.props.navigation.addListener("didFocus", () => this._handleUpdate());
       this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
 
-        let expenses = [{
+        /*let expenses = [{
             id: 1,
             name: 'Restaurant A',
             date: '9 maart 2018',
@@ -103,11 +103,9 @@ export default class TripDashboard extends React.Component {
             tripID: 3
           }]
 
-       /* AsyncStorage.setItem('expenses', JSON.stringify(expenses))
+        AsyncStorage.setItem('expenses', JSON.stringify(expenses))
               .then(res => console.log('Expenses stored in AsyncStorage'))
-              .catch(error => console.log('Error storing expenses'));
-        */
-        
+              .catch(error => console.log('Error storing expenses'));*/
     }
 
     /*componentDidMount() {

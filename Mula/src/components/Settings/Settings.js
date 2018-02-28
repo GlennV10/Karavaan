@@ -115,27 +115,6 @@ export default class Settings extends Component {
         }
     }
 
-    addFriend() {
-        console.log(this.state.friendtoadd);
-
-        try {
-            return fetch('http://193.191.177.169:8080/mula/Controller?action=addFriend', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: this.state.username,
-                    friend: this.state.friendtoadd
-                })
-            })
-        }
-        catch (error) {
-            alert("Dit account bestaat niet");
-        }
-    }
-
     changePass() {
         if (this.state.newpass == this.state.repeatnewpass) {
             try {
@@ -163,34 +142,20 @@ export default class Settings extends Component {
     render() {
         return (
             <ScrollView style={styles.container}>
-                <View style={styles.profilesettings}>
-                    <TouchableOpacity style={styles.profileButton}>
-                        <Image source={require('../../images/placeholder_user.png')} style={styles.profileImage} />
-                    </TouchableOpacity>
-                </View>
+                <View style={styles.separator}>
+                    <View style={styles.profilesettings}>
+                        <TouchableOpacity style={styles.profileButton}>
+                            <Image source={require('../../images/placeholder_user.png')} style={styles.profileImage} />
+                        </TouchableOpacity>
+                    </View>
 
-                <Text>{I18n.t('lang')} {this.state.chosenLanguage} </Text>
-                {this.renderLanguagePicker()}
-                <Text>{I18n.t('currency')} {this.state.currency}</Text>
-                <Picker selectedValue={this.state.currency} onValueChange={(itemValue) => this.updateCurrency(itemValue)}>
-                    <Picker.Item label="EUR" value="EUR" />
-                    <Picker.Item label="USD" value="USD" />
-                </Picker>
-
-                <View style={styles.addFriend}>
-                    <TextInput
-                        style={styles.inputField}
-                        placeholder={I18n.t('friendemail')}
-                        underlineColorAndroid="#ffd185"
-                        placeholderTextColor="#bfbfbf"
-                        returnKeyType="next"
-                        keyboardType='email-address'
-                        onChangeText={(text) => this.setState({ friendtoadd: text })}>
-                    </TextInput>
-
-                    <TouchableOpacity style={styles.button} onPress={() => this.addFriend()}>
-                        <Text style={styles.buttonText}>{I18n.t('add')}</Text>
-                    </TouchableOpacity>
+                    <Text>{I18n.t('lang')} {this.state.chosenLanguage} </Text>
+                    {this.renderLanguagePicker()}
+                    <Text>{I18n.t('currency')} {this.state.currency}</Text>
+                    <Picker selectedValue={this.state.currency} onValueChange={(itemValue) => this.updateCurrency(itemValue)}>
+                        <Picker.Item label="EUR" value="EUR" />
+                        <Picker.Item label="USD" value="USD" />
+                    </Picker>
                 </View>
 
                 <View>
@@ -280,5 +245,11 @@ const styles = StyleSheet.create({
     addFriend: {
         marginBottom: 10,
 
+    },
+    separator: {
+        borderBottomColor: '#bbb',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        marginBottom: 5,
+        marginTop: 5
     }
 });
