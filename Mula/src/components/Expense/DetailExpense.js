@@ -5,7 +5,13 @@ import I18n from 'react-native-i18n';
 export default class DetailExpense extends Component{
     constructor(props) {
       super(props);
-      this.state = {};
+      this.state = {
+          consumers: []
+      };
+    }
+
+    componentWillMount() {
+        this.setState({ consumers: Object.keys(this.props.navigation.state.params.expense.consumers) })
     }
 
     componentDidMount() {
@@ -13,19 +19,21 @@ export default class DetailExpense extends Component{
     }
 
     renderUsers() {
-      return this.props.navigation.state.params.expense.consumers.map((consumer, index) => {
-        return (
-          <View style={styles.userDetails} key={index}>
-              <View style={styles.userNameContainer}>
-                  <Text style={styles.userName}>{ consumer.user }</Text>
-              </View>
-              <View style={{flex: .3}}>
-                  <Text style={styles.userAmount}>{ consumer.amount.toFixed(2) }</Text>
-                  <Text style={styles.expenseCurrency}>{ this.props.navigation.state.params.expense.currency }</Text>
-              </View>
-          </View>
-        )
-      });
+        const amounts = Object.values(this.props.navigation.state.params.expense.consumers);
+
+        return this.state.consumers.map((consumer, index) => {
+            return (
+                <View style={styles.userDetails} key={index}>
+                    <View style={styles.userNameContainer}>
+                        <Text style={styles.userName}>{ consumer }</Text>
+                    </View>
+                    <View style={{flex: .3}}>
+                        <Text style={styles.userAmount}>{ amounts[index].toFixed(2) }</Text>
+                        <Text style={styles.expenseCurrency}>{ this.props.navigation.state.params.expense.currency }</Text>
+                    </View>
+                </View>
+            )
+        });
     }
 
     render(){
@@ -35,11 +43,11 @@ export default class DetailExpense extends Component{
             <ScrollView style={styles.container}>
                 <View style={styles.expenseDetails}>
                     <View style={{flex: .7}}>
-                        <Text style={styles.expenseName}>{ expense.name }</Text>
-                        <Text style={styles.expenseDate}>Paid by { expense.paidBy } on { expense.date }</Text>
+                        <Text style={styles.expenseName}>{ expense.expenseName }</Text>
+                        <Text style={styles.expenseDate}>Paid by { expense.paidBy } on { expense.date.dayOfMonth }/{ expense.date.month }/{ expense.date.year }</Text>
                     </View>
                     <View style={{flex: .3}}>
-                        <Text style={styles.expensePrice}>{ expense.amount.toFixed(2) }</Text>
+                        <Text style={styles.expensePrice}>{ expense.total.toFixed(2) }</Text>
                         <Text style={styles.expenseCurrency}>{ expense.currency }</Text>
                     </View>
                 </View>

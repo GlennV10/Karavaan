@@ -26,15 +26,15 @@ export default class DetailExpense extends Component{
                   <TouchableOpacity style={styles.expense} onPress={() => this.props.navigation.navigate('DetailExpense', { expense })} key={ expense.id }>
                       <View style={[styles.expenseContainer, styles.half]}>
                           <View style={styles.splitRow}>
-                              <Text style={[styles.expenseName]}>{ expense.name }</Text>
+                              <Text style={[styles.expenseName]}>{expense.expenseName}</Text>
                           </View>
                           <View style={styles.splitRow}>
-                              <Text style={styles.expenseDate}>{ expense.date }</Text>
+                              <Text style={styles.expenseDate}>{expense.date.dayOfMonth}/{expense.date.month}/{expense.date.year}</Text>
                           </View>
                       </View>
                       <View style={[styles.expenseAmountContainer, styles.half]}>
                           <View style={styles.splitRow}>
-                              <Text style={styles.expenseAmount}>{ expense.amount.toFixed(2) }</Text>
+                              <Text style={styles.expenseAmount}>{ expense.total.toFixed(2) }</Text>
                           </View>
                           <View style={styles.splitRow}>
                               <Text style={styles.expenseCurrency}>{ expense.currency }</Text>

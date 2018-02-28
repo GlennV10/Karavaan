@@ -116,7 +116,6 @@ export default class DashboardTrips extends Component {
       })
       .then((res) => res.json())
       .then((trips) => {
-          console.log(trips);
           this.setState({ trips, isLoading: false })
       });
   }
