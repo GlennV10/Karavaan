@@ -50,8 +50,8 @@ export default class DashboardTrips extends Component {
       currencies: ['USD', 'EUR', 'THD'],
       users: ['Glenn']
     }]
-
-    /*AsyncStorage.setItem('trips', JSON.stringify(trips))
+    /*
+    AsyncStorage.setItem('trips', JSON.stringify(trips))
       .then(res => console.log('Trips stored in AsyncStorage'))
       .catch(error => console.log('Error storing trips'));
     
