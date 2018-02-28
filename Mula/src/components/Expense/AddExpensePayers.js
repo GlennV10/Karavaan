@@ -90,15 +90,14 @@ export default class AddExpensePayers extends Component {
             payerTotal += parseFloat(payer.amount);
         }
 
-        if (payerTotal == expense.amount) {
+        if (payerTotal == expense.total) {
             for(let i = this.state.payers.length - 1; i >= 0; i--) {
                 if (this.state.payers[i].amount == 0) {
                     this.state.payers.splice(i, 1);
                 }
             }
-            console.log(this.state.payers);
-            // expense.payers = this.state.payers;
-            // this.props.navigation.navigate('AddExpenseConsumed', { payerTotal, expense, trip: this.props.navigation.state.params.trip });
+            expense.payers = this.state.payers;
+            this.props.navigation.navigate('AddExpenseConsumed', { payerTotal, expense, trip: this.props.navigation.state.params.trip });
         } else if (payerTotal > expense.amount) {
             alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {

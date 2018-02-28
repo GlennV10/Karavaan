@@ -121,8 +121,8 @@ export default class AddExpense extends Component {
             },
             category: this.state.category,
             currency: this.state.currency,
-            payers: [],
-            consumers: [],
+            payers: {},
+            consumers: {},
             loans: []
         }
 
