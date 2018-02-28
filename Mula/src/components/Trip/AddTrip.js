@@ -226,25 +226,22 @@ export default class AddTrip extends Component {
                     // Get online data
                     // =======================================================
                     console.log("Fetching online data #2");
-                    return fetch('http://193.191.177.169:8080/mula/Controller?action=getFriends', {
-                        method: 'POST',
+                    return fetch('http://193.191.177.73:8080/karafinREST/allPersons', {
+                        method: 'GET',
                         header: {
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            email: this.state.username
-                        })
+                        }
                     }).then((response) => response.json())
                         .then((responseJson) => {
-
-                            console.log("Set loadingStates to false #3");
-                            this.setState({ isLoading: false, loadJSON: false, offlineFriends: responseJson });
+                            
+                            console.log("Set loadingStates to false #3 "+ responseJson);
+                            this.setState({ isLoading: false, loadJSON: false, offlineFriends: Array.from(responseJson) });
                         }).then(() => {
                             // =======================================================
                             // set asyncstorage data
                             // =======================================================
-                            AsyncStorage.setItem('friends', JSON.stringify(this.state.offlineFriends.friends));
+                            AsyncStorage.setItem('friends', JSON.stringify(this.state.offlineFriends));
 
                         });
                 } else {
@@ -351,7 +348,7 @@ export default class AddTrip extends Component {
                     <Text style={styles.textfield}>{I18n.t('company')}</Text>
                     <MultiSelect
                         hideTags
-                        items={this.state.offlineFriends.friends}
+                        items={this.state.offlineFriends}
                         uniqueKey="email"
                         ref={(component) => { this.multiSelect = component }}
                         selectedItems={selectedItems}
@@ -359,7 +356,7 @@ export default class AddTrip extends Component {
                         selectText={I18n.t('company')}
                         searchInputPlaceholderText={I18n.t('company')}
                         onChangeInput={(item) => console.log(item)}
-                        displayKey="userName"
+                        displayKey="email"
                         style={backgroundColor = "#d4e8e5"}
                         selectedItemTextColor="#edc14f"
                         selectedItemIconColor="#edc14f"
