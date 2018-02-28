@@ -36,7 +36,7 @@ export default class AddTrip extends Component {
             teller: 0
 
         };
-        
+
 
     }
 
@@ -49,54 +49,54 @@ export default class AddTrip extends Component {
         AsyncStorage.getItem('id_teller')
             .then(req => JSON.parse(req))
             .then((id_teller) => {
-            this.setState({teller : id_teller})
-        })
-        .catch(error => console.log('Error loading teller'));
-        console.log("MMMMm"+this.state.teller);
+                this.setState({ teller: id_teller })
+            })
+            .catch(error => console.log('Error loading teller'));
+        console.log("MMMMm" + this.state.teller);
 
-      }
-    
+    }
 
-    addTrip(){
-        
+
+    addTrip() {
+
         /*this.validate({
             tripName: {minlength:3, maxlength:7, required: true},
             startDate: {date: 'YYYY-MM-DD', minDate:this.yearbefore, maxDate: this.yearafter},
             endDate: {date: 'YYYY-MM-DD', minDate:this.state.startDate, maxDate: this.yearafter}
           });*/
-          
-          console.log(this.state.teller)
-        if(this.state.connectionMode == "pony"){
-            return fetch('url',{
-            method: 'POST',
-            header:{
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: this.state.username,
-                name: this.state.title, 
-                startDate: this.state.selectedStartDate,
-                endDate: this.state.selectedEndDate,
-                users: this.state.selectedItems,
-                expenseList: [],
-                baseCurrency: this.state.baseCurrency,
-                currencies: this.state.currencies
+
+        console.log(this.state.teller)
+        if (this.state.connectionMode == "pony") {
+            return fetch('url', {
+                method: 'POST',
+                header: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: this.state.username,
+                    name: this.state.title,
+                    startDate: this.state.selectedStartDate,
+                    endDate: this.state.selectedEndDate,
+                    users: this.state.selectedItems,
+                    expenseList: [],
+                    baseCurrency: this.state.baseCurrency,
+                    currencies: this.state.currencies
+                })
             })
-            })
-            .then((res) => res.json())
-            .then((response) => {
-                console.log("added trip successfully: "+responseJson.addTrip_succes);
-                    if(responseJson.addTrip_succes === "true"){
+                .then((res) => res.json())
+                .then((response) => {
+                    console.log("added trip successfully: " + responseJson.addTrip_succes);
+                    if (responseJson.addTrip_succes === "true") {
                         this.moveOn();
                     }
-            })
+                })
         }
         else {
-            console.log("NOOOOO"+ this.state.teller)
+            console.log("NOOOOO" + this.state.teller)
             let trp = {
                 tripID: this.state.teller,
                 email: this.state.username,
-                name: this.state.title, 
+                name: this.state.title,
                 startDate: this.state.selectedStartDate,
                 endDate: this.state.selectedEndDate,
                 users: this.state.selectedItems,
@@ -113,23 +113,23 @@ export default class AddTrip extends Component {
                         .catch(error => console.log('Error storing trips'));
                 })
                 .catch(error => console.log('Error loading trips'));
-            var tel = parseInt(this.state.teller) +1;
-            console.log("TEL:"+ tel);
-            
-            AsyncStorage.setItem('id_teller',JSON.stringify(tel))
+            var tel = parseInt(this.state.teller) + 1;
+            console.log("TEL:" + tel);
+
+            AsyncStorage.setItem('id_teller', JSON.stringify(tel))
                 .then(res => console.log(teller))
                 .catch(error => console.log('Error storing teller BBBB'));
-            
+
             this.moveOn();
         }
-      }
-      //////////////////////////////////////////////////////////
-      ////////////////////CURRENCY//////////////////////////////
-    moveOn(){
-                    console.log('moveOn');
-                    this.props.navigation.navigate('DashboardTrips');       
     }
-     
+    //////////////////////////////////////////////////////////
+    ////////////////////CURRENCY//////////////////////////////
+    moveOn() {
+        console.log('moveOn');
+        this.props.navigation.navigate('DashboardTrips');
+    }
+
     onSelectedCurrencyChange = selectedCurrencies => {
         this.setState({ selectedCurrencies });
         console.log(selectedCurrencies);
@@ -147,12 +147,12 @@ export default class AddTrip extends Component {
         }
     }
     getExchangeRatesWithBase(baseCurrency) {
-        console.log("Rates met base wordt uitgevoerd"+ baseCurrency)
+        console.log("Rates met base wordt uitgevoerd" + baseCurrency)
         var url = "https://api.fixer.io/latest?base=" + baseCurrency;
         //if (this.state.loadRates) {
-            return fetch(url)
-                .then((resp) => resp.json() )
-                .then((data) => this.parseRates(data));
+        return fetch(url)
+            .then((resp) => resp.json())
+            .then((data) => this.parseRates(data));
         //}
         console.log(url);
     }
@@ -160,8 +160,8 @@ export default class AddTrip extends Component {
     parseRates(data) {
         console.log(data.rates)
         //if (this.state.loadRates) {
-            this.setState({ rates: data.rates });
-            this.renderValutaToArray(data.rates);
+        this.setState({ rates: data.rates });
+        this.renderValutaToArray(data.rates);
         //}
     }
     renderValuta(rate) {
@@ -205,16 +205,16 @@ export default class AddTrip extends Component {
     };
 
 
-    mainFetch(){
+    mainFetch() {
         // Get ... uit memory
-        console.log( AsyncStorage.getItem('userName'));
-        AsyncStorage.getItem('userName').then((username, error)=>{
-            if(error){
+        console.log(AsyncStorage.getItem('userName'));
+        AsyncStorage.getItem('userName').then((username, error) => {
+            if (error) {
                 console.log(error);
             }
             // Set username state
             this.setState({ username: username, loadJSON: false });
-            console.log("Setting username state #1"+ this.state.username);
+            console.log("Setting username state #1" + this.state.username);
             // Get connection status
             AsyncStorage.getItem('connectionStatus').then((connection, error) => {
                 if (error) {
@@ -244,8 +244,8 @@ export default class AddTrip extends Component {
                             // =======================================================
                             // set asyncstorage data
                             // =======================================================
-                                AsyncStorage.setItem('friends', JSON.stringify(this.state.offlineFriends.friends));
-                            
+                            AsyncStorage.setItem('friends', JSON.stringify(this.state.offlineFriends.friends));
+
                         });
                 } else {
                     // Get offline data en render
@@ -255,7 +255,7 @@ export default class AddTrip extends Component {
                             console.log(error);
                         }
                         // Send JSON to renderfriends
-                        
+
                         console.log("Parse friends with offline data #8");
                         this.setState({ friends: JSON.parse(friendsJson), offlineFriends: JSON.parse(friendsJson), loadJSON: false, isLoading: false });
                     });
@@ -275,142 +275,142 @@ export default class AddTrip extends Component {
         var yearb = new Date().getFullYear() - 1;
         var yearbefore = "" + yearb + "-" + month + "-" + new Date().getUTCDate();
         var yearafter = "" + yeara + "-" + month + "-" + new Date().getUTCDate();
-        
+
 
         console.log();
-        
-        return(
+
+        return (
             <ScrollView style={styles.container}>
-                
-                    <View style= {styles.separator}>
-                        <TextInput
-                            ref="tripName"
-                            placeholder="Trip name"
-                            style={styles.inputField}
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="#818181"
-                            onChangeText={(text)=>console.log(text) & this.setState({title: text})}/>
-                    </View>
-                
-                    <View  style={{flex: 1, flexDirection: 'row'}}>
-                        <TextInput
-                            ref="startDate"
-                            placeholder= "Startdate"
-                            value = {this.state.selectedStartDate}
-                            style={styles.input}
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="#818181"
-                            keyboardType= 'numeric'
-                            onChangeText={(text)=>console.log(text) & this.setState({selectedStartDate: text})}
-                        />
-                        {/*this.isFieldInError('startDate') && this.getErrorsInField('startDate').map(errorMessage => <Text>{errorMessage}</Text>) */}
-                        
-                        <DatePicker
-                            mode='date'
-                            format='YYYY-MM-DD'
-                            minDate= {yearbefore}
-                            maxDate={yearafter}
-                            date={this.state.selectedStartDate}
-                            showIcon={true}
-                            placeholder="Select date..."
-                            hideText={true}
-                            // date={this.state.selectedDate}
-                            style={[styles.input, styles.datePickerStyle]}
-                            onDateChange={(date) => this.setState({selectedStartDate: date})}
-                            />
-                    </View >
-                    
-                        <View style={[{flex: 1, flexDirection: 'row'},styles.separator]}>
-                            <TextInput
-                                placeholder= "Enddate"
-                                value = {this.state.selectedEndDate}
-                                style={styles.input}
-                                underlineColorAndroid="transparent"
-                                placeholderTextColor="#818181"
-                                keyboardType= 'numeric'
-                                onChangeText={(text)=>console.log(text) & this.setState({selectedEndDate: text})}
-                                    
-                            />
-                            <DatePicker
-                                mode='date'
-                                format='YYYY-MM-DD'
-                                minDate={this.state.selectedStartDate}
-                                maxDate={yearafter}
-                                date={this.state.selectedEndDate}
-                                showIcon={true}
-                                placeholder="Select date..."
-                                hideText={true}
-                                // date={this.state.selectedDate}
-                                style={[styles.input, styles.datePickerStyle]}
-                                onDateChange={(date) => this.setState({selectedEndDate: date})}
-                            />
 
-                        </View>
-            
-                        <View style={[styles.subItem, styles.separator]}>
-                            <Text style ={styles.textfield}>Select your travel company</Text>
-                            <MultiSelect
-                            hideTags
-                            items={this.state.offlineFriends.friends}
-                            uniqueKey="email"
-                            ref={(component) => { this.multiSelect = component }}
-                            selectedItems={selectedItems}
-                            onSelectedItemsChange={this.onSelectedItemsChange}
-                            selectText="Pick Items"
-                            searchInputPlaceholderText="Search Items..."
-                            onChangeInput={ (item)=> console.log(item)}
-                            displayKey="userName"
-                            style={backgroundColor = "#d4e8e5"}
-                            selectedItemTextColor="#edc14f"
-                            selectedItemIconColor="#edc14f"
-                            itemTextColor="#303030"
-                            searchInputStyle={{ color: '#303030' }}
-                            submitButtonColor="#edc14f"
-                            submitButtonText="Submit"
-                            color="#303030" />
-                        </View> 
-                    
-                            
-                        <View style={[styles.subItem, styles.separator]}>
-                            <Text>Select your base currency</Text>
-                            <Picker style={{ flex: .50 }}
-                                onValueChange={currency => this.setState({ baseCurrency: currency })  & this.setState({ loadRates: true }) & this.getExchangeRatesWithBase(currency) }
-                                selectedValue={this.state.baseCurrency}>
-                                <Picker.Item value= "EUR" label="EUR" key="EUR"/>
-                                <Picker.Item value= "USD" label="USD" key="USD"/>
-                            </Picker>
-                        </View>
+                <View style={styles.separator}>
+                    <TextInput
+                        ref="tripName"
+                        placeholder={I18n.t('tripname')}
+                        style={styles.inputField}
+                        underlineColorAndroid="transparent"
+                        placeholderTextColor="#818181"
+                        onChangeText={(text) => console.log(text) & this.setState({ title: text })} />
+                </View>
+
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <TextInput
+                        ref="startDate"
+                        placeholder={I18n.t('startdate')}
+                        value={this.state.selectedStartDate}
+                        style={styles.inputdate}
+                        underlineColorAndroid="transparent"
+                        placeholderTextColor="#818181"
+                        keyboardType='numeric'
+                        onChangeText={(text) => console.log(text) & this.setState({ selectedStartDate: text })}
+                    />
+                    {/*this.isFieldInError('startDate') && this.getErrorsInField('startDate').map(errorMessage => <Text>{errorMessage}</Text>) */}
+
+                    <DatePicker
+                        mode='date'
+                        format='YYYY-MM-DD'
+                        minDate={yearbefore}
+                        maxDate={yearafter}
+                        date={this.state.selectedStartDate}
+                        showIcon={true}
+                        placeholder={I18n.t('selectdate')}
+                        hideText={true}
+                        // date={this.state.selectedDate}
+                        style={[styles.input, styles.datePickerStyle]}
+                        onDateChange={(date) => this.setState({ selectedStartDate: date })}
+                    />
+                </View >
+
+                <View style={[{ flex: 1, flexDirection: 'row' }, styles.separator]}>
+                    <TextInput
+                        placeholder={I18n.t('enddate')}
+                        value={this.state.selectedEndDate}
+                        style={styles.inputdate}
+                        underlineColorAndroid="transparent"
+                        placeholderTextColor="#818181"
+                        keyboardType='numeric'
+                        onChangeText={(text) => console.log(text) & this.setState({ selectedEndDate: text })}
+
+                    />
+                    <DatePicker
+                        mode='date'
+                        format='YYYY-MM-DD'
+                        minDate={this.state.selectedStartDate}
+                        maxDate={yearafter}
+                        date={this.state.selectedEndDate}
+                        showIcon={true}
+                        placeholder={I18n.t('selectdate')}
+                        hideText={true}
+                        // date={this.state.selectedDate}
+                        style={[styles.input, styles.datePickerStyle]}
+                        onDateChange={(date) => this.setState({ selectedEndDate: date })}
+                    />
+
+                </View>
+
+                <View style={[styles.subItem, styles.separator]}>
+                    <Text style={styles.textfield}>{I18n.t('company')}</Text>
+                    <MultiSelect
+                        hideTags
+                        items={this.state.offlineFriends.friends}
+                        uniqueKey="email"
+                        ref={(component) => { this.multiSelect = component }}
+                        selectedItems={selectedItems}
+                        onSelectedItemsChange={this.onSelectedItemsChange}
+                        selectText={I18n.t('company')}
+                        searchInputPlaceholderText={I18n.t('company')}
+                        onChangeInput={(item) => console.log(item)}
+                        displayKey="userName"
+                        style={backgroundColor = "#d4e8e5"}
+                        selectedItemTextColor="#edc14f"
+                        selectedItemIconColor="#edc14f"
+                        itemTextColor="#303030"
+                        searchInputStyle={{ color: '#303030' }}
+                        submitButtonColor="#edc14f"
+                        submitButtonText={I18n.t('submit')}
+                        color="#303030" />
+                </View>
 
 
-                        <View>
-                            <Text style ={styles.textfield}>Select the other currency you're going to use on the trip</Text>
-                            <MultiSelect
-                                hideTags
-                                items={this.state.currencies}
-                                uniqueKey="id"
-                                ref={(component) => { this.multiSelect = component }}
-                                selectedItems={selectedCurrencies}
-                                onSelectedItemsChange={this.onSelectedCurrencyChange}
-                                selectText="Pick your currencies"
-                                searchInputPlaceholderText="Search currency..."
-                                onChangeInput={(item) => console.log(item)}
-                                backgroundColor="#d4e8e5"
-                                displayKey="name"
-                                style={backgroundColor = "#d4e8e5"}
-                                tagTextColor='#303030'
-                                selectedItemTextColor="#edc14f"
-                                selectedItemIconColor="#edc14f"
-                                itemTextColor="#303030"
-                                displayKey="name"
-                                searchInputStyle={{ color: '#303030' }}
-                                submitButtonColor="#edc14f"
-                                submitButtonText="Submit"
-                            />
-                
-                
-            </View>
-           
-            {/* <View style={[styles.subItem, styles.separator]}>
+                <View style={[styles.subItem, styles.separator]}>
+                    <Text>{I18n.t('tripcurrency')}</Text>
+                    <Picker style={{ flex: .50 }}
+                        onValueChange={currency => this.setState({ baseCurrency: currency }) & this.setState({ loadRates: true }) & this.getExchangeRatesWithBase(currency)}
+                        selectedValue={this.state.baseCurrency}>
+                        <Picker.Item value="EUR" label="EUR" key="EUR" />
+                        <Picker.Item value="USD" label="USD" key="USD" />
+                    </Picker>
+                </View>
+
+
+                <View>
+                    <Text style={styles.textfield}>{I18n.t('othercurrency')}</Text>
+                    <MultiSelect
+                        hideTags
+                        items={this.state.currencies}
+                        uniqueKey="id"
+                        ref={(component) => { this.multiSelect = component }}
+                        selectedItems={selectedCurrencies}
+                        onSelectedItemsChange={this.onSelectedCurrencyChange}
+                        selectText={I18n.t('pickcurrency')}
+                        searchInputPlaceholderText={I18n.t('pickcurrency')}
+                        onChangeInput={(item) => console.log(item)}
+                        backgroundColor="#d4e8e5"
+                        displayKey="name"
+                        style={backgroundColor = "#d4e8e5"}
+                        tagTextColor='#303030'
+                        selectedItemTextColor="#edc14f"
+                        selectedItemIconColor="#edc14f"
+                        itemTextColor="#303030"
+                        displayKey="name"
+                        searchInputStyle={{ color: '#303030' }}
+                        submitButtonColor="#edc14f"
+                        submitButtonText={I18n.t('submit')}
+                    />
+
+
+                </View>
+
+                {/* <View style={[styles.subItem, styles.separator]}>
                 <Text style ={styles.textfield}>Select your base currency</Text>
                 <Picker style={{flex:.50}}           
                     onValueChange={currency => this.setState({baseCurrency: currency}) &this.setState({loadRates: true}) & this.getExchangeRatesWithBase(currency) & this.renderValutaToArray(this.state.rates)}
@@ -450,16 +450,13 @@ export default class AddTrip extends Component {
                 /> 
                 
             </View>*/}
-            <Button color="#edc14f"
-                        title="Save"
-                        onPress={()=> this.addTrip() & console.log("Waiting for backend...")}
-                        
-            />
-               
+                <Button color="#edc14f"
+                    title={I18n.t('savetrip')}
+                    onPress={() => this.addTrip() & console.log("Waiting for backend...")}
 
-            
+                />
             </ScrollView>
-            
+
         );
     }
 
@@ -478,21 +475,26 @@ const styles = StyleSheet.create({
         backgroundColor: '#d4e8e5',
         margin: 10
     },
-    parts:{
-      
+    parts: {
+
     },
-    input:{   
+    input: {
         backgroundColor: '#d4e8e5',
-        flex: 0.2  
+        flex: 0.2
     },
-    textfield:{
-        paddingBottom: 8
-       
+    inputdate: {
+        backgroundColor: '#d4e8e5',
+        flex: 0.75
+    },
+    textfield: {
+        paddingBottom: 8,
+        marginBottom: 10
+
     },
     separator: {
         borderBottomColor: '#bbb',
         borderBottomWidth: StyleSheet.hairlineWidth,
-      }
+    }
 
 
 

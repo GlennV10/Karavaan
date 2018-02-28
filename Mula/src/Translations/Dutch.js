@@ -103,6 +103,18 @@ export default {
 
     //AddEXpenseConsumed
     consumers: 'Wie nam er deel in de uitgave',
-    sharedexpense: 'Voeg gezamenlijke kost toe'
+    sharedexpense: 'Voeg gezamenlijke kost toe',
+
+    //AddTrip
+    tripname: 'Bestemming',
+    startdate: 'Start datum',
+    enddate: 'Eind datum',
+    company: 'Kies je reisgenoten',
+    tripcurrency: 'Kies de basis munteenheid',
+    othercurrency: 'Kies andere nuttige munteenheden',
+    pickcurrency: 'Kies munteenheden',
+    savetrip: 'Voeg reis toe',
+    selectdate: 'Kies datum',
+    submit: 'Kies'
 
 }
