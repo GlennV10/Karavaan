@@ -10,51 +10,12 @@ export default class TripExpenses extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            expenses: [],
-            username: "",
-            isLoading: false
+            expenses: []
         }
     }
 
     componentWillMount() {
-        console.log(this.props.expenses);
         this.setState({ expenses: this.props.expenses });
-        // this.setState({ isLoading: true });
-        // this.getAllExpensesByTrip();
-    }
-
-    componentDidMount() {
-        this.setState({ isLoading: false });
-    }
-
-    /*
-      GET-request to get all Expenses from one trip
-      trip-id(?) = this.props.navigation.state.params.trip(??)
-    */
-    getAllExpensesByTrip() {
-        try {
-            AsyncStorage.getItem('userName').then((username) => {
-                this.setState({ username });
-            })
-                .then(res => {
-                    return fetch('http://193.191.177.169:8080/mula/Controller?action=getBills', {
-                        method: 'POST',
-                        header: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            email: this.state.username
-                        })
-                    })
-                        .then((res) => res.json())
-                        .then((response) => {
-                            this.setState({ expenses: response.bills })
-                        });
-                });
-        } catch (error) {
-            console.log(error);
-        }
     }
 
     renderExpenses() {
@@ -70,18 +31,18 @@ export default class TripExpenses extends Component {
                     <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={expense.id}>
                         <View style={[styles.expenseContainer, styles.half]}>
                             <View style={styles.splitRow}>
-                                <Text style={[styles.expenseName]}>{expense.name}</Text>
+                                <Text style={[styles.expenseName]}>{expense.expenseName}</Text>
                             </View>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseDate}>{expense.date}</Text>
+                                <Text style={styles.expenseDate}>{expense.date.dayOfMonth}/{expense.date.month}/{expense.date.year}</Text>
                             </View>
                         </View>
                         <View style={[styles.expenseAmountContainer, styles.half]}>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseAmount}>{expense.amount.toFixed(2)}</Text>
+                                <Text style={styles.expenseAmount}>{ expense.total.toFixed(2) }</Text>
                             </View>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseCurrency}>{expense.currency}</Text>
+                                <Text style={styles.expenseCurrency}>{ expense.currency }</Text>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -91,17 +52,6 @@ export default class TripExpenses extends Component {
     }
 
     render() {
-        if (this.state.isLoading) {
-            return (
-                <View style={styles.containerIndicator}>
-                    <ActivityIndicator />
-                    <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', { trip: this.props.navigator.state.params.trip })}>
-                        <Text style={styles.addTripButtonText} >+</Text>
-                    </TouchableOpacity>
-                </View>
-            )
-        }
-
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.expenseList}>
