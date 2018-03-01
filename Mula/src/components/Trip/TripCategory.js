@@ -6,6 +6,7 @@ export default class TripCategory extends Component {
     constructor(props) {
       super(props);
       this.state = {
+        username: "",
         categories: [],
         baseCurrency: "",
         selectedCurrency: "",
@@ -19,7 +20,10 @@ export default class TripCategory extends Component {
               .then(req => JSON.parse(req))
               .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
               .catch(error => console.log('Error loading expenses'));*/
-        this.calculateCategorytotal(); 
+        AsyncStorage.getItem('userName').then((username)=>{
+            this.setState({username});
+            this.calculateCategorytotal();
+        })
     }
 
     renderValutaToArray(rate) {
@@ -58,11 +62,19 @@ export default class TripCategory extends Component {
         this.setState({selectedCurrency : this.state.baseCurrency});
         console.log(this.state.selectedCurrency);
         for(expense of this.props.expenses) {
+            let userExpense = 0;
+            Object.keys(expense.consumers).map((user) => {
+                console.log(user);
+                if(user == this.state.username) {
+                    userExpense = expense.consumers[user];
+                }
+            });
+            console.log(userExpense);
             if(categories.findIndex(i => i.category === expense.category) < 0) {
                 if(expense.currency == this.state.baseCurrency){
                     let category = {
                         category: expense.category,
-                        total: expense.total,
+                        total: userExpense,
                         expenses: 1
                     };
                     categories.push(category);
@@ -71,7 +83,7 @@ export default class TripCategory extends Component {
                     if(expense.currency == currency.name) {
                         let category = {
                             category: expense.category,
-                            total: expense.total/currency.value,
+                            total: userExpense/currency.value,
                             expenses: 1
                         };
                         categories.push(category);
@@ -83,14 +95,14 @@ export default class TripCategory extends Component {
                         if(expense.currency == this.state.baseCurrency){
                             let category = {
                                 category: expense.category,
-                                total: expense.total,
+                                total: userExpense,
                                 expenses: 1
                             };
                             categories.push(category);
                         }
                         for(currency of this.state.rates) {
                             if(expense.currency == currency.name) {
-                                categories[j].total += (expense.total/currency.value);
+                                categories[j].total += (userExpense/currency.value);
                                 categories[j].expenses++;
                             }
                         }
@@ -123,7 +135,7 @@ export default class TripCategory extends Component {
             category.total = category.total/currentRate*newRate;
         }
         console.log("current: " + currentRate + ", newRate: " + newRate);
-        this.setState(categories);
+        this.setState({categories});
         this.setState({ selectedCurrency: newCurrency});
     }
 
