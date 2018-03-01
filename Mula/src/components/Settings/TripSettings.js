@@ -85,8 +85,38 @@ export default class TripSettings extends Component {
         });
     }
 
-    updateRate(r, t) {
-        alert("test")
+    updateRate(rate, text) {
+        let tripCurrencyRates = this.state.tripRates.slice();
+        for (rate of tripCurrencyRates) {
+            if (rate.name == rate.name) {
+                rate.value = this.checkAmount(text);             
+            }
+        }
+        this.setState({tripCurrencyRates})
+        this.renderChangeRates();
+    }
+
+    checkAmount(text) {
+        var newText = '';
+        let numbers = '0123456789';
+        var containsComma = false;
+
+        for (var i = 0; i < text.length; i++) {
+            if (numbers.indexOf(text[i]) > -1) {
+                newText = newText + text[i];
+            }
+            if (text[i] === ',' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+            if (text[i] === '.' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+        }
+        containsComma = false;
+
+        return newText
     }
 
     getTrip() {
@@ -127,13 +157,13 @@ export default class TripSettings extends Component {
                 </View>
 
                 <View style={styles.separator}>
-                    <Text>Verander de currency rate</Text>
+                    <Text>{I18n.t('changecurrency')}</Text>
                     {this.renderChangeRates()}
 
                 </View>
 
                 <View>
-                    <Text style={styles.textfieldaboveMultiSelect}>Voeg reisbegeleiders toe</Text>
+                    <Text style={styles.textfieldaboveMultiSelect}>{I18n.t('addguides')}</Text>
                     <MultiSelect
                         hideTags
                         items={["test", "test"]}
@@ -142,7 +172,7 @@ export default class TripSettings extends Component {
                         selectedItems={selectedItems}
                         onSelectedItemsChange={this.onSelectedItemsChange}
                         selectText="Kies guides"
-                        searchInputPlaceholderText="Kies guides"
+                        searchInputPlaceholderText={I18n.t('chooseguide')}
                         onChangeInput={(item) => console.log(item)}
                         displayKey="userName"
                         style={backgroundColor = "#d4e8e5"}

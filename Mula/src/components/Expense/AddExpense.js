@@ -74,18 +74,22 @@ export default class AddExpense extends Component {
     checkAmount(text) {
         var newText = '';
         let numbers = '0123456789';
+        var containsComma = false;
 
         for (var i = 0; i < text.length; i++) {
             if (numbers.indexOf(text[i]) > -1) {
                 newText = newText + text[i];
             }
-            if (text[i] === ',') {
+            if (text[i] === ',' && containsComma === false) {
                 newText = newText + '.';
+                containsComma = true;
             }
-            if (text[i] === '.') {
+            if (text[i] === '.' && containsComma === false) {
                 newText = newText + '.';
+                containsComma = true;
             }
         }
+        containsComma = false;
 
         this.setState({ amount: newText });
     }
@@ -93,26 +97,36 @@ export default class AddExpense extends Component {
     checkGroupAmount(text) {
         var newText = '';
         let numbers = '0123456789';
+        var containsComma = false;
 
         for (var i = 0; i < text.length; i++) {
             if (numbers.indexOf(text[i]) > -1) {
                 newText = newText + text[i];
             }
-            if (text[i] === ',') {
+            if (text[i] === ',' && containsComma === false) {
                 newText = newText + '.';
+                containsComma = true;
             }
-            if (text[i] === '.') {
+            if (text[i] === '.' && containsComma === false) {
                 newText = newText + '.';
+                containsComma = true;
             }
         }
+        containsComma = false;
 
         this.setState({ groupAmount: newText });
     }
 
     getExpense() {
+        var totalAmount = 0;
+        if (this.state.groupAmount !== "") {
+            totalAmount = parseFloat(this.state.amount) + parseFloat(this.state.groupAmount);
+        } else {
+            totalAmount = parseFloat(this.state.amount)
+        }
         let expense = {
-            tripName: this.state.name,
-            total: parseFloat(this.state.amount),
+            tripName: this.state.name,           
+            total: totalAmount,
             date: {
                 dayOfMonth: parseInt(this.state.selectedDate.substring(0, 2)),
                 month: parseInt(this.state.selectedDate.substring(3, 5)),

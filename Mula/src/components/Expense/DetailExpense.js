@@ -6,29 +6,49 @@ export default class DetailExpense extends Component{
     constructor(props) {
       super(props);
       this.state = {
-          consumers: []
+          consumers: [],
+          payers: []
       };
     }
 
     componentWillMount() {
-        this.setState({ consumers: Object.keys(this.props.navigation.state.params.expense.consumers) })
+        this.setState({ consumers: Object.keys(this.props.navigation.state.params.expense.consumers) });
+        this.setState({ payers: Object.keys(this.props.navigation.state.params.expense.payers) });
     }
 
-    // componentDidMount() {
-    //     console.log(this.props.navigation.state.params.expense);
-    // }
+    componentDidMount() {
+        let consumers = this.state.consumers.slice();
+        for(payer of this.state.payers) {
+            if(!(this.state.consumers.includes(payer))) {
+                consumers.push(payer);
+            }
+        }
+        this.setState({ consumers });
+    }
 
     renderUsers() {
         const amounts = Object.values(this.props.navigation.state.params.expense.consumers);
+        const payerAmounts = Object.values(this.props.navigation.state.params.expense.payers);
 
         return this.state.consumers.map((consumer, index) => {
+            let paid = null;
+            let amount = null;
+            if(this.state.payers.includes(consumer)) {
+                paid = <Text style={styles.userPaid}>Paid: { payerAmounts[this.state.payers.indexOf(consumer)] }</Text>
+            }
+            if(amounts.length > index) {
+                amount = amounts[index].toFixed(2)
+            } else {
+                amount = "--"
+            }
             return (
                 <View style={styles.userDetails} key={index}>
                     <View style={styles.userNameContainer}>
                         <Text style={styles.userName}>{ consumer }</Text>
+                        { paid }
                     </View>
                     <View style={{flex: .3}}>
-                        <Text style={styles.userAmount}>{ amounts[index].toFixed(2) }</Text>
+                        <Text style={styles.userAmount}>{ amount }</Text>
                         <Text style={styles.expenseCurrency}>{ this.props.navigation.state.params.expense.currency }</Text>
                     </View>
                 </View>
@@ -44,7 +64,7 @@ export default class DetailExpense extends Component{
                 <View style={styles.expenseDetails}>
                     <View style={{flex: .7}}>
                         <Text style={styles.expenseName}>{ expense.expenseName }</Text>
-                        <Text style={styles.expenseDate}>Paid by { expense.paidBy } on { expense.date.dayOfMonth }/{ (expense.date.month + 1) }/{ expense.date.year }</Text>
+                        <Text style={styles.expenseDate}>Paid on { expense.date.dayOfMonth }/{ (expense.date.month + 1) }/{ expense.date.year }</Text>
                     </View>
                     <View style={{flex: .3}}>
                         <Text style={styles.expensePrice}>{ expense.total.toFixed(2) }</Text>
@@ -106,11 +126,13 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     userName: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        opacity: .7
+        color: '#000'
     },
     userAmount: {
         textAlign: 'right'
+    },
+    userPaid: {
+        fontSize: 12,
+        color: '#bababa',
     }
 });

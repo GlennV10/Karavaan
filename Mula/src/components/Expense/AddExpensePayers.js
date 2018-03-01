@@ -8,7 +8,7 @@ export default class AddExpensePayers extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            payers: []
+            payers: [],
         }
     }
 
@@ -44,10 +44,33 @@ export default class AddExpensePayers extends Component {
             let payer = {
                 participant: participant[0],
                 amount: 0,
+                amountToShow: ""
             }
             payers.push(payer);
         }
         this.setState({ payers });
+    }
+
+    checkAmount(text) {
+        var newText = '';
+        let numbers = '0123456789';
+        var containsComma = false;
+
+        for (var i = 0; i < text.length; i++) {
+            if (numbers.indexOf(text[i]) > -1) {
+                newText = newText + text[i];
+            }
+            if (text[i] === ',' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+            if (text[i] === '.' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+        }
+        containsComma = false;
+        return newText;
     }
 
     updatePayerAmount(amount, participant) {
@@ -55,13 +78,16 @@ export default class AddExpensePayers extends Component {
         for (payer of payers) {
             if (payer.participant === participant) {
                 if (amount !== "") {
-                    payer.amount = parseFloat(amount);
+                    payer.amount = parseFloat(amount);   
+                    payer.amountToShow = this.checkAmount(amount)             
                 } else {
                     payer.amount = 0;
+                    payer.amountToShow = ""
                 }
             }
             console.log(payers);
         }
+        
         this.setState({ payers });
     }
 
@@ -72,6 +98,7 @@ export default class AddExpensePayers extends Component {
                     <Text style={styles.label}>{payer.participant.firstName} {payer.participant.lastName}</Text>
                     <TextInput
                         placeholder="Amount paid..."
+                        value={payer.amountToShow}
                         keyboardType="numeric"
                         style={styles.inputField}
                         placeholderTextColor="#bfbfbf"
@@ -96,12 +123,16 @@ export default class AddExpensePayers extends Component {
                     this.state.payers.splice(i, 1);
                 }
             }
+
+            
             expense.payers = this.state.payers;
             this.props.navigation.navigate('AddExpenseConsumed', { expense, trip: this.props.navigation.state.params.trip });
-        } else if (payerTotal > expense.amount) {
-            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
+        } else if (payerTotal > expense.total) {
+            alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
+            
         } else {
-            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
+            alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
+            
         }
     }
 
