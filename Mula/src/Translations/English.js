@@ -116,5 +116,6 @@ export default {
     submit: 'Submit',
 
     //TripSettings
-    delete: 'Delete trip'
+    delete: 'Delete trip',
+    deletetrip: 'Are you sure you want to delete this trip??'
 }

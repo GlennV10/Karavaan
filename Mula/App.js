@@ -15,7 +15,6 @@ import AddTrip from './src/components/Trip/AddTrip';
 import AddExpense from './src/components/Expense/AddExpense';
 import AddExpensePayers from './src/components/Expense/AddExpensePayers';
 import AddExpenseConsumed from './src/components/Expense/AddExpenseConsumed';
-import AddExpenseShared from './src/components/Expense/AddExpenseShared';
 import DetailExpense from './src/components/Expense/DetailExpense';
 import TripSettings from './src/components/Settings/TripSettings';
 // import DetailEvent from './src/components/Event/DetailEvent';
@@ -204,21 +203,6 @@ export default App = StackNavigator({
       }),
       screen: AddExpenseConsumed
     },
-    AddExpenseShared: {
-      navigationOptions: ({ navigation }) => ({
-        title: I18n.t('addExpense'),
-        headerStyle:{
-          backgroundColor: '#6fc2b0'
-        },
-        headerTitleStyle:{
-            color: '#FFF'
-        },
-        headerBackTitleStyle:{
-            color: "#FFF"
-        }
-      }),
-      screen: AddExpenseShared
-    },
     TripSettings: {
       navigationOptions: ({ navigation }) => ({
         title: I18n.t('tripsettings'),
@@ -233,7 +217,7 @@ export default App = StackNavigator({
         },
         headerLeft:
         <TouchableOpacity onPress={()=>{ navigation.navigate('DashboardTrips') }}>
-          <Image source={require('./src/images/chevron_left.png')} style={{width: 35, height: 35, marginLeft: 5}}/>
+          <Image source={require('./src/images/left-arrow-png-left-icon-1600.png')} style={{width: 22, height: 22, marginLeft: 15}}/>
         </TouchableOpacity>,
       }),
       screen: TripSettings

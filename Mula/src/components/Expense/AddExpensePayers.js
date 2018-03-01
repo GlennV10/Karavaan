@@ -40,9 +40,9 @@ export default class AddExpensePayers extends Component {
 
     populatePayersState() {
         let payers = this.state.payers.slice();
-        for (user of this.props.navigation.state.params.trip.users) {
+        for (participant of this.props.navigation.state.params.trip.participants) {
             let payer = {
-                user: user,
+                participant: participant[0],
                 amount: 0,
             }
             payers.push(payer);
@@ -50,16 +50,17 @@ export default class AddExpensePayers extends Component {
         this.setState({ payers });
     }
 
-    updatePayerAmount(amount, user) {
+    updatePayerAmount(amount, participant) {
         let payers = this.state.payers.slice();
         for (payer of payers) {
-            if (payer.user === user) {
+            if (payer.participant === participant) {
                 if (amount !== "") {
                     payer.amount = parseFloat(amount);
                 } else {
                     payer.amount = 0;
                 }
             }
+            console.log(payers);
         }
         this.setState({ payers });
     }
@@ -68,14 +69,14 @@ export default class AddExpensePayers extends Component {
         return this.state.payers.map((payer, index) => {
             return (
                 <View key={index}>
-                    <Text style={styles.label}>{payer.user}</Text>
+                    <Text style={styles.label}>{payer.participant.firstName} {payer.participant.lastName}</Text>
                     <TextInput
                         placeholder="Amount paid..."
                         keyboardType="numeric"
                         style={styles.inputField}
-                        underlineColorAndroid="#ffd185"
                         placeholderTextColor="#bfbfbf"
-                        onChangeText={(amount) => this.updatePayerAmount(amount, payer.user)} />
+                        underlineColorAndroid="transparent"
+                        onChangeText={(amount) => this.updatePayerAmount(amount, payer.participant)} />
                 </View>
             )
         });
@@ -89,14 +90,14 @@ export default class AddExpensePayers extends Component {
             payerTotal += parseFloat(payer.amount);
         }
 
-        if (payerTotal == (expense.amount + expense.groupcost)) {
+        if (payerTotal == expense.total) {
             for(let i = this.state.payers.length - 1; i >= 0; i--) {
                 if (this.state.payers[i].amount == 0) {
                     this.state.payers.splice(i, 1);
                 }
             }
             expense.payers = this.state.payers;
-            this.props.navigation.navigate('AddExpenseConsumed', { payerTotal, expense, trip: this.props.navigation.state.params.trip });
+            this.props.navigation.navigate('AddExpenseConsumed', { expense, trip: this.props.navigation.state.params.trip });
         } else if (payerTotal > expense.amount) {
             alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {
@@ -110,7 +111,7 @@ export default class AddExpensePayers extends Component {
                 <View>
                     <View style={styles.contentView}>
                         <Text style={styles.title}>{I18n.t('payers')}</Text>
-                        {this.renderPayers()}
+                        { this.renderPayers() }
 
                         <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
                             <Text style={styles.saveText}>{I18n.t('whoconsumed')}</Text>

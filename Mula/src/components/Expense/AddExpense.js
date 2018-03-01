@@ -17,8 +17,7 @@ export default class AddExpense extends Component {
             wayofsplit: I18n.t('splitplaceholder'),
             language: I18n.t('langtest'),
             check: false,
-            groupAmount: "",
-            categories: ['Restaurant', 'Taxi', 'Drank']
+            groupAmount: ""
         }
     }
 
@@ -47,7 +46,9 @@ export default class AddExpense extends Component {
     }
 
     renderPickerCurrencies() {
-        return this.props.navigation.state.params.trip.currencies.map((currency, index) => {
+        const currencies = Object.keys(this.props.navigation.state.params.trip.rates);
+
+        return currencies.map((currency, index) => {
             return (
                 <Picker.Item value={currency} label={currency} key={index} />
             )
@@ -55,7 +56,7 @@ export default class AddExpense extends Component {
     }
 
     renderPickerCategories() {
-        return this.state.categories.map((category, index) => {
+        return this.props.navigation.state.params.trip.categories.map((category, index) => {
             return (
                 <Picker.Item value={category} label={category} key={index} />
             )
@@ -110,22 +111,27 @@ export default class AddExpense extends Component {
 
     getExpense() {
         let expense = {
-            name: this.state.name,
-            amount: parseFloat(this.state.amount),
-            date: this.state.selectedDate,
+            tripName: this.state.name,
+            total: parseFloat(this.state.amount),
+            date: {
+                dayOfMonth: parseInt(this.state.selectedDate.substring(0, 2)),
+                month: parseInt(this.state.selectedDate.substring(3, 5)),
+                year: parseInt(this.state.selectedDate.substring(6))
+            },
             category: this.state.category,
             currency: this.state.currency,
-            payers: [],
-            consumers: [],
-            tripID: this.props.navigation.state.params.trip.id,
-            groupcost: parseFloat(this.state.groupAmount)
+            payers: {},
+            consumers: {},
+            loans: []
         }
 
-        if (expense.name === "" ||
-            expense.date === "" ||
+        if (expense.tripName === "" ||
+            isNaN(expense.date.dayOfMonth) ||
+            isNaN(expense.date.month) ||
+            isNaN(expense.date.year) ||
             expense.category === "Choose category" ||
             expense.currency === "Choose currency" ||
-            expense.amount < 0 || isNaN(expense.amount)) {
+            expense.total < 0 || isNaN(expense.total)) {
             alert("Velden mogen niet leeg zijn");
         } else {
             this.props.navigation.navigate('AddExpensePayers', { expense, trip: this.props.navigation.state.params.trip });
@@ -152,45 +158,55 @@ export default class AddExpense extends Component {
 
     }
 
-    showAddGroupCostField() {
-        if (this.state.check == false) {
-            this.setState({ check: !this.state.check });
-            this.addGroupCostField();
-        }
-
-        if (this.state.check == true) {
-            this.setState({ check: !this.state.check });
-            this.addGroupCostField();
-        }
-    }
-
-    addGroupCostField() {
-        if (this.state.check == true) {
-            return (
-                <View>
-                    <Text style={styles.label}>{I18n.t('groupexpense')}</Text>
-                    <TextInput
-                        placeholder={I18n.t('amountplaceholder')}
-                        style={styles.inputField}
-                        keyboardType='numeric'
-                        underlineColorAndroid="transparent"
-                        placeholderTextColor="#bfbfbf"
-                        onChangeText={(text) => this.checkGroupAmount(text)}
-                        value={this.state.groupAmount}>
-                    </TextInput>
-                </View>
-            )
-        }
-    }
+    // showAddGroupCostField() {
+    //     if (this.state.check == false) {
+    //         this.setState({ check: !this.state.check });
+    //         this.addGroupCostField();
+    //     }
+    //
+    //     if (this.state.check == true) {
+    //         this.setState({ check: !this.state.check });
+    //         this.addGroupCostField();
+    //     }
+    // }
+    //
+    // addGroupCostField() {
+    //     if (this.state.check == true) {
+    //         return (
+    //             <View>
+    //                 <Text style={styles.label}>{I18n.t('groupexpense')}</Text>
+    //                 <TextInput
+    //                     placeholder={I18n.t('amountplaceholder')}
+    //                     style={styles.inputField}
+    //                     keyboardType='numeric'
+    //                     underlineColorAndroid="transparent"
+    //                     placeholderTextColor="#bfbfbf"
+    //                     onChangeText={(text) => this.checkGroupAmount(text)}
+    //                     value={this.state.groupAmount}>
+    //                 </TextInput>
+    //             </View>
+    //         )
+    //     }
+    // }
+    //
+    // <View style={styles.checker}>
+    //     <CheckBox
+    //         label={I18n.t('addgroupexpense')}
+    //         checked={this.state.check}
+    //         onChange={() => this.showAddGroupCostField()}
+    //     />
+    //
+    //     {this.addGroupCostField()}
+    // </View>
 
 
     render() {
         const { trip } = this.props.navigation.state.params;
 
         return (
-            
+
                 <ScrollView style={styles.container}>
-                
+
                     <View style={styles.contentView}>
                         <View style={styles.separator}>
                             <Text style={styles.label}>{I18n.t('name')}</Text>
@@ -212,23 +228,14 @@ export default class AddExpense extends Component {
                                 onChangeText={(text) => this.checkAmount(text)}
                                 value={this.state.amount} />
                         </View >
-                        <View style={styles.checker}>
-                            <CheckBox
-                                label={I18n.t('addgroupexpense')}
-                                checked={this.state.check}
-                                onChange={() => this.showAddGroupCostField()}
-                            />
-
-                            {this.addGroupCostField()}
-                        </View>
 
                         <View style={styles.separator}>
                             <Text style={styles.label}>{I18n.t('date')}</Text>
                             <DatePicker
                                 mode='date'
                                 format='DD/MM/YYYY'
-                                // minDate= {this.props.navigation.state.params.trip.startDate}
-                                // maxDate={this.props.navigation.state.params.trip.endDate}
+                                minDate= {trip.startDate.dayOfMonth + "/" + (trip.startDate.month + 1) + "/" + trip.startDate.year}
+                                maxDate={trip.endDate.dayOfMonth + "/" + (trip.endDate.month + 1) + "/" + trip.endDate.year}
                                 date={this.state.selectedDate}
                                 showIcon={true}
                                 placeholder={I18n.t('dateplaceholder')}
@@ -268,6 +275,7 @@ export default class AddExpense extends Component {
                             <Text style={styles.label}>{I18n.t('currency')} {this.state.currency}</Text>
                             <Picker style={styles.picker} selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
                                 <Picker.Item label={I18n.t('choosecurrency')} value={I18n.t('currencyplaceholder')} />
+                                <Picker.Item label={trip.baseCurrency} value={trip.baseCurrency} />
                                 {this.renderPickerCurrencies()}
                             </Picker>
                         </View>
@@ -291,7 +299,7 @@ export default class AddExpense extends Component {
                             })} />
                     </View >
                 </ScrollView >
-            
+
         )
     }
 }

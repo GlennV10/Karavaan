@@ -494,6 +494,7 @@ const styles = StyleSheet.create({
     separator: {
         borderBottomColor: '#bbb',
         borderBottomWidth: StyleSheet.hairlineWidth,
+        marginBottom: 5
     }
 
 

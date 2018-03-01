@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert, CheckBox } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
@@ -9,6 +9,7 @@ export default class AddExpensePayers extends Component {
         super(props);
         this.state = {
             consumers: [],
+            shared: 0
         }
     }
 
@@ -39,47 +40,28 @@ export default class AddExpensePayers extends Component {
 
     populateConsumersState() {
         let consumers = this.state.consumers.slice();
-        for (user of this.props.navigation.state.params.trip.users) {
+        for (participant of this.props.navigation.state.params.trip.participants) {
             let consumer = {
-                user: user,
-                amount: this.props.navigation.state.params.payerTotal / this.props.navigation.state.params.trip.users.length
+                participant: participant[0],
+                amount: 0 //this.props.navigation.state.params.expense.total / this.props.navigation.state.params.trip.participants.length
             }
             consumers.push(consumer);
         }
         this.setState({ consumers });
     }
 
-    checkAmount(amount, user) {
-        var newText = '';
-        let numbers = '0123456789';
-
-        for (var i = 0; i < amount.length; i++) {
-            if (numbers.indexOf(amount[i]) > -1) {
-                newText = newText + amount[i];
-            }
-            if (amount[i] === ',') {
-                newText = newText + '.';
-            }
-            if (amount[i] === '.') {
-                newText = newText + '.';
-            }
-        }
-
-        this.updateConsumerAmount(newText, user);
-    }
-
-    updateConsumerAmount(amount, user) {
+    updateConsumerAmount(amount, participant) {
         let consumers = this.state.consumers.slice();
         for (consumer of consumers) {
-            if (consumer.user === user) {
+            if (consumer.participant === participant) {
                 if (amount !== "") {
                     consumer.amount = parseFloat(amount);
                 } else {
                     consumer.amount = 0;
                 }
             }
+            console.log(consumers);
         }
-        console.log(consumers);
         this.setState({ consumers });
     }
 
@@ -87,15 +69,14 @@ export default class AddExpensePayers extends Component {
         return this.state.consumers.map((consumer, index) => {
             return (
                 <View key={index}>
-                    <Text style={styles.label}>{consumer.user}</Text>
+                    <Text style={styles.label}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
                     <TextInput
-                        placeholder="Amount consumed"
+                        placeholder="Amount consumed..."
                         keyboardType="numeric"
                         style={styles.inputField}
-                        underlineColorAndroid="#ffd185"
                         placeholderTextColor="#bfbfbf"
-                        onChangeText={(amount) => this.checkAmount(amount, consumer.user)/*this.updateConsumerAmount(amount, consumer.user)*/}
-                        value={consumer.amount.toString()} />
+                        underlineColorAndroid="transparent"
+                        onChangeText={(amount) => this.updateConsumerAmount(amount, consumer.participant)} />
                 </View>
             )
         });
@@ -109,14 +90,17 @@ export default class AddExpensePayers extends Component {
             consumerTotal += parseFloat(consumer.amount);
         }
 
-        if (consumerTotal == expense.amount) {
+        if ((consumerTotal + this.state.shared) == expense.total) {
             for(let i = this.state.consumers.length - 1; i >= 0; i--) {
                 if (this.state.consumers[i].amount == 0) {
                     this.state.consumers.splice(i, 1);
+                } else {
+                    this.state.consumers[i].amount += (this.state.shared / this.state.consumers.length);
                 }
             }
             expense.consumers = this.state.consumers;
-            this.props.navigation.navigate('AddExpenseShared', { expense, trip: this.props.navigation.state.params.trip });
+            console.log(expense);
+            //this.props.navigation.navigate('AddExpenseShared', { expense, trip: this.props.navigation.state.params.trip });
         } else if (consumerTotal > expense.amount) {
             alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {
@@ -129,8 +113,21 @@ export default class AddExpensePayers extends Component {
             <ScrollView style={styles.container}>
                 <View>
                     <View style={styles.contentView}>
-                        <Text style={styles.title}>{I18n.t('consumers')}</Text>
-                        {this.renderConsumers()}
+                        <View style={styles.consumersView}>
+                            <Text style={styles.title}>{I18n.t('consumers')}</Text>
+                            {this.renderConsumers()}
+                        </View>
+
+                        <View style={styles.separator}>
+                            <Text style={styles.label}>Shared cost</Text>
+                            <TextInput
+                                placeholder="Amount shared..."
+                                style={styles.inputField}
+                                keyboardType='numeric'
+                                placeholderTextColor="#bfbfbf"
+                                underlineColorAndroid="transparent"
+                                onChangeText={(shared) => this.setState({ shared: parseFloat(shared) })} />
+                        </View >
 
                         <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
                             <Text style={styles.saveText}>{I18n.t('sharedexpense')}</Text>
@@ -183,5 +180,11 @@ const styles = StyleSheet.create({
         lineHeight: 28,
         color: '#303030',
         textAlign: 'center'
+    },
+    separator: {
+        borderTopColor: '#bbb',
+        borderTopWidth: StyleSheet.hairlineWidth,
+        marginBottom: 5,
+        marginTop: 5
     }
 });

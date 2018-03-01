@@ -135,7 +135,7 @@ export default class DashboardTrips extends Component {
               <Text style={styles.tripName}>{trip.tripName}</Text>
             </View>
             <View style={styles.splitRow}>
-              <Text style={styles.tripDate}>{trip.startDate.dayOfMonth}/{trip.startDate.month}/{trip.startDate.year} - {trip.endDate.dayOfMonth}/{trip.endDate.month}/{trip.endDate.year}</Text>
+              <Text style={styles.tripDate}>{trip.startDate.dayOfMonth}/{(trip.startDate.month + 1)}/{trip.startDate.year} - {trip.endDate.dayOfMonth}/{(trip.endDate.month + 1)}/{trip.endDate.year}</Text>
             </View>
             <View style={styles.progressBarContainer}>
               <View style={{ backgroundColor: barStyle(trip.startDate, trip.endDate) }}></View>
