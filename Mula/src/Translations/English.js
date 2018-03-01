@@ -102,6 +102,7 @@ export default {
     //AddEXpenseConsumed
     consumers: 'Who participated in the expense',
     addexpense: 'Add expense',
+    sharedcost: 'Shared cost',
 
     //AddTrip
     tripname: 'Destination',

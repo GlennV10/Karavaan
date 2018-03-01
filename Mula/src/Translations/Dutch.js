@@ -104,6 +104,7 @@ export default {
     //AddEXpenseConsumed
     consumers: 'Wie nam er deel in de uitgave',
     addexpense: 'Voeg uitgave toe',
+    sharedcost: 'Gemeenschappelijke kost',
 
     //AddTrip
     tripname: 'Bestemming',
@@ -123,6 +124,6 @@ export default {
     changecurrency: 'Verander wisselkoers van munt',
     addguides: 'Voeg reisbegeleiders toe',
     chooseguide: 'Kies begeleiders',
-    
+
 
 }

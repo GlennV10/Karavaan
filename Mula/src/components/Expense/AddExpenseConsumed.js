@@ -158,7 +158,7 @@ export default class AddExpensePayers extends Component {
                         </View>
 
                         <View style={styles.separator}>
-                            <Text style={styles.label}>Shared cost</Text>
+                            <Text style={styles.label}>{I18n.t('sharedcost')}</Text>
                             <TextInput
                                 placeholder="Amount shared..."
                                 style={styles.inputField}
