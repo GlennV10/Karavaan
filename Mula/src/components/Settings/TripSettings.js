@@ -68,8 +68,6 @@ export default class TripSettings extends Component {
     };
 
     renderChangeRates() {
-        console.log("render");
-        console.log(this.state.tripRates);
         return this.state.tripRates.map((rate, index) => {
             return (
                 <View style={styles.currencyView} key={index}>
@@ -114,8 +112,6 @@ export default class TripSettings extends Component {
             })
         });
         this.setState({ tripRates: array })
-        console.log("Valuta");
-        console.log(this.state.tripRates);
     }
 
     render() {
