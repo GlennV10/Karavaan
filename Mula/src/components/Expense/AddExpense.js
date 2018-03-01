@@ -159,36 +159,46 @@ export default class AddExpense extends Component {
 
     }
 
-    showAddGroupCostField() {
-        if (this.state.check == false) {
-            this.setState({ check: !this.state.check });
-            this.addGroupCostField();
-        }
-
-        if (this.state.check == true) {
-            this.setState({ check: !this.state.check });
-            this.addGroupCostField();
-        }
-    }
-
-    addGroupCostField() {
-        if (this.state.check == true) {
-            return (
-                <View>
-                    <Text style={styles.label}>{I18n.t('groupexpense')}</Text>
-                    <TextInput
-                        placeholder={I18n.t('amountplaceholder')}
-                        style={styles.inputField}
-                        keyboardType='numeric'
-                        underlineColorAndroid="transparent"
-                        placeholderTextColor="#bfbfbf"
-                        onChangeText={(text) => this.checkGroupAmount(text)}
-                        value={this.state.groupAmount}>
-                    </TextInput>
-                </View>
-            )
-        }
-    }
+    // showAddGroupCostField() {
+    //     if (this.state.check == false) {
+    //         this.setState({ check: !this.state.check });
+    //         this.addGroupCostField();
+    //     }
+    //
+    //     if (this.state.check == true) {
+    //         this.setState({ check: !this.state.check });
+    //         this.addGroupCostField();
+    //     }
+    // }
+    //
+    // addGroupCostField() {
+    //     if (this.state.check == true) {
+    //         return (
+    //             <View>
+    //                 <Text style={styles.label}>{I18n.t('groupexpense')}</Text>
+    //                 <TextInput
+    //                     placeholder={I18n.t('amountplaceholder')}
+    //                     style={styles.inputField}
+    //                     keyboardType='numeric'
+    //                     underlineColorAndroid="transparent"
+    //                     placeholderTextColor="#bfbfbf"
+    //                     onChangeText={(text) => this.checkGroupAmount(text)}
+    //                     value={this.state.groupAmount}>
+    //                 </TextInput>
+    //             </View>
+    //         )
+    //     }
+    // }
+    //
+    // <View style={styles.checker}>
+    //     <CheckBox
+    //         label={I18n.t('addgroupexpense')}
+    //         checked={this.state.check}
+    //         onChange={() => this.showAddGroupCostField()}
+    //     />
+    //
+    //     {this.addGroupCostField()}
+    // </View>
 
 
     render() {
@@ -219,15 +229,6 @@ export default class AddExpense extends Component {
                                 onChangeText={(text) => this.checkAmount(text)}
                                 value={this.state.amount} />
                         </View >
-                        <View style={styles.checker}>
-                            <CheckBox
-                                label={I18n.t('addgroupexpense')}
-                                checked={this.state.check}
-                                onChange={() => this.showAddGroupCostField()}
-                            />
-
-                            {this.addGroupCostField()}
-                        </View>
 
                         <View style={styles.separator}>
                             <Text style={styles.label}>{I18n.t('date')}</Text>
