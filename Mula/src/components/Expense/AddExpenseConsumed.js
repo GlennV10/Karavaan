@@ -42,11 +42,35 @@ export default class AddExpensePayers extends Component {
         for (participant of this.props.navigation.state.params.trip.participants) {
             let consumer = {
                 participant: participant[0],
-                amount: 0 //this.props.navigation.state.params.expense.total / this.props.navigation.state.params.trip.participants.length
+                amount: 0, //this.props.navigation.state.params.expense.total / this.props.navigation.state.params.trip.participants.length
+                amountToShow: ""
             }
             consumers.push(consumer);
         }
         this.setState({ consumers });
+    }
+
+    checkAmount(text) {
+        var newText = '';
+        let numbers = '0123456789';
+        var containsComma = false;
+
+        for (var i = 0; i < text.length; i++) {
+            if (numbers.indexOf(text[i]) > -1) {
+                newText = newText + text[i];
+            }
+            if (text[i] === ',' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+            if (text[i] === '.' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+        }
+        containsComma = false;
+
+        return newText
     }
 
     updateConsumerAmount(amount, participant) {
@@ -55,8 +79,10 @@ export default class AddExpensePayers extends Component {
             if (consumer.participant === participant) {
                 if (amount !== "") {
                     consumer.amount = parseFloat(amount);
+                    consumer.amountToShow = this.checkAmount(amount)  
                 } else {
                     consumer.amount = 0;
+                    consumer.amountToShow = ""
                 }
             }
             console.log(consumers);
@@ -71,6 +97,7 @@ export default class AddExpensePayers extends Component {
                     <Text style={styles.label}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
                     <TextInput
                         placeholder="Amount consumed"
+                        value={consumer.amountToShow}
                         keyboardType="numeric"
                         style={styles.inputField}
                         underlineColorAndroid="#ffd185"
@@ -81,7 +108,7 @@ export default class AddExpensePayers extends Component {
         });
     }
 
-    getExpense() {
+    addExpense() {
         let expense = this.props.navigation.state.params.expense;
 
         let consumerTotal = 0;
@@ -89,18 +116,31 @@ export default class AddExpensePayers extends Component {
             consumerTotal += parseFloat(consumer.amount);
         }
 
-        if (consumerTotal == expense.amount) {
+        if (consumerTotal == expense.total) {
             for(let i = this.state.consumers.length - 1; i >= 0; i--) {
                 if (this.state.consumers[i].amount == 0) {
                     this.state.consumers.splice(i, 1);
                 }
             }
             expense.consumers = this.state.consumers;
-            this.props.navigation.navigate('AddExpenseShared', { expense, trip: this.props.navigation.state.params.trip });
-        } else if (consumerTotal > expense.amount) {
-            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
+            //==========================================================================================
+            //=========================AANVULLEN MET POST REQUEST NAAR API==============================
+            //==========================================================================================
+            return fetch('http://193.191.177.73:8080/karafinREST/addExpense/', {
+            method: 'POST',
+            header: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((expense) => {
+                this.renderValutaToArray(trip.rates)
+            });
+            this.props.navigation.navigate('TripExpenses', { trip: this.props.navigation.state.params.trip });
+        } else if (consumerTotal > expense.total) {
+            alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {
-            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
+            alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
         }
     }
 
@@ -112,8 +152,8 @@ export default class AddExpensePayers extends Component {
                         <Text style={styles.title}>{I18n.t('consumers')}</Text>
                         {this.renderConsumers()}
 
-                        <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
-                            <Text style={styles.saveText}>{I18n.t('sharedexpense')}</Text>
+                        <TouchableOpacity style={styles.saveButton} onPress={() => this.addExpense()}>
+                            <Text style={styles.saveText}>{I18n.t('addexpense')}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

@@ -101,7 +101,7 @@ export default {
 
     //AddEXpenseConsumed
     consumers: 'Who participated in the expense',
-    sharedexpense: 'Add shared expense',
+    addexpense: 'Add expense',
 
     //AddTrip
     tripname: 'Destination',
@@ -117,5 +117,9 @@ export default {
 
     //TripSettings
     delete: 'Delete trip',
-    deletetrip: 'Are you sure you want to delete this trip??'
+    deletetrip: 'Are you sure you want to delete this trip?',
+    changecurrency: 'Change currency exchange rate',
+    addguides: 'Voeg reisbegeleiders toe',
+    chooseguide: 'Choose guides',
+
 }
