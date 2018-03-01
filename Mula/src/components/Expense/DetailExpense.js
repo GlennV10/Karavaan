@@ -14,9 +14,9 @@ export default class DetailExpense extends Component{
         this.setState({ consumers: Object.keys(this.props.navigation.state.params.expense.consumers) })
     }
 
-    componentDidMount() {
-        console.log(this.props.navigation.state.params.expense);
-    }
+    // componentDidMount() {
+    //     console.log(this.props.navigation.state.params.expense);
+    // }
 
     renderUsers() {
         const amounts = Object.values(this.props.navigation.state.params.expense.consumers);
@@ -44,7 +44,7 @@ export default class DetailExpense extends Component{
                 <View style={styles.expenseDetails}>
                     <View style={{flex: .7}}>
                         <Text style={styles.expenseName}>{ expense.expenseName }</Text>
-                        <Text style={styles.expenseDate}>Paid by { expense.paidBy } on { expense.date.dayOfMonth }/{ expense.date.month }/{ expense.date.year }</Text>
+                        <Text style={styles.expenseDate}>Paid by { expense.paidBy } on { expense.date.dayOfMonth }/{ (expense.date.month + 1) }/{ expense.date.year }</Text>
                     </View>
                     <View style={{flex: .3}}>
                         <Text style={styles.expensePrice}>{ expense.total.toFixed(2) }</Text>

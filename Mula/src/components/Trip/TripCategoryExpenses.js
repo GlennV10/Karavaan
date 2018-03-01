@@ -29,7 +29,7 @@ export default class DetailExpense extends Component{
                               <Text style={[styles.expenseName]}>{expense.expenseName}</Text>
                           </View>
                           <View style={styles.splitRow}>
-                              <Text style={styles.expenseDate}>{expense.date.dayOfMonth}/{expense.date.month}/{expense.date.year}</Text>
+                              <Text style={styles.expenseDate}>{expense.date.dayOfMonth}/{(expense.date.month + 1)}/{expense.date.year}</Text>
                           </View>
                       </View>
                       <View style={[styles.expenseAmountContainer, styles.half]}>

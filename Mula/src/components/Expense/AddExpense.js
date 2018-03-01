@@ -47,7 +47,9 @@ export default class AddExpense extends Component {
     }
 
     renderPickerCurrencies() {
-        return this.props.navigation.state.params.trip.currencies.map((currency, index) => {
+        const currencies = Object.keys(this.props.navigation.state.params.trip.rates);
+
+        return currencies.map((currency, index) => {
             return (
                 <Picker.Item value={currency} label={currency} key={index} />
             )
@@ -110,22 +112,27 @@ export default class AddExpense extends Component {
 
     getExpense() {
         let expense = {
-            name: this.state.name,
-            amount: parseFloat(this.state.amount),
-            date: this.state.selectedDate,
+            tripName: this.state.name,
+            total: parseFloat(this.state.amount),
+            date: {
+                dayOfMonth: parseInt(this.state.selectedDate.substring(0, 2)),
+                month: parseInt(this.state.selectedDate.substring(3, 5)),
+                year: parseInt(this.state.selectedDate.substring(6))
+            },
             category: this.state.category,
             currency: this.state.currency,
-            payers: [],
-            consumers: [],
-            tripID: this.props.navigation.state.params.trip.id,
-            groupcost: parseFloat(this.state.groupAmount)
+            payers: {},
+            consumers: {},
+            loans: []
         }
 
-        if (expense.name === "" ||
-            expense.date === "" ||
+        if (expense.tripName === "" ||
+            isNaN(expense.date.dayOfMonth) ||
+            isNaN(expense.date.month) ||
+            isNaN(expense.date.year) ||
             expense.category === "Choose category" ||
             expense.currency === "Choose currency" ||
-            expense.amount < 0 || isNaN(expense.amount)) {
+            expense.total < 0 || isNaN(expense.total)) {
             alert("Velden mogen niet leeg zijn");
         } else {
             this.props.navigation.navigate('AddExpensePayers', { expense, trip: this.props.navigation.state.params.trip });
@@ -188,9 +195,9 @@ export default class AddExpense extends Component {
         const { trip } = this.props.navigation.state.params;
 
         return (
-            
+
                 <ScrollView style={styles.container}>
-                
+
                     <View style={styles.contentView}>
                         <View style={styles.separator}>
                             <Text style={styles.label}>{I18n.t('name')}</Text>
@@ -227,8 +234,8 @@ export default class AddExpense extends Component {
                             <DatePicker
                                 mode='date'
                                 format='DD/MM/YYYY'
-                                // minDate= {this.props.navigation.state.params.trip.startDate}
-                                // maxDate={this.props.navigation.state.params.trip.endDate}
+                                minDate= {trip.startDate.dayOfMonth + "/" + (trip.startDate.month + 1) + "/" + trip.startDate.year}
+                                maxDate={trip.endDate.dayOfMonth + "/" + (trip.endDate.month + 1) + "/" + trip.endDate.year}
                                 date={this.state.selectedDate}
                                 showIcon={true}
                                 placeholder={I18n.t('dateplaceholder')}
@@ -268,6 +275,7 @@ export default class AddExpense extends Component {
                             <Text style={styles.label}>{I18n.t('currency')} {this.state.currency}</Text>
                             <Picker style={styles.picker} selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
                                 <Picker.Item label={I18n.t('choosecurrency')} value={I18n.t('currencyplaceholder')} />
+                                <Picker.Item label={trip.baseCurrency} value={trip.baseCurrency} />
                                 {this.renderPickerCurrencies()}
                             </Picker>
                         </View>
@@ -291,7 +299,7 @@ export default class AddExpense extends Component {
                             })} />
                     </View >
                 </ScrollView >
-            
+
         )
     }
 }
