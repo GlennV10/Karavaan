@@ -43,34 +43,11 @@ export default class AddExpensePayers extends Component {
         for (participant of this.props.navigation.state.params.trip.participants) {
             let payer = {
                 participant: participant[0],
-                amount: 0,
-                amountToShow: ""
+                amount: 0
             }
             payers.push(payer);
         }
         this.setState({ payers });
-    }
-
-    checkAmount(text) {
-        var newText = '';
-        let numbers = '0123456789';
-        var containsComma = false;
-
-        for (var i = 0; i < text.length; i++) {
-            if (numbers.indexOf(text[i]) > -1) {
-                newText = newText + text[i];
-            }
-            if (text[i] === ',' && containsComma === false) {
-                newText = newText + '.';
-                containsComma = true;
-            }
-            if (text[i] === '.' && containsComma === false) {
-                newText = newText + '.';
-                containsComma = true;
-            }
-        }
-        containsComma = false;
-        return newText;
     }
 
     updatePayerAmount(amount, participant) {
@@ -78,16 +55,14 @@ export default class AddExpensePayers extends Component {
         for (payer of payers) {
             if (payer.participant === participant) {
                 if (amount !== "") {
-                    payer.amount = parseFloat(amount);   
-                    payer.amountToShow = this.checkAmount(amount)             
+                    payer.amount = parseFloat(amount);
                 } else {
                     payer.amount = 0;
-                    payer.amountToShow = ""
                 }
             }
             console.log(payers);
         }
-        
+
         this.setState({ payers });
     }
 
@@ -118,21 +93,14 @@ export default class AddExpensePayers extends Component {
         }
 
         if (payerTotal == expense.total) {
-            for(let i = this.state.payers.length - 1; i >= 0; i--) {
-                if (this.state.payers[i].amount == 0) {
-                    this.state.payers.splice(i, 1);
-                }
-            }
-
-            
             expense.payers = this.state.payers;
             this.props.navigation.navigate('AddExpenseConsumed', { expense, trip: this.props.navigation.state.params.trip });
         } else if (payerTotal > expense.total) {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
-            
+
         } else {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
-            
+
         }
     }
 

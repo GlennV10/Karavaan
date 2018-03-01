@@ -125,7 +125,7 @@ export default class AddExpense extends Component {
             totalAmount = parseFloat(this.state.amount)
         }
         let expense = {
-            tripName: this.state.name,           
+            expenseName: this.state.name,
             total: totalAmount,
             date: {
                 dayOfMonth: parseInt(this.state.selectedDate.substring(0, 2)),
@@ -139,7 +139,7 @@ export default class AddExpense extends Component {
             loans: []
         }
 
-        if (expense.tripName === "" ||
+        if (expense.expenseName === "" ||
             isNaN(expense.date.dayOfMonth) ||
             isNaN(expense.date.month) ||
             isNaN(expense.date.year) ||

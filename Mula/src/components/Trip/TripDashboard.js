@@ -118,6 +118,7 @@ export default class TripDashboard extends React.Component {
 
     _handleUpdate = () => {
       BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
+      this.state.expenses = this.props.navigation.state.params.trip.expenseList;
       // AsyncStorage.getItem('expenses')
       //         .then(req => JSON.parse(req))
       //         .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
