@@ -16,6 +16,10 @@ export default class TripExpenses extends Component {
 
     componentWillMount() {
         this.setState({ expenses: this.props.expenses });
+
+        AsyncStorage.getItem('userName').then((username)=>{
+            this.setState({username});
+        })
     }
 
     renderExpenses() {
@@ -27,6 +31,16 @@ export default class TripExpenses extends Component {
             )
         } else {
             return this.state.expenses.map((expense) => {
+
+                let userExpense = 0;
+
+                Object.keys(expense.consumers).map((user) => {
+                    console.log("expenseUser: " + user);
+                    if(user == this.state.username) {
+                        userExpense = expense.consumers[user];
+                    }
+                });
+
                 return (
                     <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={expense.id}>
                         <View style={[styles.expenseContainer, styles.half]}>
@@ -39,7 +53,7 @@ export default class TripExpenses extends Component {
                         </View>
                         <View style={[styles.expenseAmountContainer, styles.half]}>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseAmount}>{ expense.total.toFixed(2) }</Text>
+                                <Text style={styles.expenseAmount}>{ userExpense.toFixed(2) }</Text>
                             </View>
                             <View style={styles.splitRow}>
                                 <Text style={styles.expenseCurrency}>{ expense.currency }</Text>

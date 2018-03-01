@@ -77,17 +77,10 @@ export default class TripCategory extends Component {
                         total: userExpense,
                         expenses: 1
                     };
-                    categories.push(category);
-                }
-                for(currency of this.state.rates) {
-                    if(expense.currency == currency.name) {
-                        let category = {
-                            category: expense.category,
-                            total: userExpense/currency.value,
-                            expenses: 1
-                        };
-                        categories.push(category);
+                    for(currency of this.state.rates) {
+                        if(expense.currency == currency.name) category.total = userExpense/currency.value;
                     }
+                    categories.push(category);
                 }
             } else {
                 for (let j = 0; j < categories.length; j++) {
