@@ -68,29 +68,6 @@ export default class TripSettings extends Component {
     };
 
     renderChangeRates() {
-<<<<<<< HEAD
-        var result = [];
-        
-            for (let rate = 0; rate < this.state.tripRates.length; rate++) {
-                result.push(
-                    <View style={styles.currencyView} key={rate}>
-                        <View style={styles.currencyField}>
-                            <Text >{this.state.tripRates[rate].name}</Text>
-                        </View>
-                        <View style={styles.currencyInput}>
-                            <TextInput
-                                value={this.state.tripRates[rate].value + ""}                               
-                                underlineColorAndroid="transparent"
-                                placeholderTextColor="#818181"
-                                keyboardType='numeric'
-                                onChangeText={(text) => this.updateRate(this.state.tripRates[rate], text)}
-                            />
-                        </View>
-                    </View>)
-            }
-        
-        return result;
-=======
         return this.state.tripRates.map((rate, index) => {
             return (
                 <View style={styles.currencyView} key={index}>
@@ -106,7 +83,6 @@ export default class TripSettings extends Component {
                 </View>
             )
         });
->>>>>>> 41046ae6c38696ab909f48b503245f0e7ec577ea
     }
 
     updateRate(rate, text) {
@@ -273,19 +249,6 @@ const styles = StyleSheet.create({
     textfieldaboveMultiSelect: {
         marginBottom: 10
     },
-<<<<<<< HEAD
-    // currencyView: {
-    //     flex: 1,
-    //     flexDirection: 'row'
-    // },
-    // currencyField: {
-    //     flex: 0.2
-    // },
-    // currencyInput: {
-    //     flex: 0.8
-    // }
-});
-=======
     currencyView: {
         // flex: 1,
         justifyContent: 'center',
@@ -302,4 +265,3 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     }
 });
->>>>>>> 41046ae6c38696ab909f48b503245f0e7ec577ea

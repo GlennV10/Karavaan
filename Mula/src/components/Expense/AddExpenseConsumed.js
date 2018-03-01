@@ -97,12 +97,8 @@ export default class AddExpensePayers extends Component {
                 <View key={index}>
                     <Text style={styles.label}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
                     <TextInput
-<<<<<<< HEAD
                         placeholder="Amount consumed"
                         value={consumer.amountToShow}
-=======
-                        placeholder="Amount consumed..."
->>>>>>> 41046ae6c38696ab909f48b503245f0e7ec577ea
                         keyboardType="numeric"
                         style={styles.inputField}
                         placeholderTextColor="#bfbfbf"
@@ -121,11 +117,7 @@ export default class AddExpensePayers extends Component {
             consumerTotal += parseFloat(consumer.amount);
         }
 
-<<<<<<< HEAD
         if (consumerTotal == expense.total) {
-=======
-        if ((consumerTotal + this.state.shared) == expense.total) {
->>>>>>> 41046ae6c38696ab909f48b503245f0e7ec577ea
             for(let i = this.state.consumers.length - 1; i >= 0; i--) {
                 if (this.state.consumers[i].amount == 0) {
                     this.state.consumers.splice(i, 1);
@@ -134,7 +126,6 @@ export default class AddExpensePayers extends Component {
                 }
             }
             expense.consumers = this.state.consumers;
-<<<<<<< HEAD
             //==========================================================================================
             //=========================AANVULLEN MET POST REQUEST NAAR API==============================
             //==========================================================================================
@@ -151,27 +142,9 @@ export default class AddExpensePayers extends Component {
             this.props.navigation.navigate('TripExpenses', { trip: this.props.navigation.state.params.trip });
         } else if (consumerTotal > expense.total) {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
-=======
-            console.log(expense);
-            //this.props.navigation.navigate('AddExpenseShared', { expense, trip: this.props.navigation.state.params.trip });
-        } else if (consumerTotal > expense.amount) {
-            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
->>>>>>> 41046ae6c38696ab909f48b503245f0e7ec577ea
         } else {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
         }
-    }
-
-    addExpense(expense) {
-        return fetch('http://193.191.177.73:8080/karafinREST/', {
-            method: 'POST',
-            header: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ expense })
-        })
-        .then((res) => res.json())
-        .then((response) => console.log(response))
     }
 
     render() {
