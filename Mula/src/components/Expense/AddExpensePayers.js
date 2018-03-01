@@ -101,8 +101,8 @@ export default class AddExpensePayers extends Component {
                         value={payer.amountToShow}
                         keyboardType="numeric"
                         style={styles.inputField}
-                        underlineColorAndroid="#ffd185"
                         placeholderTextColor="#bfbfbf"
+                        underlineColorAndroid="transparent"
                         onChangeText={(amount) => this.updatePayerAmount(amount, payer.participant)} />
                 </View>
             )

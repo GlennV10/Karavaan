@@ -20,7 +20,6 @@ export default class TripSettings extends Component {
     }
 
     async componentDidMount() {
-
         AsyncStorage.getItem('currency').then((currency) => {
             this.setState({ currency });
         });
@@ -69,6 +68,7 @@ export default class TripSettings extends Component {
     };
 
     renderChangeRates() {
+<<<<<<< HEAD
         var result = [];
         
             for (let rate = 0; rate < this.state.tripRates.length; rate++) {
@@ -90,6 +90,23 @@ export default class TripSettings extends Component {
             }
         
         return result;
+=======
+        return this.state.tripRates.map((rate, index) => {
+            return (
+                <View style={styles.currencyView} key={index}>
+                    <Text style={styles.currencyField}>{rate.name}</Text>
+                    <TextInput
+                        style={styles.currencyInput}
+                        placeholder={rate.value.toString()}
+                        underlineColorAndroid="transparent"
+                        placeholderTextColor="#818181"
+                        keyboardType='numeric'
+                        onChangeText={(text) => console.log(text) & this.updateRate(rate, text)}
+                    />
+                </View>
+            )
+        });
+>>>>>>> 41046ae6c38696ab909f48b503245f0e7ec577ea
     }
 
     updateRate(rate, text) {
@@ -256,6 +273,7 @@ const styles = StyleSheet.create({
     textfieldaboveMultiSelect: {
         marginBottom: 10
     },
+<<<<<<< HEAD
     // currencyView: {
     //     flex: 1,
     //     flexDirection: 'row'
@@ -267,3 +285,21 @@ const styles = StyleSheet.create({
     //     flex: 0.8
     // }
 });
+=======
+    currencyView: {
+        // flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row'
+    },
+    currencyField: {
+        flex: .3,
+        textAlign: 'left',
+        paddingLeft: 10
+    },
+    currencyInput: {
+        flex: .7,
+        textAlign: 'left'
+    }
+});
+>>>>>>> 41046ae6c38696ab909f48b503245f0e7ec577ea

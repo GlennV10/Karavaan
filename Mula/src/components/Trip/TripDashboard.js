@@ -138,7 +138,7 @@ export default class TripDashboard extends React.Component {
           tabBarActiveTextColor={'#303030'}
           tabBarInactiveTextColor={'#303030'}>
             <TripExpenses tabLabel={I18n.t('expenses')} navigator={nav} expenses={this.state.expenses}/>
-            <TripCategory tabLabel={I18n.t('category')} navigator={nav} expenses={this.state.expenses}/>
+            <TripCategory tabLabel={I18n.t('category')} navigator={nav} expenses={this.state.expenses} tripID={this.props.navigation.state.params.trip.id}/>
             <TripTotal tabLabel={I18n.t('balance')} navigator={nav} expenses={this.state.expenses}/>
         </ScrollableTabView>
       );
