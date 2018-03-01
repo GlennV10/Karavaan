@@ -108,6 +108,18 @@ export default class AddExpensePayers extends Component {
         }
     }
 
+    addExpense(expense) {
+        return fetch('http://193.191.177.73:8080/karafinREST/', {
+            method: 'POST',
+            header: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ expense })
+        })
+        .then((res) => res.json())
+        .then((response) => console.log(response))
+    }
+
     render() {
         return (
             <ScrollView style={styles.container}>
