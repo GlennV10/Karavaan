@@ -74,8 +74,8 @@ export default class AddExpensePayers extends Component {
                         placeholder="Amount consumed..."
                         keyboardType="numeric"
                         style={styles.inputField}
-                        underlineColorAndroid="#ffd185"
                         placeholderTextColor="#bfbfbf"
+                        underlineColorAndroid="transparent"
                         onChangeText={(amount) => this.updateConsumerAmount(amount, consumer.participant)} />
                 </View>
             )
@@ -124,8 +124,8 @@ export default class AddExpensePayers extends Component {
                                 placeholder="Amount shared..."
                                 style={styles.inputField}
                                 keyboardType='numeric'
-                                underlineColorAndroid="#ffd185"
                                 placeholderTextColor="#bfbfbf"
+                                underlineColorAndroid="transparent"
                                 onChangeText={(shared) => this.setState({ shared: parseFloat(shared) })} />
                         </View >
 

@@ -17,8 +17,7 @@ export default class AddExpense extends Component {
             wayofsplit: I18n.t('splitplaceholder'),
             language: I18n.t('langtest'),
             check: false,
-            groupAmount: "",
-            categories: ['Restaurant', 'Taxi', 'Drank']
+            groupAmount: ""
         }
     }
 
@@ -57,7 +56,7 @@ export default class AddExpense extends Component {
     }
 
     renderPickerCategories() {
-        return this.state.categories.map((category, index) => {
+        return this.props.navigation.state.params.trip.categories.map((category, index) => {
             return (
                 <Picker.Item value={category} label={category} key={index} />
             )
