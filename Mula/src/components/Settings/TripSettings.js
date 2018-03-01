@@ -15,12 +15,11 @@ export default class TripSettings extends Component {
             language: "",
             currency: "",
             selectedItems: [],
-            tripRates: ""
+            tripRates: []
         }
     }
 
     async componentDidMount() {
-
         AsyncStorage.getItem('currency').then((currency) => {
             this.setState({ currency });
         });
@@ -69,30 +68,23 @@ export default class TripSettings extends Component {
     };
 
     renderChangeRates() {
-        var result = [];
-        if (this.state.tripRates.length > 0) {
-            for (let rate = 0; rate < this.state.tripRates.length; rate++) {
-                result.push(
-                    <View style={styles.currencyView} key={rate}>
-                        <View style={styles.currencyField}>
-                            <Text >{this.state.tripRates[rate].name}</Text>
-                        </View>
-                        <View style={styles.currencyInput}>
-                            <TextInput
-                                placeholder={this.state.tripRates[rate].value + ""}
-                                
-                                underlineColorAndroid="transparent"
-                                placeholderTextColor="#818181"
-                                keyboardType='numeric'
-                                onChangeText={(text) => console.log(text) & this.updateRate(rate, text)}
-                            />
-                        </View>
-                    </View>)
-            }
-        } else {
-            alert("niks gedaan")
-        }
-        return result;
+        console.log("render");
+        console.log(this.state.tripRates);
+        return this.state.tripRates.map((rate, index) => {
+            return (
+                <View style={styles.currencyView} key={index}>
+                    <Text style={styles.currencyField}>{rate.name}</Text>
+                    <TextInput
+                        style={styles.currencyInput}
+                        placeholder={rate.value.toString()}
+                        underlineColorAndroid="transparent"
+                        placeholderTextColor="#818181"
+                        keyboardType='numeric'
+                        onChangeText={(text) => console.log(text) & this.updateRate(rate, text)}
+                    />
+                </View>
+            )
+        });
     }
 
     updateRate(r, t) {
@@ -122,6 +114,8 @@ export default class TripSettings extends Component {
             })
         });
         this.setState({ tripRates: array })
+        console.log("Valuta");
+        console.log(this.state.tripRates);
     }
 
     render() {
@@ -230,13 +224,18 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     currencyView: {
-        flex: 1,
+        // flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         flexDirection: 'row'
     },
     currencyField: {
-        flex: 0.2
+        flex: .3,
+        textAlign: 'left',
+        paddingLeft: 10
     },
     currencyInput: {
-        flex: 0.8
+        flex: .7,
+        textAlign: 'left'
     }
 });
