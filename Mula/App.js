@@ -233,7 +233,7 @@ export default App = StackNavigator({
         },
         headerLeft:
         <TouchableOpacity onPress={()=>{ navigation.navigate('DashboardTrips') }}>
-          <Image source={require('./src/images/chevron_left.png')} style={{width: 35, height: 35, marginLeft: 5}}/>
+          <Image source={require('./src/images/left-arrow-png-left-icon-1600.png')} style={{width: 22, height: 22, marginLeft: 15}}/>
         </TouchableOpacity>,
       }),
       screen: TripSettings

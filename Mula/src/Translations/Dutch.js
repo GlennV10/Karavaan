@@ -118,6 +118,7 @@ export default {
     submit: 'Kies',
 
     //TripSettings
-    delete: 'Verwijder reis'
+    delete: 'Verwijder reis',
+    deletetrip: 'Bent u zeker dat u deze reis wil verwijderen?'
 
 }
