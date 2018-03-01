@@ -20,6 +20,7 @@ export default class AddTrip extends Component {
             selectedStartDate: "",
             selectedEndDate: "",
             selectedItems: [],
+            selectedGuides: [],
             selectedCurrencies: [],
             baseCurrency: "EUR",
             rates: Object,
@@ -66,8 +67,16 @@ export default class AddTrip extends Component {
           });*/
 
         console.log(this.state.teller)
+        var month = this.state.selectedStartDate.getUTCMonth() + 1;
+        var yeara =this.state.selectedStartDate.getFullYear() ;
+        var day = this.state.selectedStartDate.getUTCDate() ;
+        var startdate = "" + yeara + "-" + month + "-" + day;
+        var endmonth = this.state.selectedStartDate.getUTCMonth() + 1;
+        var yearb =this.state.selectedStartDate.getFullYear() ;
+        var endday = this.state.selectedStartDate.getUTCDate() ;
+        var enddate = "" + yearb + "-" + endmonth + "-" + endday;
         if (this.state.connectionMode == "pony") {
-            return fetch('url', {
+            return fetch('http://193.191.177.73:8080/karafinREST/addTrip', {
                 method: 'POST',
                 header: {
                     'Content-Type': 'application/json'
@@ -75,12 +84,12 @@ export default class AddTrip extends Component {
                 body: JSON.stringify({
                     email: this.state.username,
                     name: this.state.title,
-                    startDate: this.state.selectedStartDate,
-                    endDate: this.state.selectedEndDate,
-                    users: this.state.selectedItems,
-                    expenseList: [],
-                    baseCurrency: this.state.baseCurrency,
-                    currencies: this.state.currencies
+                    startDate: this.state.startdate,
+                    endDate: this.state.enddate,
+                    participants: this.state.selectedItems,
+                    guides: this.state.selectedGuides,
+                    currency: this.state.baseCurrency,
+                    rates: this.state.currencies
                 })
             })
                 .then((res) => res.json())
@@ -203,6 +212,10 @@ export default class AddTrip extends Component {
         console.log(selectedItems);
 
     };
+    onSelectedGuidesChange = selectedGuides => {
+        this.setState({ selectedGuides });
+        console.log(selectedGuides);
+    } 
 
 
     mainFetch() {
@@ -263,6 +276,7 @@ export default class AddTrip extends Component {
     }
     render() {
         const { selectedItems } = this.state;
+        const { selectedGuides } = this.state;
         const { selectedCurrencies } = this.state;
         const { rates } = this.state;
         const { baseCurrency } = this.state;
@@ -366,7 +380,28 @@ export default class AddTrip extends Component {
                         submitButtonText={I18n.t('submit')}
                         color="#303030" />
                 </View>
-
+                <View style={[styles.subItem, styles.separator]}>
+                    <Text style={styles.textfield}>{I18n.t('company')}</Text>
+                    <MultiSelect
+                        hideTags
+                        items={this.state.selectedItems}
+                        uniqueKey="email"
+                        ref={(component) => { this.multiSelect = component }}
+                        selectedItems={selectedGuides}
+                        onSelectedItemsChange={this.onSelectedGuidesChange}
+                        selectText={I18n.t('company')}
+                        searchInputPlaceholderText={I18n.t('company')}
+                        onChangeInput={(item) => console.log(item)}
+                        displayKey="email"
+                        style={backgroundColor = "#d4e8e5"}
+                        selectedItemTextColor="#edc14f"
+                        selectedItemIconColor="#edc14f"
+                        itemTextColor="#303030"
+                        searchInputStyle={{ color: '#303030' }}
+                        submitButtonColor="#edc14f"
+                        submitButtonText={I18n.t('submit')}
+                        color="#303030" />
+                </View>
 
                 <View style={[styles.subItem, styles.separator]}>
                     <Text>{I18n.t('tripcurrency')}</Text>
