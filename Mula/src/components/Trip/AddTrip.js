@@ -345,17 +345,7 @@ export default class AddTrip extends Component{
                         </View>
                     
                 <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <TextInput
-                        ref="startDate"
-                        placeholder={I18n.t('startdate')}
-                        
-                        value={this.state.selectedStartDate}
-                        style={styles.inputdate}
-                        underlineColorAndroid="transparent"
-                        placeholderTextColor="#818181"
-                        keyboardType='numeric'
-                        onChangeText={(text) => console.log(text) & this.setState({ selectedStartDate: text })}
-                    />
+                    <Text>{this.state.selectedStartDate}</Text> 
                     {/*this.isFieldInError('startDate') && this.getErrorsInField('startDate').map(errorMessage => <Text>{errorMessage}</Text>) */}
 
                     <DatePicker
@@ -374,17 +364,8 @@ export default class AddTrip extends Component{
                 </View >
 
                 <View style={[{ flex: 1, flexDirection: 'row' }, styles.separator]}>
-                <TextInput
-                    ref="endDate"
-                    placeholder={I18n.t('enddate')}
-                    
-                    value={this.state.selectedEndDate}
-                    style={styles.inputdate}
-                    underlineColorAndroid="transparent"
-                    placeholderTextColor="#818181"
-                    keyboardType='numeric'
-                    onChangeText={(text) => console.log(text) & this.setState({ selectedEndDate: text })}
-                />
+                <Text>{this.state.selectedEndDate}</Text>    
+                
                     <DatePicker
                         mode='date'
                         format='YYYY-MM-DD'
