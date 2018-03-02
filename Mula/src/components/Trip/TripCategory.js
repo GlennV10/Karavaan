@@ -7,6 +7,8 @@ export default class TripCategory extends Component {
       super(props);
       this.state = {
         username: "",
+        activeUser: "",
+        users: [],
         categories: [],
         baseCurrency: "",
         selectedCurrency: "",
@@ -22,6 +24,7 @@ export default class TripCategory extends Component {
               .catch(error => console.log('Error loading expenses'));*/
         AsyncStorage.getItem('userName').then((username)=>{
             this.setState({username});
+            this.setState({activeUser: username});
             this.calculateCategorytotal();
         })
     }
@@ -49,9 +52,16 @@ export default class TripCategory extends Component {
                 } 
             })
                 .then((resp) => resp.json() )
-                .then((trip) => (console.log(trip.rates) &
-                this.setState({baseCurrency: trip.baseCurrency}) &
-                this.renderValutaToArray(trip.rates)));
+                .then((trip) => {
+                    console.log(trip.rates);
+                    this.setState({baseCurrency: trip.baseCurrency});
+                    this.renderValutaToArray(trip.rates);
+                    let users = [];
+                    for (participant of trip.participants) {
+                        users.push(participant[0]);
+                    }
+                    this.setState({users});
+                });
         //}
     }
 
@@ -65,13 +75,13 @@ export default class TripCategory extends Component {
             let userExpense = 0;
             Object.keys(expense.consumers).map((user) => {
                 console.log(user);
-                if(user == this.state.username) {
+                if(user == this.state.activeUser) {
                     userExpense = expense.consumers[user];
                 }
             });
             console.log(userExpense);
             if(categories.findIndex(i => i.category === expense.category) < 0) {
-                if(expense.currency == this.state.baseCurrency){
+                if(expense.currency == this.state.baseCurrency && userExpense !== 0){
                     let category = {
                         category: expense.category,
                         total: userExpense,
@@ -85,7 +95,7 @@ export default class TripCategory extends Component {
             } else {
                 for (let j = 0; j < categories.length; j++) {
                     if (categories[j].category === expense.category) {
-                        if(expense.currency == this.state.baseCurrency){
+                        if(expense.currency == this.state.baseCurrency && userExpense !== 0){
                             let category = {
                                 category: expense.category,
                                 total: userExpense,
@@ -94,7 +104,7 @@ export default class TripCategory extends Component {
                             categories.push(category);
                         }
                         for(currency of this.state.rates) {
-                            if(expense.currency == currency.name) {
+                            if(expense.currency == currency.name && userExpense !== 0) {
                                 categories[j].total += (userExpense/currency.value);
                                 categories[j].expenses++;
                             }
@@ -107,8 +117,8 @@ export default class TripCategory extends Component {
         this.setState({ isLoading: false})
     }
 
-    async updateCurrency(newCurrency) {
-        await this.getExchangeRates();
+    updateCurrency(newCurrency) {
+        this.getExchangeRates();
         for(element of this.state.rates) {
             console.log("rates: " + element.name);
         }
@@ -132,6 +142,11 @@ export default class TripCategory extends Component {
         this.setState({ selectedCurrency: newCurrency});
     }
 
+    updateUser(newActiveUser) {
+        this.calculateCategorytotal();
+        this.setState({ activeUser: newActiveUser });
+    }
+
     getCategoryExpenses(category) {
         let expenses = [];
         for(expense of this.props.expenses) {
@@ -143,47 +158,39 @@ export default class TripCategory extends Component {
     }
 
     renderCategories() {
-        if(this.state.isLoading) {
+        if(this.state.categories.length === 0){
             return(
-              <View style={styles.containerIndicator}>
-                <ActivityIndicator />
-              </View>
+                <View style={styles.noCategoriesView}>
+                    <Text style={styles.noCategoriesText}>{I18n.t('nocategoriesfound')}</Text>
+                </View>
             )
         } else {
-            if(this.state.categories.length === 0){
+            return this.state.categories.map((category, index) => {
                 return(
-                    <View style={styles.noCategoriesView}>
-                        <Text style={styles.noCategoriesText}>{I18n.t('nocategoriesfound')}</Text>
-                    </View>
+                    <TouchableOpacity style={styles.category} onPress={() => this.props.navigator.navigate('TripCategoryExpenses', { category: category.category, expenses: this.getCategoryExpenses(category.category) })} key={ index }>
+                        <View style={[styles.categoryContainer, styles.half]}>
+                            <View style={styles.splitRow}>
+                                <Text style={[styles.categoryName]}>{category.category}</Text>
+                           </View>
+                           <View style={styles.splitRow}>
+                                <Text style={styles.categoryExpensesCount}>{ category.expenses } {I18n.t('exp')}</Text>
+                           </View>
+                        </View>
+                        <View style={[styles.categorytotalContainer, styles.half]}>
+                            <View style={styles.splitRow}>
+                                <Text style={styles.categorytotal}>{category.total.toFixed(2)}</Text>
+                            </View>
+                           <View style={styles.splitRow}>
+                                <Text style={styles.categoryCurrency}>{this.state.selectedCurrency}</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
                 )
-            } else {
-                return this.state.categories.map((category, index) => {
-                    return(
-                        <TouchableOpacity style={styles.category} onPress={() => this.props.navigator.navigate('TripCategoryExpenses', { category: category.category, expenses: this.getCategoryExpenses(category.category) })} key={ index }>
-                            <View style={[styles.categoryContainer, styles.half]}>
-                                <View style={styles.splitRow}>
-                                    <Text style={[styles.categoryName]}>{category.category}</Text>
-                                </View>
-                                <View style={styles.splitRow}>
-                                    <Text style={styles.categoryExpensesCount}>{ category.expenses } {I18n.t('exp')}</Text>
-                                </View>
-                            </View>
-                            <View style={[styles.categorytotalContainer, styles.half]}>
-                                <View style={styles.splitRow}>
-                                    <Text style={styles.categorytotal}>{category.total.toFixed(2)}</Text>
-                                </View>
-                                <View style={styles.splitRow}>
-                                    <Text style={styles.categoryCurrency}>{this.state.selectedCurrency}</Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                    )
-                });
-            }
+            });
         }
     }
 
-    renderPicker() {
+    renderCurrencyPicker() {
         let trip = this.props.navigator.state.params.trip;
         if(this.props.expenses.length > 0) {        
             return(
@@ -199,18 +206,51 @@ export default class TripCategory extends Component {
         } else return null;
     }
 
+    renderUserPicker() {
+        let trip = this.props.navigator.state.params.trip;
+        let isAdmin = false;
+        for (participant of trip.participants) {
+            if(participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
+                isAdmin = true;
+            }
+        }
+        if(this.props.expenses.length > 0 && isAdmin) {        
+            return(
+                <Picker
+                    style={styles.currencyPicker}
+                    selectedValue={this.state.activeUser}
+                    onValueChange={(itemValue, itemIndex) => this.updateUser(itemValue)}>
+                    {this.state.users.map((item, index) => {
+                        return (<Picker.Item label={item.firstName + " " + item.lastName} value={item.email} key={index}/>)
+                    })}
+                </Picker>
+            )
+        } else return null;
+    }
+
     render() {
-        return (
-            <View style={styles.container}>
-                { this.renderPicker() }
-                <ScrollView style={styles.categoryList}>
-                    { this.renderCategories() }
-                </ScrollView>
-                <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
-                    <Text style={styles.addTripButtonText} >+</Text>
-                </TouchableOpacity>
-            </View>
-        )
+        if(this.state.isLoading) {
+            return(
+              <View style={styles.containerIndicator}>
+                <ActivityIndicator />
+              </View>
+            )
+        } else {
+            return (
+                <View style={styles.container}>
+                    <View style={{ backgroundColor: '#d1d5da' }}>
+                        <View style={styles.separator}>{ this.renderCurrencyPicker() }</View>
+                        <View style={styles.separator}>{ this.renderUserPicker() }</View>
+                    </View>
+                    <ScrollView style={styles.categoryList}>
+                        { this.renderCategories() }
+                    </ScrollView>
+                    <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+                        <Text style={styles.addTripButtonText} >+</Text>
+                    </TouchableOpacity>
+                </View>
+            )
+        }
     }
 }
 
@@ -292,10 +332,16 @@ const styles = StyleSheet.create({
     },
     currencyPicker: {
         backgroundColor: "white",
+        borderWidth: 1,
     },
     containerIndicator: {
         flex: 1,
         paddingTop: 5,
         backgroundColor: '#d4e8e5'
     },
+    separator: {
+        borderBottomColor: '#d1d5da',
+        marginBottom: 1,
+        
+    }
 });
