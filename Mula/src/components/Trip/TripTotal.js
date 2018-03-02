@@ -41,7 +41,7 @@ export default class TripTotal extends Component {
   }
 
   getTripUsers() {
-    let trip = this.props.navigator.state.params.trip;
+    let trip = this.props.navigation.state.params.trip;
     let users = [];
     for (participant of trip.participants) {
       users.push(participant[0]);
@@ -50,7 +50,7 @@ export default class TripTotal extends Component {
   }
 
   renderUserPicker() {
-    let trip = this.props.navigator.state.params.trip;
+    let trip = this.props.navigation.state.params.trip;
     let isAdmin = false;
     for (participant of trip.participants) {
       if (participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
@@ -113,7 +113,7 @@ export default class TripTotal extends Component {
                     <View key={i + "balanceContainerView"} style={styles.balanceContainer}>
                       <View key={i + "paidFlexView"} style={styles.flexViewContainer}>
                         <View key={i + "paidLeftFlexView"} style={styles.leftFlexView}>
-                          <Text key={i + "paidText"}>{I18n.t('amountpaid')} </Text>
+                          <Text key={i + "paidText"} style={styles.label}>{I18n.t('amountpaid')} </Text>
                         </View>
                         <View key={i + "paidrRghtFlexView"} style={styles.rightFlexView}>
                           <Text key={i + "paidAmount"}>{parseFloat(table[i][1]).toFixed(2)}</Text>
@@ -122,7 +122,7 @@ export default class TripTotal extends Component {
 
                       <View key={i + "consumedFlexView"} style={styles.flexViewContainer}>
                         <View key={i + "consumedLeftFlexView"} style={styles.leftFlexView}>
-                          <Text key={i + "consumedText"}>{I18n.t('amountconsumed')} </Text>
+                          <Text key={i + "consumedText"} style={styles.label}>{I18n.t('amountconsumed')} </Text>
                         </View>
                         <View key={i + "consumedRightFlexView"} style={styles.rightFlexView}>
                           <Text key={i + "consumedAmount"}>{parseFloat(table[i][2]).toFixed(2)}</Text>
@@ -131,7 +131,7 @@ export default class TripTotal extends Component {
 
                       <View key={i + "balanceFlexView"} style={styles.flexViewContainer}>
                         <View key={i + "balanceLeftFlexView"} style={styles.leftFlexView}>
-                          <Text key={i + "balanceText"}>{I18n.t('balans')} </Text>
+                          <Text key={i + "balanceText"} style={styles.label}>{I18n.t('balans')} </Text>
                         </View>
                         <View key={i + "balanceRightFlexView"} style={styles.rightFlexView}>
                           <Text key={i + "balanceAmount"}>{parseFloat(table[i][3]).toFixed(2)}</Text>
@@ -204,7 +204,11 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   nameField: {
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: 17
+  },
+  label: {
+    fontSize: 15
   },
   text: { marginLeft: 5, padding: 5 },
   row: { height: 30 },
