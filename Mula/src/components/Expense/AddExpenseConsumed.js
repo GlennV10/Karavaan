@@ -44,34 +44,10 @@ export default class AddExpensePayers extends Component {
             let consumer = {
                 participant: participant[0],
                 amount: 0, //this.props.navigation.state.params.expense.total / this.props.navigation.state.params.trip.participants.length
-                amountToShow: ""
             }
             consumers.push(consumer);
         }
         this.setState({ consumers });
-    }
-
-    checkAmount(text) {
-        var newText = '';
-        let numbers = '0123456789';
-        var containsComma = false;
-
-        for (var i = 0; i < text.length; i++) {
-            if (numbers.indexOf(text[i]) > -1) {
-                newText = newText + text[i];
-            }
-            if (text[i] === ',' && containsComma === false) {
-                newText = newText + '.';
-                containsComma = true;
-            }
-            if (text[i] === '.' && containsComma === false) {
-                newText = newText + '.';
-                containsComma = true;
-            }
-        }
-        containsComma = false;
-
-        return newText
     }
 
     updateConsumerAmount(amount, participant) {
@@ -80,10 +56,8 @@ export default class AddExpensePayers extends Component {
             if (consumer.participant === participant) {
                 if (amount !== "") {
                     consumer.amount = parseFloat(amount);
-                    consumer.amountToShow = this.checkAmount(amount)
                 } else {
                     consumer.amount = 0;
-                    consumer.amountToShow = ""
                 }
             }
             console.log(consumers);
@@ -98,7 +72,6 @@ export default class AddExpensePayers extends Component {
                     <Text style={styles.label}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
                     <TextInput
                         placeholder="Amount consumed"
-                        value={consumer.amountToShow}
                         keyboardType="numeric"
                         style={styles.inputField}
                         placeholderTextColor="#bfbfbf"
@@ -109,9 +82,24 @@ export default class AddExpensePayers extends Component {
         });
     }
 
-    /*
-        NEED TO FIX THIS
-    */
+    formatPayersAPI(expense) {
+        let formatPayers = {};
+        for(payer of expense.payers) {
+            let key = payer.participant.email;
+            formatPayers[key] = payer.amount;
+        }
+        expense.payers = formatPayers;
+    }
+
+    formatConsumersAPI(expense) {
+        let formatConsumers = {};
+        for(consumer of expense.consumers) {
+            let key = consumer.participant.email;
+            formatConsumers[key] = consumer.amount;
+        }
+        expense.consumers = formatConsumers;
+    }
+
     addExpense() {
         let expense = this.props.navigation.state.params.expense;
 
@@ -128,22 +116,31 @@ export default class AddExpensePayers extends Component {
                     this.state.consumers[i].amount += (this.state.shared / this.state.consumers.length);
                 }
             }
+            for(let i = expense.payers.length - 1; i >= 0; i--) {
+                if (expense.payers[i].amount == 0) {
+                    expense.payers.splice(i, 1);
+                }
+            }
             expense.consumers = this.state.consumers;
+
+            this.formatPayersAPI(expense);
+            this.formatConsumersAPI(expense);
+            console.log(expense);
             //==========================================================================================
             //=========================AANVULLEN MET POST REQUEST NAAR API==============================
             //==========================================================================================
-            return fetch('http://193.191.177.73:8080/karafinREST/addExpense/', {
-            method: 'POST',
-            header: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then((res) => res.json())
-            .then((expense) => {
-                this.renderValutaToArray(trip.rates)
+            return fetch('http://193.191.177.73:8080/karafinREST/addExpense/' + this.props.navigation.state.params.trip.id, {
+                method: 'POST',
+                header: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(expense)
+            })
+            .then((res) => {
+                console.log(res._bodyText);
+                this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip });
             });
-            this.props.navigation.navigate('TripExpenses', { trip: this.props.navigation.state.params.trip });
-        } else if (consumerTotal > expense.total) {
+        } else if ((consumerTotal + this.state.shared) > expense.total) {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
@@ -161,7 +158,7 @@ export default class AddExpensePayers extends Component {
                         </View>
 
                         <View style={styles.separator}>
-                            <Text style={styles.label}>Shared cost</Text>
+                            <Text style={styles.label}>{I18n.t('sharedcost')}</Text>
                             <TextInput
                                 placeholder="Amount shared..."
                                 style={styles.inputField}

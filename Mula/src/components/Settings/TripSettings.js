@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert } from 'react-native';
+import { AsyncStorage, ScrollView, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import I18n from 'react-native-i18n';
 import MultiSelect from 'react-native-multiple-select';
@@ -30,6 +30,7 @@ export default class TripSettings extends Component {
     }
 
     _handleBackButton = () => {
+        this.updateTripRate()
         this.props.navigation.navigate('DashboardTrips');
         return true;
     }
@@ -68,13 +69,15 @@ export default class TripSettings extends Component {
     };
 
     renderChangeRates() {
+        let trip = this.props.navigation.state.params.trip;
         return this.state.tripRates.map((rate, index) => {
             return (
                 <View style={styles.currencyView} key={index}>
                     <Text style={styles.currencyField}>{rate.name}</Text>
+                    <Text style={styles.currencyField2}>(-> {trip.baseCurrency})</Text>
                     <TextInput
                         style={styles.currencyInput}
-                        placeholder={rate.value.toString()}
+                        value={rate.value.toString()}
                         underlineColorAndroid="transparent"
                         placeholderTextColor="#818181"
                         keyboardType='numeric'
@@ -87,13 +90,20 @@ export default class TripSettings extends Component {
 
     updateRate(rate, text) {
         let tripCurrencyRates = this.state.tripRates.slice();
-        for (rate of tripCurrencyRates) {
-            if (rate.name == rate.name) {
-                rate.value = this.checkAmount(text);             
+        for (r of tripCurrencyRates) {
+            if (r.name == rate.name) {
+                rate.value = this.checkAmount(text);
             }
         }
-        this.setState({tripCurrencyRates})
+        this.setState({ tripCurrencyRates })
+        console.log(tripCurrencyRates);
         this.renderChangeRates();
+    }
+
+    updateTripRate() {
+        //================================================================
+        //====================RATES MEEGEVEN MET TRIP=====================
+        //================================================================
     }
 
     checkAmount(text) {
@@ -147,7 +157,7 @@ export default class TripSettings extends Component {
     render() {
         const { selectedItems } = this.state;
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <View style={styles.separator}>
                     <Text>{I18n.t('currency')}</Text>
                     <Picker selectedValue={this.state.currency} onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
@@ -191,10 +201,7 @@ export default class TripSettings extends Component {
                         <Text style={styles.buttonText}>{I18n.t('delete')}</Text>
                     </TouchableOpacity>
                 </View>
-
-
-            </View>
-
+            </ScrollView>
         )
     }
 
@@ -256,12 +263,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     currencyField: {
-        flex: .3,
+        flex: .2,
+        textAlign: 'left',
+        paddingLeft: 10
+    },
+    currencyField2: {
+        flex: .2,
         textAlign: 'left',
         paddingLeft: 10
     },
     currencyInput: {
-        flex: .7,
-        textAlign: 'left'
+        flex: .6,
+        textAlign: 'center'
     }
 });

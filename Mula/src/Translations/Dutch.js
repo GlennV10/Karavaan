@@ -73,13 +73,13 @@ export default {
     name: 'Naam van uitgave',
     nameplaceholder: 'Kies een naam voor de uitgave',
     amount: 'Bedrag van uitgave',
-    amountplaceholder: 'Kies een bedrag voor de uitgave',
+    amountplaceholder: 'Bedrag van de uitgave',
     categoryexpense: 'Categorie van uitgave: ',
     savebutton: 'Voeg uitgave toe',
     categoryplaceholder: 'Kies categorie',
     currencyplaceholder: 'Kies munteenheid',
     addcategory: 'Voeg categorie toe',
-    choosecurrency: '--- Kies Munteenheid ---',
+    choosecurrency: 'Kies',
     choosecategory: '--- Kies Categorie ---',
     split: 'Verdeling:',
     choosesplit: '--- Kies een optie ---',
@@ -104,15 +104,16 @@ export default {
     //AddEXpenseConsumed
     consumers: 'Wie nam er deel in de uitgave',
     addexpense: 'Voeg uitgave toe',
+    sharedcost: 'Gemeenschappelijke kost',
 
     //AddTrip
     tripname: 'Bestemming',
     startdate: 'Start datum',
     enddate: 'Eind datum',
-    company: 'Kies je reisgenoten',
+    company: '  Kies je reisgenoten',
     tripcurrency: 'Kies de basis munteenheid',
     othercurrency: 'Kies andere nuttige munteenheden',
-    pickcurrency: 'Kies munteenheden',
+    pickcurrency: '  Kies munteenheden',
     savetrip: 'Voeg reis toe',
     selectdate: 'Kies datum',
     submit: 'Kies',
@@ -123,6 +124,6 @@ export default {
     changecurrency: 'Verander wisselkoers van munt',
     addguides: 'Voeg reisbegeleiders toe',
     chooseguide: 'Kies begeleiders',
-    
+
 
 }

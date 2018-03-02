@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Dimensions, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage } from 'react-native';
 import I18n from 'react-native-i18n';
 // ############ Colors ############
 const red = '#C42525';
 const yellow = '#D6A024';
 const green = '#4F9628';
+const width = Dimensions.get('window').width;
 
 export default class TripExpenses extends Component {
     constructor(props) {
@@ -16,10 +17,6 @@ export default class TripExpenses extends Component {
 
     componentWillMount() {
         this.setState({ expenses: this.props.expenses });
-
-        AsyncStorage.getItem('userName').then((username)=>{
-            this.setState({username});
-        })
     }
 
     renderExpenses() {
@@ -36,7 +33,7 @@ export default class TripExpenses extends Component {
 
                 Object.keys(expense.consumers).map((user) => {
                     console.log("expenseUser: " + user);
-                    if(user == this.state.username) {
+                    if (user == this.state.username) {
                         userExpense = expense.consumers[user];
                     }
                 });
@@ -53,10 +50,10 @@ export default class TripExpenses extends Component {
                         </View>
                         <View style={[styles.expenseAmountContainer, styles.half]}>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseAmount}>{ userExpense.toFixed(2) }</Text>
+                                <Text style={styles.expenseAmount}>{userExpense.toFixed(2)}</Text>
                             </View>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseCurrency}>{ expense.currency }</Text>
+                                <Text style={styles.expenseCurrency}>{expense.currency}</Text>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -69,7 +66,9 @@ export default class TripExpenses extends Component {
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.expenseList}>
-                    {this.renderExpenses()}
+                    <View style={styles.spaceView}>
+                        {this.renderExpenses()}
+                    </View>
                 </ScrollView>
                 <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', { trip: this.props.navigator.state.params.trip })}>
                     <Text style={styles.addTripButtonText} >+</Text>
@@ -109,7 +108,10 @@ const styles = StyleSheet.create({
     },
     expenseList: {
         // marginLeft: 10,
-        // marginRight: 10
+        // marginRight: 10,
+    },
+    spaceView: {
+        marginBottom: 75
     },
     expense: {
         flex: 1,
