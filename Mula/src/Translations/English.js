@@ -36,6 +36,12 @@ export default {
     //TripExpenses
     noexpensesfound: 'NO EXPENSES FOUND',
 
+    //TripTotal
+    balancefor: 'Balance of',
+    amountpaid: 'Paid: ',
+    amountconsumed: 'Consumed: ',
+    balans: 'Balance: ',
+
     //DashboardTrips
     notripsfound: 'NO TRIPS FOUND',
 
