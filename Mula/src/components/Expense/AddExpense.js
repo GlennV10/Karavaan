@@ -219,100 +219,103 @@ export default class AddExpense extends Component {
 
         return (
 
-                <ScrollView style={styles.container}>
+            <ScrollView style={styles.container}>
 
-                    <View style={styles.contentView}>
-                        <View style={styles.separator}>
-                            <Text style={styles.label}>{I18n.t('name')}</Text>
-                            <TextInput
-                                placeholder={I18n.t('nameplaceholder')}
-                                style={styles.inputField}
-                                placeholderTextColor="#bfbfbf"
-                                underlineColorAndroid="transparent"
-                                onChangeText={(text) => this.setState({ name: text })} />
+                <View style={styles.contentView}>
+                    <View style={styles.separator}>
+                        <Text style={styles.label}>{I18n.t('name')}</Text>
+                        <TextInput
+                            placeholder={I18n.t('nameplaceholder')}
+                            style={styles.inputField}
+                            placeholderTextColor="#bfbfbf"
+                            underlineColorAndroid="transparent"
+                            onChangeText={(text) => this.setState({ name: text })} />
+                    </View>
+                    <View style={styles.separator}>
+                        <Text style={styles.label}>{I18n.t('amount')}</Text>
+                        <View style={styles.currencyView}>
+                            <View style={styles.currencyPicker}>
+                                <Picker selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
+                                    <Picker.Item label={I18n.t('choosecurrency')} value={I18n.t('currencyplaceholder')} />
+                                    <Picker.Item label={trip.baseCurrency} value={trip.baseCurrency} />
+                                    {this.renderPickerCurrencies()}
+                                </Picker>
+                            </View>
+                            <View style={styles.inputFieldCurrency}>
+                                <TextInput
+                                    placeholder={I18n.t('amountplaceholder')}
+                                    style={styles.inputField}
+                                    keyboardType='numeric'
+                                    placeholderTextColor="#bfbfbf"
+                                    underlineColorAndroid="transparent"
+                                    onChangeText={(text) => this.checkAmount(text)}
+                                    value={this.state.amount} />
+                            </View>
                         </View>
-                        <View style={styles.separator}>
-                            <Text style={styles.label}>{I18n.t('amount')}</Text>
-                            <TextInput
-                                placeholder={I18n.t('amountplaceholder')}
-                                style={styles.inputField}
-                                keyboardType='numeric'
-                                placeholderTextColor="#bfbfbf"
-                                underlineColorAndroid="transparent"
-                                onChangeText={(text) => this.checkAmount(text)}
-                                value={this.state.amount} />
-                        </View >
-
-                        <View style={styles.separator}>
-                            <Text style={styles.label}>{I18n.t('date')}</Text>
-                            <DatePicker
-                                mode='date'
-                                format='DD/MM/YYYY'
-                                minDate= {trip.startDate.dayOfMonth + "/" + (trip.startDate.month + 1) + "/" + trip.startDate.year}
-                                maxDate={trip.endDate.dayOfMonth + "/" + (trip.endDate.month + 1) + "/" + trip.endDate.year}
-                                date={this.state.selectedDate}
-                                showIcon={true}
-                                placeholder={I18n.t('dateplaceholder')}
-                                hideText={false}
-                                date={this.state.selectedDate}
-                                style={{ width: 200 }}
-                                customStyles={{
-                                    dateIcon: {
-                                        position: 'absolute',
-                                        left: 2,
-                                        marginLeft: 2
-                                    },
-                                    dateInput: {
-                                        marginLeft: 2,
-                                        padding: 10,
-                                        borderWidth: 0
-                                    },
-                                    placeholderText: {
-                                        color: "#818181"
-                                    },
-                                    dateText: {
-                                        marginLeft: 2
-                                    }
-                                }}
-                                onDateChange={(date) => this.setState({ selectedDate: date })}
-                            />
-                        </View>
-                        <View style={styles.separator}>
-                            <Text style={styles.label}>{I18n.t('categoryexpense')} {this.state.category}</Text>
-                            <Picker style={styles.picker} selectedValue={this.state.category} onValueChange={(itemValue, itemIndex) => this.setCategory(itemValue)}>
-                                <Picker.Item label={I18n.t('choosecategory')} value={I18n.t('categoryplaceholder')} />
-                                {this.renderPickerCategories()}
-                                <Picker.Item label={I18n.t('addcategory')} value="add" />
-                            </Picker>
-                        </View>
-                        <View style={styles.separator}>
-                            <Text style={styles.label}>{I18n.t('currency')} {this.state.currency}</Text>
-                            <Picker style={styles.picker} selectedValue={this.state.currency} onValueChange={(currency) => this.setState({ currency })}>
-                                <Picker.Item label={I18n.t('choosecurrency')} value={I18n.t('currencyplaceholder')} />
-                                <Picker.Item label={trip.baseCurrency} value={trip.baseCurrency} />
-                                {this.renderPickerCurrencies()}
-                            </Picker>
-                        </View>
-
-                        <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
-                            <Text style={styles.saveText}>{I18n.t('whopaid')}</Text>
-                        </TouchableOpacity>
-
-                        <Prompt
-                            title={I18n.t('addcategory')}
-                            placeholder={I18n.t('newcategory')}
-                            visible={this.state.promptVisible}
-                            onCancel={() => this.setState({
-                                promptVisible: false,
-                                message: "You cancelled"
-                            })}
-                            onSubmit={(value) => this.setState({
-                                promptVisible: false,
-                                message: `You added "${value}"`,
-                                category: value
-                            })} />
                     </View >
-                </ScrollView >
+
+                    <View style={styles.separator}>
+                        <Text style={styles.label}>{I18n.t('date')}</Text>
+                        <DatePicker
+                            mode='date'
+                            format='DD/MM/YYYY'
+                            minDate={trip.startDate.dayOfMonth + "/" + (trip.startDate.month + 1) + "/" + trip.startDate.year}
+                            maxDate={trip.endDate.dayOfMonth + "/" + (trip.endDate.month + 1) + "/" + trip.endDate.year}
+                            date={this.state.selectedDate}
+                            showIcon={true}
+                            placeholder={I18n.t('dateplaceholder')}
+                            hideText={false}
+                            date={this.state.selectedDate}
+                            style={{ width: 200 }}
+                            customStyles={{
+                                dateIcon: {
+                                    position: 'absolute',
+                                    left: 2,
+                                    marginLeft: 2
+                                },
+                                dateInput: {
+                                    marginLeft: 2,
+                                    padding: 10,
+                                    borderWidth: 0
+                                },
+                                placeholderText: {
+                                    color: "#818181"
+                                },
+                                dateText: {
+                                    marginLeft: 2
+                                }
+                            }}
+                            onDateChange={(date) => this.setState({ selectedDate: date })}
+                        />
+                    </View>
+                    <View style={styles.separator}>
+                        <Text style={styles.label}>{I18n.t('categoryexpense')} {this.state.category}</Text>
+                        <Picker style={styles.picker} selectedValue={this.state.category} onValueChange={(itemValue, itemIndex) => this.setCategory(itemValue)}>
+                            <Picker.Item label={I18n.t('choosecategory')} value={I18n.t('categoryplaceholder')} />
+                            {this.renderPickerCategories()}
+                            <Picker.Item label={I18n.t('addcategory')} value="add" />
+                        </Picker>
+                    </View>
+
+                    <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
+                        <Text style={styles.saveText}>{I18n.t('whopaid')}</Text>
+                    </TouchableOpacity>
+
+                    <Prompt
+                        title={I18n.t('addcategory')}
+                        placeholder={I18n.t('newcategory')}
+                        visible={this.state.promptVisible}
+                        onCancel={() => this.setState({
+                            promptVisible: false,
+                            message: "You cancelled"
+                        })}
+                        onSubmit={(value) => this.setState({
+                            promptVisible: false,
+                            message: `You added "${value}"`,
+                            category: value
+                        })} />
+                </View >
+            </ScrollView >
 
         )
     }
@@ -358,6 +361,20 @@ const styles = StyleSheet.create({
         borderBottomWidth: StyleSheet.hairlineWidth,
         marginBottom: 5,
         marginTop: 5
+    },
+    currencyView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row'
+    },
+    currencyPicker: {
+        flex: 0.4
+    },
+    inputFieldCurrency: {
+        flex: 0.6,
+        marginLeft: 2,
+        marginBottom: 2,
     }
+
 
 });
