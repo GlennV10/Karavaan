@@ -11,11 +11,15 @@ export default class TripExpenses extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            username: "",
             expenses: []
         }
     }
 
     componentWillMount() {
+        AsyncStorage.getItem('userName').then((username)=>{
+            this.setState({username});
+        })
         this.setState({ expenses: this.props.expenses });
     }
 
@@ -30,16 +34,26 @@ export default class TripExpenses extends Component {
             return this.state.expenses.map((expense) => {
 
                 let userExpense = 0;
+                let trip = this.props.navigation.state.params.trip;
+                let isAdmin = false;
 
-                Object.keys(expense.consumers).map((user) => {
-                    console.log("expenseUser: " + user);
-                    if (user == this.state.username) {
-                        userExpense = expense.consumers[user];
+                for (participant of trip.participants) {
+                    if(participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
+                        isAdmin = true;
                     }
-                });
+                }
+
+                if(!isAdmin) {
+                    Object.keys(expense.consumers).map((user) => {
+                        console.log("expenseUser: " + user);
+                        if (user == this.state.username) {
+                            userExpense = expense.consumers[user];
+                        }
+                    });
+                } else userExpense = expense.total;
 
                 return (
-                    <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={expense.id}>
+                    <TouchableOpacity style={styles.expense} onPress={() => this.props.navigation.navigate('DetailExpense', { expense })} key={expense.id}>
                         <View style={[styles.expenseContainer, styles.half]}>
                             <View style={styles.splitRow}>
                                 <Text style={[styles.expenseName]}>{expense.expenseName}</Text>
@@ -70,7 +84,7 @@ export default class TripExpenses extends Component {
                         {this.renderExpenses()}
                     </View>
                 </ScrollView>
-                <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', { trip: this.props.navigator.state.params.trip })}>
+                <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigation.navigate('AddExpense', { trip: this.props.navigation.state.params.trip })}>
                     <Text style={styles.addTripButtonText} >+</Text>
                 </TouchableOpacity>
             </View>
