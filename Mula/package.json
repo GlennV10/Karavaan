@@ -23,6 +23,7 @@
     "react": "16.0.0-alpha.12",
     "react-native": "^0.48.4",
     "react-native-autocomplete-input": "^3.4.0",
+    "react-native-camera-roll-picker": "^1.2.3",
     "react-native-check-box": "^2.0.2",
     "react-native-checkbox": "^2.0.0",
     "react-native-checkbox-heaven": "^0.1.4",

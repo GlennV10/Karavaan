@@ -136,7 +136,12 @@ export default class Login extends Component{
 	    this.registerToDevice();
         if(this.state.autheticated){
             console.log('test2');
-            this.props.navigation.navigate('DashboardTrips');
+            let imgUri = "";
+            AsyncStorage.getItem('profilePic').then((profile) => {
+                imgUri: profile;
+                this.props.navigation.navigate('DashboardTrips', {imgUri});
+              }).catch(error => imgUri = require('../../images/placeholder_user.png') & this.props.navigation.navigate('DashboardTrips', imgUri));
+            
         }
     }
 

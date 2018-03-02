@@ -51,6 +51,7 @@ export default {
     dutch: 'Nederlands',
     english: 'Engels',
     save: 'Instellingen opslaan',
+    savepic: 'Gebruik als profielfoto',
     lang: 'Taal: ',
     currency: 'Munteenheid: ',
     chooselanguage: '--- Kies taal ---',

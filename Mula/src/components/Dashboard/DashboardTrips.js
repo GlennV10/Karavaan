@@ -16,15 +16,17 @@ export default class DashboardTrips extends Component {
       allTrips: [],
       username: "",
       isLoading: true,
+      imgUri: ""
     }
   }
 
   componentWillMount() {
     this.setState({ isLoading: true });
+    
     AsyncStorage.getItem('userName').then((username)=>{
       this.setState({username});
       this.setUserTrips();
-    })
+    });
 
     /* ================================================================
               CODE TO STORE HARDCODED DATA INTO ASYNCSTORAGE
@@ -124,7 +126,7 @@ export default class DashboardTrips extends Component {
       .then((res) => res.json())
       .then((userTrips) => {
         this.setState({userTrips});
-      });
+      }).catch(error => console.log("network/rest error"));
   }
 
   getAllTrips() {
@@ -137,7 +139,7 @@ export default class DashboardTrips extends Component {
     .then((res) => res.json())
     .then((allTrips) => {
       this.setState({allTrips});
-    });
+    }).catch(error => console.log("network/rest error"));
   }
 
   async setUserTrips() {
@@ -146,14 +148,16 @@ export default class DashboardTrips extends Component {
 
     let trips = [];
     let tripIDs = [];
-    Object.keys(this.state.userTrips).map((id) => {
-      tripIDs.push({
-          id: id
-      })
-    });
-    for(trip of this.state.allTrips) {
-      for(tripID of tripIDs) {
-        if(trip.id == tripID.id) trips.push(trip);
+    if(this.state.userTrips.length !== 0 && this.state.allTrips.length !== 0) {
+      Object.keys(this.state.userTrips).map((id) => {
+        tripIDs.push({
+            id: id
+        })
+      });
+      for(trip of this.state.allTrips) {
+        for(tripID of tripIDs) {
+          if(trip.id == tripID.id) trips.push(trip);
+        }
       }
     }
     this.setState({ trips, isLoading: false });

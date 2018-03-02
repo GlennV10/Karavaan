@@ -14,9 +14,8 @@ export default class Settings extends Component {
             language: "",
             chosenLanguage: "",
             currency: "",
-
+            imgUri: "",
             friendtoadd: "",
-
             currentpass: "",
             newpass: "",
             repeatnewpass: ""
@@ -24,6 +23,7 @@ export default class Settings extends Component {
     }
 
     componentWillMount() {
+        this.setState({ imgUri: this.props.navigation.state.params.imgUri });
         AsyncStorage.getItem('language').then((language) => {
             this.setState({ language });
             if (language == "English") this.setState({ chosenLanguage: "English" });
@@ -64,7 +64,7 @@ export default class Settings extends Component {
           .then((res) => res.json())
           .then((user) => {
             this.setState({name: user.firstName + " " + user.lastName});
-          });
+          }).catch(error => console.log("network/rest error"));
       }
 
     updateLanguage(newLanguage) {
@@ -163,8 +163,8 @@ export default class Settings extends Component {
             <ScrollView style={styles.container}>
                 <View style={styles.separator}>
                     <View style={styles.profilesettings}>
-                        <TouchableOpacity style={styles.profileButton}>
-                            <Image source={require('../../images/placeholder_user.png')} style={styles.profileImage} />
+                        <TouchableOpacity style={styles.profileButton} onPress={() => this.props.navigation.navigate('Gallery')}>
+                            <Image source={this.state.imgUri} style={styles.profileImage} />
                         </TouchableOpacity>
                     </View>
                     <Text style={{  alignSelf: 'center', fontSize: 19, marginBottom: 20 }}>{this.state.name}</Text>

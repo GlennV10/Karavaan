@@ -49,6 +49,7 @@ export default {
     dutch: 'Dutch',
     english: 'English',
     save: 'Save settings',
+    savepic: 'Use as profile picture',
     lang: 'Language: ',
     currency: 'Currency: ',
     chooselanguage: '--- Choose Language ---',
