@@ -16,6 +16,8 @@ export default {
     password: 'Password',
     login: 'Log in',
     register: 'Register',
+    error: "Oops, that didn't work out!",
+    errormessage: "Email and/or password is incorrect.",
 
     //Register
     firstname: 'First Name',
