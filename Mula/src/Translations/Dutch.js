@@ -38,6 +38,12 @@ export default {
     //TripExpenses
     noexpensesfound: 'GEEN UITGAVEN GEVONDEN',
 
+    //TripTotal
+    balancefor: 'Balans van',
+    amountpaid: 'Betaalt: ',
+    amountconsumed: 'Verbruikt: ',
+    balans: 'Balans: ',
+
     //DashboardTrips
     notripsfound: 'GEEN REIZEN GEVONDEN',
 
