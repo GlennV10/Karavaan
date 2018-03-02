@@ -17,6 +17,8 @@ export default {
     password: 'Wachtwoord',
     login: 'Aanmelden',
     register: 'Registreer',
+    error: 'Oops, dat ging fout!',
+    errormessage: "Email en/of wachtwoord is niet correct.",
 
     //Register
     firstname: 'Voornaam',
