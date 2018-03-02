@@ -16,10 +16,6 @@ export default class TripExpenses extends Component {
 
     componentWillMount() {
         this.setState({ expenses: this.props.expenses });
-
-        AsyncStorage.getItem('userName').then((username)=>{
-            this.setState({username});
-        })
     }
 
     renderExpenses() {
