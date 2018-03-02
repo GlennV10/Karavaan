@@ -140,7 +140,7 @@ export default class AddExpensePayers extends Component {
                 console.log(res._bodyText);
                 this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip });
             });
-        } else if (consumerTotal > expense.total) {
+        } else if ((consumerTotal + this.state.shared) > expense.total) {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
