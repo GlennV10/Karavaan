@@ -13,6 +13,11 @@ export default class AddExpensePayers extends Component {
         }
     }
 
+    /********************
+      ADD SHARE BY SOME
+      Styling smaller
+    ********************/
+
     componentDidMount() {
         console.log(this.props.navigation.state.params.expense);
         this.populateConsumersState();
