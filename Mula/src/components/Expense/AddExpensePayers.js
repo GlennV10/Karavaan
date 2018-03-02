@@ -8,7 +8,7 @@ export default class AddExpensePayers extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            payers: []
+            payers: [],
         }
     }
 
@@ -43,7 +43,7 @@ export default class AddExpensePayers extends Component {
         for (participant of this.props.navigation.state.params.trip.participants) {
             let payer = {
                 participant: participant[0],
-                amount: 0,
+                amount: 0
             }
             payers.push(payer);
         }
@@ -62,6 +62,7 @@ export default class AddExpensePayers extends Component {
             }
             console.log(payers);
         }
+
         this.setState({ payers });
     }
 
@@ -72,10 +73,11 @@ export default class AddExpensePayers extends Component {
                     <Text style={styles.label}>{payer.participant.firstName} {payer.participant.lastName}</Text>
                     <TextInput
                         placeholder="Amount paid..."
+                        value={payer.amountToShow}
                         keyboardType="numeric"
                         style={styles.inputField}
-                        underlineColorAndroid="#ffd185"
                         placeholderTextColor="#bfbfbf"
+                        underlineColorAndroid="transparent"
                         onChangeText={(amount) => this.updatePayerAmount(amount, payer.participant)} />
                 </View>
             )
@@ -91,17 +93,14 @@ export default class AddExpensePayers extends Component {
         }
 
         if (payerTotal == expense.total) {
-            for(let i = this.state.payers.length - 1; i >= 0; i--) {
-                if (this.state.payers[i].amount == 0) {
-                    this.state.payers.splice(i, 1);
-                }
-            }
             expense.payers = this.state.payers;
             this.props.navigation.navigate('AddExpenseConsumed', { expense, trip: this.props.navigation.state.params.trip });
-        } else if (payerTotal > expense.amount) {
-            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
+        } else if (payerTotal > expense.total) {
+            alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
+
         } else {
-            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
+            alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
+
         }
     }
 

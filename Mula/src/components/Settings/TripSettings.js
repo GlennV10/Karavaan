@@ -15,12 +15,11 @@ export default class TripSettings extends Component {
             language: "",
             currency: "",
             selectedItems: [],
-            tripRates: ""
+            tripRates: []
         }
     }
 
     async componentDidMount() {
-
         AsyncStorage.getItem('currency').then((currency) => {
             this.setState({ currency });
         });
@@ -31,6 +30,7 @@ export default class TripSettings extends Component {
     }
 
     _handleBackButton = () => {
+        this.updateTripRate()
         this.props.navigation.navigate('DashboardTrips');
         return true;
     }
@@ -69,34 +69,64 @@ export default class TripSettings extends Component {
     };
 
     renderChangeRates() {
-        var result = [];
-        if (this.state.tripRates.length > 0) {
-            for (let rate = 0; rate < this.state.tripRates.length; rate++) {
-                result.push(
-                    <View style={styles.currencyView} key={rate}>
-                        <View style={styles.currencyField}>
-                            <Text >{this.state.tripRates[rate].name}</Text>
-                        </View>
-                        <View style={styles.currencyInput}>
-                            <TextInput
-                                placeholder={this.state.tripRates[rate].value + ""}
-                                
-                                underlineColorAndroid="transparent"
-                                placeholderTextColor="#818181"
-                                keyboardType='numeric'
-                                onChangeText={(text) => console.log(text) & this.updateRate(rate, text)}
-                            />
-                        </View>
-                    </View>)
-            }
-        } else {
-            alert("niks gedaan")
-        }
-        return result;
+        let trip = this.props.navigation.state.params.trip;
+        return this.state.tripRates.map((rate, index) => {
+            return (
+                <View style={styles.currencyView} key={index}>
+                    <Text style={styles.currencyField}>{rate.name}</Text>
+                    <Text style={styles.currencyField2}>(-> {trip.baseCurrency})</Text>
+                    <TextInput
+                        style={styles.currencyInput}
+                        value={rate.value.toString()}
+                        underlineColorAndroid="transparent"
+                        placeholderTextColor="#818181"
+                        keyboardType='numeric'
+                        onChangeText={(text) => console.log(text) & this.updateRate(rate, text)}
+                    />
+                </View>
+            )
+        });
     }
 
-    updateRate(r, t) {
-        alert("test")
+    updateRate(rate, text) {
+        let tripCurrencyRates = this.state.tripRates.slice();
+        for (r of tripCurrencyRates) {
+            if (r.name == rate.name) {
+                rate.value = this.checkAmount(text);             
+            }
+        }
+        this.setState({tripCurrencyRates})
+        console.log(tripCurrencyRates);
+        this.renderChangeRates();
+    }
+
+    updateTripRate() {
+        //================================================================
+        //====================RATES MEEGEVEN MET TRIP=====================
+        //================================================================
+    }
+
+    checkAmount(text) {
+        var newText = '';
+        let numbers = '0123456789';
+        var containsComma = false;
+
+        for (var i = 0; i < text.length; i++) {
+            if (numbers.indexOf(text[i]) > -1) {
+                newText = newText + text[i];
+            }
+            if (text[i] === ',' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+            if (text[i] === '.' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+        }
+        containsComma = false;
+
+        return newText
     }
 
     getTrip() {
@@ -137,13 +167,13 @@ export default class TripSettings extends Component {
                 </View>
 
                 <View style={styles.separator}>
-                    <Text>Verander de currency rate</Text>
+                    <Text>{I18n.t('changecurrency')}</Text>
                     {this.renderChangeRates()}
 
                 </View>
 
                 <View>
-                    <Text style={styles.textfieldaboveMultiSelect}>Voeg reisbegeleiders toe</Text>
+                    <Text style={styles.textfieldaboveMultiSelect}>{I18n.t('addguides')}</Text>
                     <MultiSelect
                         hideTags
                         items={["test", "test"]}
@@ -152,7 +182,7 @@ export default class TripSettings extends Component {
                         selectedItems={selectedItems}
                         onSelectedItemsChange={this.onSelectedItemsChange}
                         selectText="Kies guides"
-                        searchInputPlaceholderText="Kies guides"
+                        searchInputPlaceholderText={I18n.t('chooseguide')}
                         onChangeInput={(item) => console.log(item)}
                         displayKey="userName"
                         style={backgroundColor = "#d4e8e5"}
@@ -230,13 +260,23 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     currencyView: {
-        flex: 1,
+        // flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         flexDirection: 'row'
     },
     currencyField: {
-        flex: 0.2
+        flex: .2,
+        textAlign: 'left',
+        paddingLeft: 10
+    },
+    currencyField2: {
+        flex: .2,
+        textAlign: 'left',
+        paddingLeft: 10
     },
     currencyInput: {
-        flex: 0.8
+        flex: .6,
+        textAlign: 'center'
     }
 });

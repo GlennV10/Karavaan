@@ -17,8 +17,7 @@ export default class AddExpense extends Component {
             wayofsplit: I18n.t('splitplaceholder'),
             language: I18n.t('langtest'),
             check: false,
-            groupAmount: "",
-            categories: ['Restaurant', 'Taxi', 'Drank']
+            groupAmount: ""
         }
     }
 
@@ -57,7 +56,7 @@ export default class AddExpense extends Component {
     }
 
     renderPickerCategories() {
-        return this.state.categories.map((category, index) => {
+        return this.props.navigation.state.params.trip.categories.map((category, index) => {
             return (
                 <Picker.Item value={category} label={category} key={index} />
             )
@@ -75,18 +74,22 @@ export default class AddExpense extends Component {
     checkAmount(text) {
         var newText = '';
         let numbers = '0123456789';
+        var containsComma = false;
 
         for (var i = 0; i < text.length; i++) {
             if (numbers.indexOf(text[i]) > -1) {
                 newText = newText + text[i];
             }
-            if (text[i] === ',') {
+            if (text[i] === ',' && containsComma === false) {
                 newText = newText + '.';
+                containsComma = true;
             }
-            if (text[i] === '.') {
+            if (text[i] === '.' && containsComma === false) {
                 newText = newText + '.';
+                containsComma = true;
             }
         }
+        containsComma = false;
 
         this.setState({ amount: newText });
     }
@@ -94,26 +97,36 @@ export default class AddExpense extends Component {
     checkGroupAmount(text) {
         var newText = '';
         let numbers = '0123456789';
+        var containsComma = false;
 
         for (var i = 0; i < text.length; i++) {
             if (numbers.indexOf(text[i]) > -1) {
                 newText = newText + text[i];
             }
-            if (text[i] === ',') {
+            if (text[i] === ',' && containsComma === false) {
                 newText = newText + '.';
+                containsComma = true;
             }
-            if (text[i] === '.') {
+            if (text[i] === '.' && containsComma === false) {
                 newText = newText + '.';
+                containsComma = true;
             }
         }
+        containsComma = false;
 
         this.setState({ groupAmount: newText });
     }
 
     getExpense() {
+        var totalAmount = 0;
+        if (this.state.groupAmount !== "") {
+            totalAmount = parseFloat(this.state.amount) + parseFloat(this.state.groupAmount);
+        } else {
+            totalAmount = parseFloat(this.state.amount)
+        }
         let expense = {
-            tripName: this.state.name,
-            total: parseFloat(this.state.amount),
+            expenseName: this.state.name,
+            total: totalAmount,
             date: {
                 dayOfMonth: parseInt(this.state.selectedDate.substring(0, 2)),
                 month: parseInt(this.state.selectedDate.substring(3, 5)),
@@ -126,7 +139,7 @@ export default class AddExpense extends Component {
             loans: []
         }
 
-        if (expense.tripName === "" ||
+        if (expense.expenseName === "" ||
             isNaN(expense.date.dayOfMonth) ||
             isNaN(expense.date.month) ||
             isNaN(expense.date.year) ||
@@ -159,36 +172,46 @@ export default class AddExpense extends Component {
 
     }
 
-    showAddGroupCostField() {
-        if (this.state.check == false) {
-            this.setState({ check: !this.state.check });
-            this.addGroupCostField();
-        }
-
-        if (this.state.check == true) {
-            this.setState({ check: !this.state.check });
-            this.addGroupCostField();
-        }
-    }
-
-    addGroupCostField() {
-        if (this.state.check == true) {
-            return (
-                <View>
-                    <Text style={styles.label}>{I18n.t('groupexpense')}</Text>
-                    <TextInput
-                        placeholder={I18n.t('amountplaceholder')}
-                        style={styles.inputField}
-                        keyboardType='numeric'
-                        underlineColorAndroid="transparent"
-                        placeholderTextColor="#bfbfbf"
-                        onChangeText={(text) => this.checkGroupAmount(text)}
-                        value={this.state.groupAmount}>
-                    </TextInput>
-                </View>
-            )
-        }
-    }
+    // showAddGroupCostField() {
+    //     if (this.state.check == false) {
+    //         this.setState({ check: !this.state.check });
+    //         this.addGroupCostField();
+    //     }
+    //
+    //     if (this.state.check == true) {
+    //         this.setState({ check: !this.state.check });
+    //         this.addGroupCostField();
+    //     }
+    // }
+    //
+    // addGroupCostField() {
+    //     if (this.state.check == true) {
+    //         return (
+    //             <View>
+    //                 <Text style={styles.label}>{I18n.t('groupexpense')}</Text>
+    //                 <TextInput
+    //                     placeholder={I18n.t('amountplaceholder')}
+    //                     style={styles.inputField}
+    //                     keyboardType='numeric'
+    //                     underlineColorAndroid="transparent"
+    //                     placeholderTextColor="#bfbfbf"
+    //                     onChangeText={(text) => this.checkGroupAmount(text)}
+    //                     value={this.state.groupAmount}>
+    //                 </TextInput>
+    //             </View>
+    //         )
+    //     }
+    // }
+    //
+    // <View style={styles.checker}>
+    //     <CheckBox
+    //         label={I18n.t('addgroupexpense')}
+    //         checked={this.state.check}
+    //         onChange={() => this.showAddGroupCostField()}
+    //     />
+    //
+    //     {this.addGroupCostField()}
+    // </View>
 
 
     render() {
@@ -219,15 +242,6 @@ export default class AddExpense extends Component {
                                 onChangeText={(text) => this.checkAmount(text)}
                                 value={this.state.amount} />
                         </View >
-                        <View style={styles.checker}>
-                            <CheckBox
-                                label={I18n.t('addgroupexpense')}
-                                checked={this.state.check}
-                                onChange={() => this.showAddGroupCostField()}
-                            />
-
-                            {this.addGroupCostField()}
-                        </View>
 
                         <View style={styles.separator}>
                             <Text style={styles.label}>{I18n.t('date')}</Text>

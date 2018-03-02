@@ -6,103 +6,96 @@ export default class TripCategory extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        user: "",
+        username: "",
         categories: [],
-        currency: "USD",
+        baseCurrency: "",
+        selectedCurrency: "",
         rates: [],
-        pickerRate: 0,
         isLoading: true
       }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         /*AsyncStorage.getItem('expenses')
               .then(req => JSON.parse(req))
               .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
               .catch(error => console.log('Error loading expenses'));*/
-        this.calculateCategoryAmount();
-        
+        AsyncStorage.getItem('userName').then((username)=>{
+            this.setState({username});
+            this.calculateCategorytotal();
+        })
     }
 
     renderValutaToArray(rate) {
         var array = [];
+        array.push({name: this.state.baseCurrency, value: 1});
         Object.keys(rate).map((val) => {
             array.push({
                 name: val,
                 value: rate[val]
             })
         });
-        if(array.length == 1) {
-            this.setState({ pickerRate: array[0].value });
-        } else this.setState({ rates: array });
+        this.setState({ rates: array });
     }
 
-    parseRates(data) {
-        console.log(data.rates)
+    getExchangeRates() {
+        console.log("Getting rates...");
+        var url = "http://193.191.177.73:8080/karafinREST/getTrip/" + this.props.navigator.state.params.trip.id;
         //if (this.state.loadRates) {
-            this.renderValutaToArray(data.rates);
-        //}
-    }
-
-    getExchangeRatesWithBase(baseCurrency) {
-        console.log("Rates met base '" + baseCurrency + "' wordt uitgevoerd ")
-        var url = "https://api.fixer.io/latest?base=" + baseCurrency;
-        //if (this.state.loadRates) {
-            return fetch(url)
+            return fetch(url, {
+                method: 'GET',
+                header: {
+                'Content-Type': 'application/json'
+                } 
+            })
                 .then((resp) => resp.json() )
-                .then((data) => this.parseRates(data));
+                .then((trip) => (console.log(trip.rates) &
+                this.setState({baseCurrency: trip.baseCurrency}) &
+                this.renderValutaToArray(trip.rates)));
         //}
     }
 
-    getExchangeRatesWithBasePicker(newCurrency) {
-        console.log(newCurrency + " en current: " + this.state.currency);
-        console.log("Rates met base '" + this.state.currency + "' wordt uitgevoerd ")
-        var url = "https://api.fixer.io/latest?symbols=" + newCurrency + "&base=" + this.state.currency;
-        //if (this.state.loadRates) {
-            return fetch(url)
-                .then((resp) => resp.json() )
-                .then((data) => this.parseRates(data));
-        //}
-    }
-
-    async calculateCategoryAmount() {
+    async calculateCategorytotal() {
         let categories = [];
         
-        await this.getExchangeRatesWithBase(this.state.currency);
+        await this.getExchangeRates();
+        this.setState({selectedCurrency : this.state.baseCurrency});
+        console.log(this.state.selectedCurrency);
         for(expense of this.props.expenses) {
+            let userExpense = 0;
+            Object.keys(expense.consumers).map((user) => {
+                console.log(user);
+                if(user == this.state.username) {
+                    userExpense = expense.consumers[user];
+                }
+            });
+            console.log(userExpense);
             if(categories.findIndex(i => i.category === expense.category) < 0) {
-                if(expense.currency == this.state.currency){
+                if(expense.currency == this.state.baseCurrency){
                     let category = {
                         category: expense.category,
-                        amount: expense.amount,
+                        total: userExpense,
                         expenses: 1
                     };
-                    categories.push(category);
-                }
-                for(currency of this.state.rates) {
-                    if(expense.currency == currency.name) {
-                        let category = {
-                            category: expense.category,
-                            amount: expense.amount/currency.value,
-                            expenses: 1
-                        };
-                        categories.push(category);
+                    for(currency of this.state.rates) {
+                        if(expense.currency == currency.name) category.total = userExpense/currency.value;
                     }
+                    categories.push(category);
                 }
             } else {
                 for (let j = 0; j < categories.length; j++) {
                     if (categories[j].category === expense.category) {
-                        if(expense.currency == this.state.currency){
+                        if(expense.currency == this.state.baseCurrency){
                             let category = {
                                 category: expense.category,
-                                amount: expense.amount,
+                                total: userExpense,
                                 expenses: 1
                             };
                             categories.push(category);
                         }
                         for(currency of this.state.rates) {
                             if(expense.currency == currency.name) {
-                                categories[j].amount += (expense.amount/currency.value);
+                                categories[j].total += (userExpense/currency.value);
                                 categories[j].expenses++;
                             }
                         }
@@ -115,14 +108,28 @@ export default class TripCategory extends Component {
     }
 
     async updateCurrency(newCurrency) {
-        await this.getExchangeRatesWithBasePicker(newCurrency);
-        let categories = this.state.categories;
-        console.log(this.state.pickerRate);
-        for(category of categories) {
-            category.amount = category.amount*this.state.pickerRate;
+        await this.getExchangeRates();
+        for(element of this.state.rates) {
+            console.log("rates: " + element.name);
         }
-        this.setState(categories);
-        this.setState({ currency: newCurrency});
+        let categories = this.state.categories;
+        let currentRate = 1;
+        let newRate = 1;
+        for(category of categories) {
+            for(currency of this.state.rates) {
+                if (currency.name == this.state.selectedCurrency) {
+                    console.log("current: " + currency.name + " , " + this.state.selectedCurrency);
+                    currentRate = currency.value;
+                } else if(currency.name == newCurrency) {
+                    console.log("new: " + currency.name + " , " + newCurrency);
+                    newRate = currency.value;
+                } 
+            }
+            category.total = category.total/currentRate*newRate;
+        }
+        console.log("current: " + currentRate + ", newRate: " + newRate);
+        this.setState({categories});
+        this.setState({ selectedCurrency: newCurrency});
     }
 
     getCategoryExpenses(category) {
@@ -161,12 +168,12 @@ export default class TripCategory extends Component {
                                     <Text style={styles.categoryExpensesCount}>{ category.expenses } {I18n.t('exp')}</Text>
                                 </View>
                             </View>
-                            <View style={[styles.categoryAmountContainer, styles.half]}>
+                            <View style={[styles.categorytotalContainer, styles.half]}>
                                 <View style={styles.splitRow}>
-                                    <Text style={styles.categoryAmount}>{category.amount.toFixed(2)}</Text>
+                                    <Text style={styles.categorytotal}>{category.total.toFixed(2)}</Text>
                                 </View>
                                 <View style={styles.splitRow}>
-                                    <Text style={styles.categoryCurrency}>{this.state.currency}</Text>
+                                    <Text style={styles.categoryCurrency}>{this.state.selectedCurrency}</Text>
                                 </View>
                             </View>
                         </TouchableOpacity>
@@ -178,22 +185,18 @@ export default class TripCategory extends Component {
 
     renderPicker() {
         let trip = this.props.navigator.state.params.trip;
-        if(this.props.expenses.length > 0) {
-            let currencies = null;  
-                if(trip.id == this.props.expenses[0].tripID) {                  
-                    return(
-                        <Picker
-                            style={styles.currencyPicker}
-                            selectedValue={this.state.currency}
-                            onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
-                            {trip.currencies.map((item, index) => {
-                                return (<Picker.Item label={item} value={item} key={index}/>)
-                            })}
-                        </Picker>
-                    )
-                }
-            }
-        else return null;
+        if(this.props.expenses.length > 0) {        
+            return(
+                <Picker
+                    style={styles.currencyPicker}
+                    selectedValue={this.state.selectedCurrency}
+                    onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
+                    {this.state.rates.map((item, index) => {
+                        return (<Picker.Item label={item.name} value={item.name} key={index}/>)
+                    })}
+                </Picker>
+            )
+        } else return null;
     }
 
     render() {
@@ -255,7 +258,7 @@ const styles = StyleSheet.create({
       fontSize: 12,
       color: '#bababa'
     },
-    categoryAmount: {
+    categorytotal: {
         fontSize: 16,
         textAlign: 'right'
     },
@@ -268,7 +271,7 @@ const styles = StyleSheet.create({
         flex: .5,
         paddingLeft: 10
     },
-    categoryAmountContainer: {
+    categorytotalContainer: {
         flex: .5,
         alignItems: 'flex-end',
         justifyContent: 'center'

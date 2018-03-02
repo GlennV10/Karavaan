@@ -103,7 +103,8 @@ export default {
 
     //AddEXpenseConsumed
     consumers: 'Wie nam er deel in de uitgave',
-    sharedexpense: 'Voeg gezamenlijke kost toe',
+    addexpense: 'Voeg uitgave toe',
+    sharedcost: 'Gemeenschappelijke kost',
 
     //AddTrip
     tripname: 'Bestemming',
@@ -119,6 +120,10 @@ export default {
 
     //TripSettings
     delete: 'Verwijder reis',
-    deletetrip: 'Bent u zeker dat u deze reis wil verwijderen?'
+    deletetrip: 'Bent u zeker dat u deze reis wil verwijderen?',
+    changecurrency: 'Verander wisselkoers van munt',
+    addguides: 'Voeg reisbegeleiders toe',
+    chooseguide: 'Kies begeleiders',
+
 
 }

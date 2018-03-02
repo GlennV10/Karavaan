@@ -73,7 +73,7 @@ export default class Login extends Component{
          return true;
     }
 
-    getChallenge(usernameField){
+    /*getChallenge(usernameField){
         console.log(usernameField + "USERNAME GETCHALLENGE")
         return fetch('http://193.191.177.169:8080/mula/Controller?action=login',{
             method: 'POST',
@@ -93,30 +93,25 @@ export default class Login extends Component{
             }
 
         }).catch((error)=> console.log("ERROR: " + error));
-    }
+    }*/
 
     sendLoginRequest(salt){
-        var hashedPwd = sha1(sha1(this.state.password)+salt);
-        return fetch('http://193.191.177.169:8080/mula/Controller?action=login',{
+        //var hashedPwd = sha1(sha1(this.state.password)+salt);
+        console.log(this.state.password);
+        url = "http://193.191.177.73:8080/karafinREST/checkPassword/" + this.state.username;
+        return fetch(url,{
             method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify({
-                email: this.state.username,
-                psw: hashedPwd
+                password: this.state.password
             })
         })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            console.log("IS LOGIN SUCCESS: "+responseJson.login_succes);
-            this.setState({autheticated: responseJson.login_succes});
-            console.log(this.state.autheticated);
-            if(responseJson.login_succes === "true"){
-                console.log('test');
+        .then((response) => {
+            console.log(response._bodyText);
+            console.log(this.state.autheticated );
+            if(response._bodyText === "true"){
+                this.setState({autheticated: true});
                 this.moveOn();
-            }
+            } else this.setState({autheticated: false});
         }).catch((error)=> console.log("ERROR: " + error));
     }
 
@@ -214,10 +209,10 @@ export default class Login extends Component{
                         returnKeyType="go"
                         onChangeText={(passwordText) => this.setState({password: passwordText})}
                         ref={(input) => this.passwordInput = input}
-                        onSubmitEditing={() => this.getChallenge(this.state.username)}></TextInput>
+                        onSubmitEditing={() => this.sendLoginRequest(this.state.username)}></TextInput>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.loginButton} onPress={() => this.getChallenge(this.state.username)}>
+                    <TouchableOpacity style={styles.loginButton} onPress={() => this.sendLoginRequest(this.state.username)}>
                         <Text style={styles.buttonText}>{I18n.t('login')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.registerButton} onPress={() => this.props.navigation.navigate('Register')}>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert, CheckBox } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
@@ -9,6 +9,7 @@ export default class AddExpensePayers extends Component {
         super(props);
         this.state = {
             consumers: [],
+            shared: 0
         }
     }
 
@@ -42,7 +43,7 @@ export default class AddExpensePayers extends Component {
         for (participant of this.props.navigation.state.params.trip.participants) {
             let consumer = {
                 participant: participant[0],
-                amount: 0 //this.props.navigation.state.params.expense.total / this.props.navigation.state.params.trip.participants.length
+                amount: 0, //this.props.navigation.state.params.expense.total / this.props.navigation.state.params.trip.participants.length
             }
             consumers.push(consumer);
         }
@@ -73,15 +74,33 @@ export default class AddExpensePayers extends Component {
                         placeholder="Amount consumed"
                         keyboardType="numeric"
                         style={styles.inputField}
-                        underlineColorAndroid="#ffd185"
                         placeholderTextColor="#bfbfbf"
+                        underlineColorAndroid="transparent"
                         onChangeText={(amount) => this.updateConsumerAmount(amount, consumer.participant)} />
                 </View>
             )
         });
     }
 
-    getExpense() {
+    formatPayersAPI(expense) {
+        let formatPayers = {};
+        for(payer of expense.payers) {
+            let key = payer.participant.email;
+            formatPayers[key] = payer.amount;
+        }
+        expense.payers = formatPayers;
+    }
+
+    formatConsumersAPI(expense) {
+        let formatConsumers = {};
+        for(consumer of expense.consumers) {
+            let key = consumer.participant.email;
+            formatConsumers[key] = consumer.amount;
+        }
+        expense.consumers = formatConsumers;
+    }
+
+    addExpense() {
         let expense = this.props.navigation.state.params.expense;
 
         let consumerTotal = 0;
@@ -89,18 +108,42 @@ export default class AddExpensePayers extends Component {
             consumerTotal += parseFloat(consumer.amount);
         }
 
-        if (consumerTotal == expense.amount) {
+        if ((consumerTotal + this.state.shared) == expense.total) {
             for(let i = this.state.consumers.length - 1; i >= 0; i--) {
                 if (this.state.consumers[i].amount == 0) {
                     this.state.consumers.splice(i, 1);
+                } else {
+                    this.state.consumers[i].amount += (this.state.shared / this.state.consumers.length);
+                }
+            }
+            for(let i = expense.payers.length - 1; i >= 0; i--) {
+                if (expense.payers[i].amount == 0) {
+                    expense.payers.splice(i, 1);
                 }
             }
             expense.consumers = this.state.consumers;
-            this.props.navigation.navigate('AddExpenseShared', { expense, trip: this.props.navigation.state.params.trip });
-        } else if (consumerTotal > expense.amount) {
-            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
+
+            this.formatPayersAPI(expense);
+            this.formatConsumersAPI(expense);
+            console.log(expense);
+            //==========================================================================================
+            //=========================AANVULLEN MET POST REQUEST NAAR API==============================
+            //==========================================================================================
+            return fetch('http://193.191.177.73:8080/karafinREST/addExpense/' + this.props.navigation.state.params.trip.id, {
+                method: 'POST',
+                header: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(expense)
+            })
+            .then((res) => {
+                console.log(res._bodyText);
+                this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip });
+            });
+        } else if (consumerTotal > expense.total) {
+            alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {
-            alert("Som van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
+            alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
         }
     }
 
@@ -109,11 +152,24 @@ export default class AddExpensePayers extends Component {
             <ScrollView style={styles.container}>
                 <View>
                     <View style={styles.contentView}>
-                        <Text style={styles.title}>{I18n.t('consumers')}</Text>
-                        {this.renderConsumers()}
+                        <View style={styles.consumersView}>
+                            <Text style={styles.title}>{I18n.t('consumers')}</Text>
+                            {this.renderConsumers()}
+                        </View>
 
-                        <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
-                            <Text style={styles.saveText}>{I18n.t('sharedexpense')}</Text>
+                        <View style={styles.separator}>
+                            <Text style={styles.label}>{I18n.t('sharedcost')}</Text>
+                            <TextInput
+                                placeholder="Amount shared..."
+                                style={styles.inputField}
+                                keyboardType='numeric'
+                                placeholderTextColor="#bfbfbf"
+                                underlineColorAndroid="transparent"
+                                onChangeText={(shared) => this.setState({ shared: parseFloat(shared) })} />
+                        </View >
+
+                        <TouchableOpacity style={styles.saveButton} onPress={() => this.addExpense()}>
+                            <Text style={styles.saveText}>{I18n.t('addexpense')}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -163,5 +219,11 @@ const styles = StyleSheet.create({
         lineHeight: 28,
         color: '#303030',
         textAlign: 'center'
+    },
+    separator: {
+        borderTopColor: '#bbb',
+        borderTopWidth: StyleSheet.hairlineWidth,
+        marginBottom: 5,
+        marginTop: 5
     }
 });
