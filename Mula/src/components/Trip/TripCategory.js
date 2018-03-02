@@ -43,7 +43,7 @@ export default class TripCategory extends Component {
 
     getExchangeRates() {
         console.log("Getting rates...");
-        var url = "http://193.191.177.73:8080/karafinREST/getTrip/" + this.props.navigator.state.params.trip.id;
+        var url = "http://193.191.177.73:8080/karafinREST/getTrip/" + this.props.navigation.state.params.trip.id;
         //if (this.state.loadRates) {
         return fetch(url, {
             method: 'GET',
@@ -167,7 +167,7 @@ export default class TripCategory extends Component {
         } else {
             return this.state.categories.map((category, index) => {
                 return(
-                    <TouchableOpacity style={styles.category} onPress={() => this.props.navigator.navigate('TripCategoryExpenses', { category: category.category, expenses: this.getCategoryExpenses(category.category) })} key={ index }>
+                    <TouchableOpacity style={styles.category} onPress={() => this.props.navigation.navigate('TripCategoryExpenses', { category: category.category, expenses: this.getCategoryExpenses(category.category), activeUser:this.state.activeUser })} key={ index }>
                         <View style={[styles.categoryContainer, styles.half]}>
                             <View style={styles.splitRow}>
                                 <Text style={[styles.categoryName]}>{category.category}</Text>
@@ -191,7 +191,7 @@ export default class TripCategory extends Component {
     }
 
     renderCurrencyPicker() {
-        let trip = this.props.navigator.state.params.trip;
+        let trip = this.props.navigation.state.params.trip;
         if (this.props.expenses.length > 0) {
             return (
                 <Picker
@@ -207,7 +207,7 @@ export default class TripCategory extends Component {
     }
 
     renderUserPicker() {
-        let trip = this.props.navigator.state.params.trip;
+        let trip = this.props.navigation.state.params.trip;
         let isAdmin = false;
         for (participant of trip.participants) {
             if(participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
@@ -245,7 +245,7 @@ export default class TripCategory extends Component {
                     <ScrollView style={styles.categoryList}>
                         { this.renderCategories() }
                     </ScrollView>
-                    <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+                    <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigation.navigate('AddExpense', {trip: this.props.navigation.state.params.trip})}>
                         <Text style={styles.addTripButtonText} >+</Text>
                     </TouchableOpacity>
                 </View>

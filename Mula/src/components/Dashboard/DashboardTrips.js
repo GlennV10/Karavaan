@@ -12,14 +12,19 @@ export default class DashboardTrips extends Component {
     super(props);
     this.state = {
       trips: [],
+      userTrips: [],
+      allTrips: [],
       username: "",
-      isLoading: false,
+      isLoading: true,
     }
   }
 
   componentWillMount() {
     this.setState({ isLoading: true });
-    this.getAllTrips();
+    AsyncStorage.getItem('userName').then((username)=>{
+      this.setState({username});
+      this.setUserTrips();
+    })
 
     /* ================================================================
               CODE TO STORE HARDCODED DATA INTO ASYNCSTORAGE
@@ -107,17 +112,51 @@ export default class DashboardTrips extends Component {
     }
   }
 
-  getAllTrips() {
-      return fetch('http://193.191.177.73:8080/karafinREST/allTrips', {
+  getUserTrips() {
+    let url = 'http://193.191.177.73:8080/karafinREST/getTripsOfPerson/' + this.state.username;
+
+    return fetch(url, {
           method: 'GET',
           header: {
               'Content-Type': 'application/json'
           }
       })
       .then((res) => res.json())
-      .then((trips) => {
-          this.setState({ trips, isLoading: false })
+      .then((userTrips) => {
+        this.setState({userTrips});
       });
+  }
+
+  getAllTrips() {
+    return fetch('http://193.191.177.73:8080/karafinREST/allTrips', {
+        method: 'GET',
+        header: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((res) => res.json())
+    .then((allTrips) => {
+      this.setState({allTrips});
+    });
+  }
+
+  async setUserTrips() {
+    await this.getUserTrips();
+    await this.getAllTrips();
+
+    let trips = [];
+    let tripIDs = [];
+    Object.keys(this.state.userTrips).map((id) => {
+      tripIDs.push({
+          id: id
+      })
+    });
+    for(trip of this.state.allTrips) {
+      for(tripID of tripIDs) {
+        if(trip.id == tripID.id) trips.push(trip);
+      }
+    }
+    this.setState({ trips, isLoading: false });
   }
 
   renderTrips() {

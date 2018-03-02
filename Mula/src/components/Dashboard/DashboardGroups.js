@@ -200,7 +200,7 @@ export default class DashboardGroups extends Component{
         }else{
             return this.state.groups.map((group) => {
                 return(
-                  <TouchableOpacity style={[styles.person, styles.odd]} onPress={() => this.props.navigator.navigate('DetailGroup', { group_id: group.id }) } key={group.id}>
+                  <TouchableOpacity style={[styles.person, styles.odd]} onPress={() => this.props.navigation.navigate('DetailGroup', { group_id: group.id }) } key={group.id}>
                     <View style={styles.personImage}></View>
                     <View style={styles.personName}>
                       <Text style={styles.right}>{group.userName}</Text>
@@ -238,7 +238,7 @@ export default class DashboardGroups extends Component{
               {/* {this.renderFriends()} */}
               {this.renderGroups()}
           </ScrollView>
-          <TouchableOpacity style={styles.addButton} onPress={() => this.props.navigator.navigate('AddGroup') /*& this.setModalVisible(true) & this.getCurrentLocation() */}>
+          <TouchableOpacity style={styles.addButton} onPress={() => this.props.navigation.navigate('AddGroup') /*& this.setModalVisible(true) & this.getCurrentLocation() */}>
               <Text style={styles.addButtonText} >+</Text>
           </TouchableOpacity>
         </View>

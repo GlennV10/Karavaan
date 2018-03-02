@@ -444,7 +444,7 @@ export default class DashboardPersons extends Component {
             console.log(this.state.offlineFriends);
             return this.state.friends.friends.map((friend, index) => {
                 return (
-                    <TouchableOpacity style={[styles.person, styles.odd]} onPress={() => this.props.navigator.navigate('DetailPerson', { email2: friend.email })} key={index}>
+                    <TouchableOpacity style={[styles.person, styles.odd]} onPress={() => this.props.navigation.navigate('DetailPerson', { email2: friend.email })} key={index}>
                         <View style={styles.personImage}></View>
                         <View style={styles.personName}>
                             <Text style={styles.right}>{friend.userName}</Text>
@@ -461,7 +461,7 @@ export default class DashboardPersons extends Component {
         }
         //   return this.state.friends.map((friend) => {
         //     return (
-        //       <TouchableOpacity style={[styles.person, styles.odd]} onPress={() => this.props.navigator.navigate('DetailPerson', { email2: friend.email })} key={friend.userName}>
+        //       <TouchableOpacity style={[styles.person, styles.odd]} onPress={() => this.props.navigation.navigate('DetailPerson', { email2: friend.email })} key={friend.userName}>
         //         <View style={styles.personImage}></View>
         //         <View style={styles.personName}>
         //           <Text style={styles.right}>{friend.userName}</Text>

@@ -4,7 +4,7 @@ import Hamburger from 'react-native-hamburger';
 import I18n from 'react-native-i18n';
 
 export default class NavbarAndroid extends Component{
-    _renderScene(route, navigator){
+    _renderScene(route, navigation){
         switch (route.id){
             case 'home':
                 return (
@@ -18,7 +18,7 @@ export default class NavbarAndroid extends Component{
             <ToolbarAndroid
             style={styles.navBar}
             initialRoute={{id: 'home'}}
-            renderScene={(route, navigator) => this._renderScene(route, navigator)}
+            renderScene={(route, navigation) => this._renderScene(route, navigation)}
             title='Mula'
             >
             <Hamburger type="spinCross" color="blue"/></ToolbarAndroid>
