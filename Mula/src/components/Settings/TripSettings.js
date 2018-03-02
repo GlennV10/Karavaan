@@ -162,7 +162,7 @@ export default class TripSettings extends Component {
                     <Text>{I18n.t('currency')}</Text>
                     <Picker selectedValue={this.state.currency} onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
                         <Picker.Item label="Euro" value="Euro" />
-                        <Picker.Item label="American Dollar" value="USD" />
+                        <Picker.Item label="USD" value="USD" />
                     </Picker>
                 </View>
 

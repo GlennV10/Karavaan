@@ -29,6 +29,10 @@ export default class Settings extends Component {
             if (language == "English") this.setState({ chosenLanguage: "English" });
             if (language == "Dutch") this.setState({ chosenLanguage: "Nederlands" });
         });
+        AsyncStorage.getItem('userName').then((username) => {
+            this.setState({ username });
+            this.setUser();
+        });
     }
 
     componentDidMount() {
@@ -47,6 +51,21 @@ export default class Settings extends Component {
         this.props.navigation.navigate('DashboardTrips');
         return true;
     }
+
+    setUser() {
+        let url = 'http://193.191.177.73:8080/karafinREST/getPerson/' + this.state.username;
+    
+        return fetch(url, {
+              method: 'GET',
+              header: {
+                  'Content-Type': 'application/json'
+              }
+          })
+          .then((res) => res.json())
+          .then((user) => {
+            this.setState({name: user.firstName + " " + user.lastName});
+          });
+      }
 
     updateLanguage(newLanguage) {
         console.log(newLanguage);
@@ -148,7 +167,7 @@ export default class Settings extends Component {
                             <Image source={require('../../images/placeholder_user.png')} style={styles.profileImage} />
                         </TouchableOpacity>
                     </View>
-
+                    <Text style={{  alignSelf: 'center', fontSize: 19, marginBottom: 20 }}>{this.state.name}</Text>
                     <Text>{I18n.t('lang')} {this.state.chosenLanguage} </Text>
                     {this.renderLanguagePicker()}
                     <Text>{I18n.t('currency')} {this.state.currency}</Text>
