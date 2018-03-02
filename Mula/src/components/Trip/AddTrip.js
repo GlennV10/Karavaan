@@ -374,25 +374,21 @@ export default class AddTrip extends Component{
                 </View >
 
                 <View style={[{ flex: 1, flexDirection: 'row' }, styles.separator]}>
-                <TextInputMask
-                        ref="endDate"
-                        type={'datetime'}
-                        options={{
-                            format: 'YYYY-MM-DD'
-                        }}
-                        placeholder={I18n.t('enddate')}
-                        value={this.state.selectedEndDate}
-                        style={styles.inputdate}
-                        underlineColorAndroid="transparent"
-                        placeholderTextColor="#818181"
-                        keyboardType='numeric'
-                        onChangeText={(text) => console.log(text) & this.setState({ selectedEndDate: text })}
-
-                    />
+                <TextInput
+                    ref="endDate"
+                    placeholder={I18n.t('enddate')}
+                    
+                    value={this.state.selectedEndDate}
+                    style={styles.inputdate}
+                    underlineColorAndroid="transparent"
+                    placeholderTextColor="#818181"
+                    keyboardType='numeric'
+                    onChangeText={(text) => console.log(text) & this.setState({ selectedEndDate: text })}
+                />
                     <DatePicker
                         mode='date'
                         format='YYYY-MM-DD'
-                        minDate={this.state.selectedStartDate}
+                        minDate={yearbefore}
                         maxDate={yearafter}
                         date={this.state.selectedEndDate}
                         showIcon={true}
