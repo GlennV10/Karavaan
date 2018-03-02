@@ -1,5 +1,5 @@
 import React, { Component, cloneElement } from 'react';
-import { StyleSheet, KeyboardAvoidingView, View, Image, Text, TextInput, Button, Modal, TouchableOpacity, ScrollView, Picker, AsyncStorage, Label } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView, View, Image, Text, TextInput, Button, Modal, TouchableOpacity, ScrollView, Picker, AsyncStorage, Label,FlatList  } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import DatePicker from 'react-native-datepicker';
 import { Switch } from 'react-native-switch';
@@ -8,9 +8,10 @@ import CheckBox from 'react-native-checkbox-heaven';
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import MultiSelect from 'react-native-multiple-select';
 import I18n from 'react-native-i18n';
+import { TextInputMask } from 'react-native-masked-text';
 
 
-export default class AddTrip extends Component {
+export default class AddTrip extends Component{
 
     constructor(props) {
         super(props);
@@ -20,7 +21,7 @@ export default class AddTrip extends Component {
             selectedStartDate: "",
             selectedEndDate: "",
             selectedItems: [],
-            selectedGuides: [],
+            selectedFriends:[],
             selectedCurrencies: [],
             baseCurrency: "EUR",
             rates: Object,
@@ -34,7 +35,8 @@ export default class AddTrip extends Component {
             onlineFriends: {},
             isLoading: true,
             trips: [],
-            teller: 0
+            teller: 0,
+            errors: []
 
         };
 
@@ -56,82 +58,94 @@ export default class AddTrip extends Component {
         console.log("MMMMm" + this.state.teller);
 
     }
+    
 
 
     addTrip() {
 
-        /*this.validate({
-            tripName: {minlength:3, maxlength:7, required: true},
-            startDate: {date: 'YYYY-MM-DD', minDate:this.yearbefore, maxDate: this.yearafter},
-            endDate: {date: 'YYYY-MM-DD', minDate:this.state.startDate, maxDate: this.yearafter}
-          });*/
-
-        console.log(this.state.teller)
-        var month = this.state.selectedStartDate.getUTCMonth() + 1;
-        var yeara =this.state.selectedStartDate.getFullYear() ;
-        var day = this.state.selectedStartDate.getUTCDate() ;
-        var startdate = "" + yeara + "-" + month + "-" + day;
-        var endmonth = this.state.selectedStartDate.getUTCMonth() + 1;
-        var yearb =this.state.selectedStartDate.getFullYear() ;
-        var endday = this.state.selectedStartDate.getUTCDate() ;
-        var enddate = "" + yearb + "-" + endmonth + "-" + endday;
-        if (this.state.connectionMode == "pony") {
-            return fetch('http://193.191.177.73:8080/karafinREST/addTrip', {
-                method: 'POST',
-                header: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+        this.state.errors = [];
+        console.log("addTrip")
+        //if(this.isValid()){
+            console.log(this.state.teller)
+            /*var month = this.state.selectedStartDate.getUTCMonth() - 1;
+            var yeara =this.state.selectedStartDate.getFullYear() ;
+            var day = this.state.selectedStartDate.getUTCDate() ;
+    
+            var endmonth = this.state.selectedEndDate.getUTCMonth() - 1;
+            var yearb =this.state.selectedEndDate.getFullYear() ;
+            var endday = this.state.selectedEndDate.getUTCDate() ;*/
+    
+            if (this.state.connectionMode == "pony") {
+                return fetch('http://193.191.177.73:8080/karafinREST/addTrip', {
+                    method: 'POST',
+                    header: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: this.state.username,
+                        name: this.state.title,
+                        startDate: {
+                            dayOfMonth: day,
+                            month: month,
+                            year: yeara
+                        },
+                        endDate: {
+                            dayOfMonth: endday,
+                            month: endmonth,
+                            year: yearb
+                        },
+                        participants: this.state.selectedItems,
+                        currency: this.state.baseCurrency,
+                        rates: this.state.currencies
+                    })
+                })
+                    .then((res) => res.json())
+                    .then((response) => {
+                        console.log("added trip successfully: " + responseJson.addTrip_succes);
+                        if (responseJson.addTrip_succes === "true") {
+                            this.moveOn();
+                        }
+                    })
+            }
+            else {
+                console.log("NOOOOO" + this.state.teller)
+                let trp = {
+                    tripID: this.state.teller,
                     email: this.state.username,
                     name: this.state.title,
-                    startDate: this.state.startdate,
-                    endDate: this.state.enddate,
-                    participants: this.state.selectedItems,
-                    guides: this.state.selectedGuides,
-                    currency: this.state.baseCurrency,
-                    rates: this.state.currencies
-                })
-            })
-                .then((res) => res.json())
-                .then((response) => {
-                    console.log("added trip successfully: " + responseJson.addTrip_succes);
-                    if (responseJson.addTrip_succes === "true") {
-                        this.moveOn();
-                    }
-                })
-        }
-        else {
-            console.log("NOOOOO" + this.state.teller)
-            let trp = {
-                tripID: this.state.teller,
-                email: this.state.username,
-                name: this.state.title,
-                startDate: this.state.selectedStartDate,
-                endDate: this.state.selectedEndDate,
-                users: this.state.selectedItems,
-                expenseList: [],
-                baseCurrency: this.state.baseCurrency,
-                currencies: this.state.selectedCurrencies
+                    startDate: this.state.selectedStartDate,
+                    endDate: this.state.selectedEndDate,
+                    users: this.state.selectedItems,
+                    expenseList: [],
+                    baseCurrency: this.state.baseCurrency,
+                    currencies: this.state.selectedCurrencies
+                    
+                }
+                AsyncStorage.getItem('trips')
+                    .then(req => JSON.parse(req))
+                    .then((trips) => {
+                        trips.push(trp);
+                        AsyncStorage.setItem('trips', JSON.stringify(trips))
+                            .then(res => console.log(trips))
+                            .catch(error => console.log('Error storing trips'));
+                    })
+                    .catch(error => console.log('Error loading trips'));
+                var tel = parseInt(this.state.teller) + 1;
+                console.log("TEL:" + tel);
+    
+                AsyncStorage.setItem('id_teller', JSON.stringify(tel))
+                    .then(res => console.log(teller))
+                    .catch(error => console.log('Error storing teller BBBB'));
+    
+                this.moveOn();
             }
-            AsyncStorage.getItem('trips')
-                .then(req => JSON.parse(req))
-                .then((trips) => {
-                    trips.push(trp);
-                    AsyncStorage.setItem('trips', JSON.stringify(trips))
-                        .then(res => console.log(trips))
-                        .catch(error => console.log('Error storing trips'));
-                })
-                .catch(error => console.log('Error loading trips'));
-            var tel = parseInt(this.state.teller) + 1;
-            console.log("TEL:" + tel);
+        
 
-            AsyncStorage.setItem('id_teller', JSON.stringify(tel))
-                .then(res => console.log(teller))
-                .catch(error => console.log('Error storing teller BBBB'));
-
-            this.moveOn();
-        }
+        //}
+        //alert(this.state.errors)
+        
     }
+
     //////////////////////////////////////////////////////////
     ////////////////////CURRENCY//////////////////////////////
     moveOn() {
@@ -203,20 +217,45 @@ export default class AddTrip extends Component {
             )
         });
     }
-
+    isValid() {
+        var res = true;
+           
+                if(this.state.title.length === 0 || this.state.title.length > 15){
+                    this.state.errors.push("please add a valid tripName ")
+                    res = false;
+                }
+                
+                var dateType = /(\d{4})([\/-])(\d{1,2})\2(\d{1,2})/;
+                var startisMatch = dateType.test(this.state.selectedStartDate);
+                var endisMatch = dateType.test(this.state.selectedEndDate)
+                if(!startisMatch ||this.state.startDate == null ){
+                    this.state.errors.push("please add a valid startDate ")
+                    res = false;
+                }
+                if(!endisMatch || this.state.endDate == null){
+                    this.state.errors.push("please add a valid endDate ")
+                    res = false;
+                }
+                if(this.state.selectedItems.length == 0){
+                    this.state.errors.push("please add some company ")
+                    res = false;
+                }
+            return res;
+    }
+    
     //////////////////////////////////////////////////////////
     ////////////////////FRIENDS//////////////////////////////
 
     onSelectedItemsChange = selectedItems => {
         this.setState({ selectedItems });
-        console.log(selectedItems);
+
 
     };
     onSelectedGuidesChange = selectedGuides => {
         this.setState({ selectedGuides });
         console.log(selectedGuides);
     } 
-
+    
 
     mainFetch() {
         // Get ... uit memory
@@ -278,6 +317,7 @@ export default class AddTrip extends Component {
         const { selectedItems } = this.state;
         const { selectedGuides } = this.state;
         const { selectedCurrencies } = this.state;
+        const {errors} = this.state;
         const { rates } = this.state;
         const { baseCurrency } = this.state;
         const { loadRates } = this.state;
@@ -292,21 +332,23 @@ export default class AddTrip extends Component {
 
         return (
             <ScrollView style={styles.container}>
-
-                <View style={styles.separator}>
-                    <TextInput
-                        ref="tripName"
-                        placeholder={I18n.t('tripname')}
-                        style={styles.inputField}
-                        underlineColorAndroid="transparent"
-                        placeholderTextColor="#818181"
-                        onChangeText={(text) => console.log(text) & this.setState({ title: text })} />
-                </View>
-
+                        
+                
+                        <View style={styles.separator}>
+                            <TextInput
+                                ref="tripName"
+                                placeholder={I18n.t('tripname')}
+                                style={styles.inputField}
+                                underlineColorAndroid="transparent"
+                                placeholderTextColor="#818181"
+                                onChangeText={(text) => console.log(text) & this.setState({ title: text })} />
+                        </View>
+                    
                 <View style={{ flex: 1, flexDirection: 'row' }}>
                     <TextInput
                         ref="startDate"
                         placeholder={I18n.t('startdate')}
+                        
                         value={this.state.selectedStartDate}
                         style={styles.inputdate}
                         underlineColorAndroid="transparent"
@@ -332,7 +374,12 @@ export default class AddTrip extends Component {
                 </View >
 
                 <View style={[{ flex: 1, flexDirection: 'row' }, styles.separator]}>
-                    <TextInput
+                <TextInputMask
+                        ref="endDate"
+                        type={'datetime'}
+                        options={{
+                            format: 'YYYY-MM-DD'
+                        }}
                         placeholder={I18n.t('enddate')}
                         value={this.state.selectedEndDate}
                         style={styles.inputdate}
@@ -380,32 +427,11 @@ export default class AddTrip extends Component {
                         submitButtonText={I18n.t('submit')}
                         color="#303030" />
                 </View>
-                <View style={[styles.subItem, styles.separator]}>
-                    <Text style={styles.textfield}>{I18n.t('company')}</Text>
-                    <MultiSelect
-                        hideTags
-                        items={this.state.selectedItems}
-                        uniqueKey="email"
-                        ref={(component) => { this.multiSelect = component }}
-                        selectedItems={selectedGuides}
-                        onSelectedItemsChange={this.onSelectedGuidesChange}
-                        selectText={I18n.t('company')}
-                        searchInputPlaceholderText={I18n.t('company')}
-                        onChangeInput={(item) => console.log(item)}
-                        displayKey="email"
-                        style={backgroundColor = "#d4e8e5"}
-                        selectedItemTextColor="#edc14f"
-                        selectedItemIconColor="#edc14f"
-                        itemTextColor="#303030"
-                        searchInputStyle={{ color: '#303030' }}
-                        submitButtonColor="#edc14f"
-                        submitButtonText={I18n.t('submit')}
-                        color="#303030" />
-                </View>
+                
 
                 <View style={[styles.subItem, styles.separator]}>
                     <Text>{I18n.t('tripcurrency')}</Text>
-                    <Picker style={{ flex: .50 }}
+                    <Picker style={{ flex: .50 , backgroundColor:"#FFFFFF"}}
                         onValueChange={currency => this.setState({ baseCurrency: currency }) & this.setState({ loadRates: true }) & this.getExchangeRatesWithBase(currency)}
                         selectedValue={this.state.baseCurrency}>
                         <Picker.Item value="EUR" label="EUR" key="EUR" />
@@ -487,6 +513,13 @@ export default class AddTrip extends Component {
                     onPress={() => this.addTrip() & console.log("Waiting for backend...")}
 
                 />
+                <View>
+                    <FlatList
+                        data={this.state.errors}
+                        renderItem={({error}) => <Text>{error}</Text>}
+                    />
+                </View>
+
             </ScrollView>
 
         );
