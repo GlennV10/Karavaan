@@ -16,6 +16,8 @@ export default {
     password: 'Password',
     login: 'Log in',
     register: 'Register',
+    error: "Oops, that didn't work out!",
+    errormessage: "Email and/or password is incorrect.",
 
     //Register
     firstname: 'First Name',
@@ -33,6 +35,12 @@ export default {
 
     //TripExpenses
     noexpensesfound: 'NO EXPENSES FOUND',
+
+    //TripTotal
+    balancefor: 'Balance of',
+    amountpaid: 'Paid: ',
+    amountconsumed: 'Consumed: ',
+    balans: 'Balance: ',
 
     //DashboardTrips
     notripsfound: 'NO TRIPS FOUND',
@@ -71,13 +79,13 @@ export default {
     name: 'Expense name',
     nameplaceholder: 'Choose a name for your expense',
     amount: 'Amount of expense',
-    amountplaceholder: 'Choose the amount of the expense',
+    amountplaceholder: 'Amount of the expense',
     categoryexpense: 'Expense category: ',
     savebutton: 'Add expense',
     categoryplaceholder: 'Choose category',
     currencyplaceholder: 'Choose currency',
     addcategory: 'Add category',
-    choosecurrency: '--- Choose Currency ---',
+    choosecurrency: 'Choose',
     choosecategory: '--- Choose Category ---',
     split: 'Splitting:',
     choosesplit: '--- Choose option ---',
@@ -108,10 +116,10 @@ export default {
     tripname: 'Destination',
     startdate: 'Start date',
     enddate: 'End date',
-    company: 'Select your travel company',
+    company: '  Select your travel company',
     tripcurrency: 'Select your base currency',
     othercurrency: 'Select other usefull currencies',
-    pickcurrency: 'Pick your currencies',
+    pickcurrency: '  Pick your currencies',
     savetrip: 'Add trip',
     selectdate: 'Select date',
     submit: 'Submit',

@@ -1,25 +1,26 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Dimensions, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage } from 'react-native';
 import I18n from 'react-native-i18n';
 // ############ Colors ############
 const red = '#C42525';
 const yellow = '#D6A024';
 const green = '#4F9628';
+const width = Dimensions.get('window').width;
 
 export default class TripExpenses extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            username: "",
             expenses: []
         }
     }
 
     componentWillMount() {
-        this.setState({ expenses: this.props.expenses });
-
         AsyncStorage.getItem('userName').then((username)=>{
             this.setState({username});
         })
+        this.setState({ expenses: this.props.expenses });
     }
 
     renderExpenses() {
@@ -33,16 +34,26 @@ export default class TripExpenses extends Component {
             return this.state.expenses.map((expense) => {
 
                 let userExpense = 0;
+                let trip = this.props.navigation.state.params.trip;
+                let isAdmin = false;
 
-                Object.keys(expense.consumers).map((user) => {
-                    console.log("expenseUser: " + user);
-                    if(user == this.state.username) {
-                        userExpense = expense.consumers[user];
+                for (participant of trip.participants) {
+                    if(participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
+                        isAdmin = true;
                     }
-                });
+                }
+
+                if(!isAdmin) {
+                    Object.keys(expense.consumers).map((user) => {
+                        console.log("expenseUser: " + user);
+                        if (user == this.state.username) {
+                            userExpense = expense.consumers[user];
+                        }
+                    });
+                } else userExpense = expense.total;
 
                 return (
-                    <TouchableOpacity style={styles.expense} onPress={() => this.props.navigator.navigate('DetailExpense', { expense })} key={expense.id}>
+                    <TouchableOpacity style={styles.expense} onPress={() => this.props.navigation.navigate('DetailExpense', { expense })} key={expense.id}>
                         <View style={[styles.expenseContainer, styles.half]}>
                             <View style={styles.splitRow}>
                                 <Text style={[styles.expenseName]}>{expense.expenseName}</Text>
@@ -53,10 +64,10 @@ export default class TripExpenses extends Component {
                         </View>
                         <View style={[styles.expenseAmountContainer, styles.half]}>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseAmount}>{ userExpense.toFixed(2) }</Text>
+                                <Text style={styles.expenseAmount}>{userExpense.toFixed(2)}</Text>
                             </View>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseCurrency}>{ expense.currency }</Text>
+                                <Text style={styles.expenseCurrency}>{expense.currency}</Text>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -69,9 +80,11 @@ export default class TripExpenses extends Component {
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.expenseList}>
-                    {this.renderExpenses()}
+                    <View style={styles.spaceView}>
+                        {this.renderExpenses()}
+                    </View>
                 </ScrollView>
-                <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', { trip: this.props.navigator.state.params.trip })}>
+                <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigation.navigate('AddExpense', { trip: this.props.navigation.state.params.trip })}>
                     <Text style={styles.addTripButtonText} >+</Text>
                 </TouchableOpacity>
             </View>
@@ -109,7 +122,10 @@ const styles = StyleSheet.create({
     },
     expenseList: {
         // marginLeft: 10,
-        // marginRight: 10
+        // marginRight: 10,
+    },
+    spaceView: {
+        marginBottom: 75
     },
     expense: {
         flex: 1,

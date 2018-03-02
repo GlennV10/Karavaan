@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Alert} from 'react-native';
+import {AsyncStorage, StyleSheet, Vibration, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import I18n from 'react-native-i18n';
 
@@ -111,7 +111,24 @@ export default class Login extends Component{
             if(response._bodyText === "true"){
                 this.setState({autheticated: true});
                 this.moveOn();
-            } else this.setState({autheticated: false});
+            } else {
+                 this.setState({autheticated: false});
+                 Vibration.vibrate(1000)
+                 Alert.alert(
+                    I18n.t('error'),
+                    I18n.t('errormessage'), [{
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed on Login error message'),
+                        style: 'cancel'
+                    }, {
+                        text: 'OK',
+                        onPress: () => console.log('Ok Pressed on Login error message'),
+                    },], {
+                        cancelable: false
+                    }
+                )
+                //return true;
+            }
         }).catch((error)=> console.log("ERROR: " + error));
     }
 

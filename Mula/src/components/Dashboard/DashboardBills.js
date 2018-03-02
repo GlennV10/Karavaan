@@ -87,7 +87,7 @@ export default class DashboardBills extends Component {
             }
 
             return(
-                <TouchableOpacity style={styles.eventItem} onPress={() => this.props.navigator.navigate('DetailEvent', { event: event })} key={ event.id }>
+                <TouchableOpacity style={styles.eventItem} onPress={() => this.props.navigation.navigate('DetailEvent', { event: event })} key={ event.id }>
                     <View style={styles.splitRow}>
                         <View style={[styles.half, styles.wayContainer]}>
                             { image }
@@ -139,7 +139,7 @@ export default class DashboardBills extends Component {
               <Picker.Item value="2" label="Paid"/>
               <Picker.Item value="3" label="Category"/>
           </Picker>
-          <TouchableOpacity style={styles.addButton} onPress={() => this.props.navigator.navigate('AddEvent') /*& this.setModalVisible(true) & this.getCurrentLocation()*/ }>
+          <TouchableOpacity style={styles.addButton} onPress={() => this.props.navigation.navigate('AddEvent') /*& this.setModalVisible(true) & this.getCurrentLocation()*/ }>
               <Text style={styles.addButtonText} >+</Text>
           </TouchableOpacity>
       </View>

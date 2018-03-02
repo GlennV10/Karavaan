@@ -17,6 +17,8 @@ export default {
     password: 'Wachtwoord',
     login: 'Aanmelden',
     register: 'Registreer',
+    error: 'Oops, dat ging fout!',
+    errormessage: "Email en/of wachtwoord is niet correct.",
 
     //Register
     firstname: 'Voornaam',
@@ -35,6 +37,12 @@ export default {
 
     //TripExpenses
     noexpensesfound: 'GEEN UITGAVEN GEVONDEN',
+
+    //TripTotal
+    balancefor: 'Balans van',
+    amountpaid: 'Betaalt: ',
+    amountconsumed: 'Verbruikt: ',
+    balans: 'Balans: ',
 
     //DashboardTrips
     notripsfound: 'GEEN REIZEN GEVONDEN',
@@ -73,13 +81,13 @@ export default {
     name: 'Naam van uitgave',
     nameplaceholder: 'Kies een naam voor de uitgave',
     amount: 'Bedrag van uitgave',
-    amountplaceholder: 'Kies een bedrag voor de uitgave',
+    amountplaceholder: 'Bedrag van de uitgave',
     categoryexpense: 'Categorie van uitgave: ',
     savebutton: 'Voeg uitgave toe',
     categoryplaceholder: 'Kies categorie',
     currencyplaceholder: 'Kies munteenheid',
     addcategory: 'Voeg categorie toe',
-    choosecurrency: '--- Kies Munteenheid ---',
+    choosecurrency: 'Kies',
     choosecategory: '--- Kies Categorie ---',
     split: 'Verdeling:',
     choosesplit: '--- Kies een optie ---',
@@ -110,10 +118,10 @@ export default {
     tripname: 'Bestemming',
     startdate: 'Start datum',
     enddate: 'Eind datum',
-    company: 'Kies je reisgenoten',
+    company: '  Kies je reisgenoten',
     tripcurrency: 'Kies de basis munteenheid',
     othercurrency: 'Kies andere nuttige munteenheden',
-    pickcurrency: 'Kies munteenheden',
+    pickcurrency: '  Kies munteenheden',
     savetrip: 'Voeg reis toe',
     selectdate: 'Kies datum',
     submit: 'Kies',

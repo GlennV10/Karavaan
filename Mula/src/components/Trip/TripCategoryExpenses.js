@@ -33,7 +33,7 @@ export default class DetailExpense extends Component{
 
             Object.keys(expense.consumers).map((user) => {
                 console.log("categoryExpenseUser: " + user);
-                if(user == this.state.username) {
+                if(user == this.props.navigation.state.params.activeUser) {
                     userExpense = expense.consumers[user];
                 }
             });
@@ -67,7 +67,7 @@ export default class DetailExpense extends Component{
             return(
                 <View style={styles.containerIndicator}>
                     <ActivityIndicator />
-                    <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+                    <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigation.navigate('AddExpense', {trip: this.props.navigation.state.params.trip})}>
                         <Text style={styles.addTripButtonText} >+</Text>
                     </TouchableOpacity>
                 </View>
@@ -79,7 +79,7 @@ export default class DetailExpense extends Component{
               <ScrollView style={styles.expenseList}>
                   { this.renderExpenses() }
               </ScrollView>
-              <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigator.navigate('AddExpense', {trip: this.props.navigator.state.params.trip})}>
+              <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigation.navigate('AddExpense', {trip: this.props.navigation.state.params.trip})}>
                   <Text style={styles.addTripButtonText} >+</Text>
               </TouchableOpacity>
           </View>

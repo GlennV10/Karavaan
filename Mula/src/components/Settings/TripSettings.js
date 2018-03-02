@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert } from 'react-native';
+import { AsyncStorage, ScrollView, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import I18n from 'react-native-i18n';
 import MultiSelect from 'react-native-multiple-select';
@@ -92,10 +92,10 @@ export default class TripSettings extends Component {
         let tripCurrencyRates = this.state.tripRates.slice();
         for (r of tripCurrencyRates) {
             if (r.name == rate.name) {
-                rate.value = this.checkAmount(text);             
+                rate.value = this.checkAmount(text);
             }
         }
-        this.setState({tripCurrencyRates})
+        this.setState({ tripCurrencyRates })
         console.log(tripCurrencyRates);
         this.renderChangeRates();
     }
@@ -157,12 +157,12 @@ export default class TripSettings extends Component {
     render() {
         const { selectedItems } = this.state;
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <View style={styles.separator}>
                     <Text>{I18n.t('currency')}</Text>
                     <Picker selectedValue={this.state.currency} onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
                         <Picker.Item label="Euro" value="Euro" />
-                        <Picker.Item label="American Dollar" value="USD" />
+                        <Picker.Item label="USD" value="USD" />
                     </Picker>
                 </View>
 
@@ -201,10 +201,7 @@ export default class TripSettings extends Component {
                         <Text style={styles.buttonText}>{I18n.t('delete')}</Text>
                     </TouchableOpacity>
                 </View>
-
-
-            </View>
-
+            </ScrollView>
         )
     }
 
