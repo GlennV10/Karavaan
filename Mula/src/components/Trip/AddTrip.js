@@ -374,7 +374,7 @@ export default class AddTrip extends Component{
                 </View >
 
                 <View style={[{ flex: 1, flexDirection: 'row' }, styles.separator]}>
-                <TextInput
+                  <TextInput
                     ref="endDate"
                     placeholder={I18n.t('enddate')}
                     
