@@ -115,7 +115,10 @@ export default {
     sharedcost: 'Shared cost',
 
     //AddExpenseShared
+    shared: 'Shared costs',
     addexpense: 'Add expense',
+    sharedbysome: 'Shared by some',
+    sharedbyall: 'Shared by all',
 
     //AddTrip
     tripname: 'Destination',
