@@ -4,12 +4,13 @@ import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
 
-export default class AddExpenseConsumed extends Component {
+export default class AddExpenseShared extends Component {
     constructor(props) {
         super(props);
         this.state = {
             consumers: [],
-            remaining: this.props.navigation.state.params.expense.total
+            remaining: this.props.navigation.state.params.expense.total,
+            shared: 0
         }
     }
 
@@ -67,17 +68,7 @@ export default class AddExpenseConsumed extends Component {
         this.setState({ remaining: (this.props.navigation.state.params.expense.total - total) });
         this.setState({ consumers });
     }
-
-    updateConsumerChecked(checked, participant) {
-        let consumers = this.state.consumers.slice();
-        for(consumer of consumers) {
-            if (consumer.participant === participant) {
-                consumer.checked = checked;
-            }
-        }
-        this.setState({ consumers });
-    }
-
+    
     renderConsumers() {
         return this.state.consumers.map((consumer, index) => {
             return (
@@ -102,7 +93,25 @@ export default class AddExpenseConsumed extends Component {
         });
     }
 
-    getExpense() {
+    formatPayersAPI(expense) {
+        let formatPayers = {};
+        for(payer of expense.payers) {
+            let key = payer.participant.email;
+            formatPayers[key] = payer.amount;
+        }
+        expense.payers = formatPayers;
+    }
+
+    formatConsumersAPI(expense) {
+        let formatConsumers = {};
+        for(consumer of expense.consumers) {
+            let key = consumer.participant.email;
+            formatConsumers[key] = consumer.amount;
+        }
+        expense.consumers = formatConsumers;
+    }
+
+    addExpense() {
         let expense = this.props.navigation.state.params.expense;
 
         let consumerTotal = 0;
@@ -110,11 +119,42 @@ export default class AddExpenseConsumed extends Component {
             consumerTotal += parseFloat(consumer.amount);
         }
 
-        if (!(consumerTotal > expense.total)) {
+        if ((consumerTotal + this.state.shared) == expense.total) {
+            for(let i = this.state.consumers.length - 1; i >= 0; i--) {
+                if (this.state.consumers[i].amount == 0) {
+                    this.state.consumers.splice(i, 1);
+                } else {
+                    this.state.consumers[i].amount += (this.state.shared / this.state.consumers.length);
+                }
+            }
+            for(let i = expense.payers.length - 1; i >= 0; i--) {
+                if (expense.payers[i].amount == 0) {
+                    expense.payers.splice(i, 1);
+                }
+            }
             expense.consumers = this.state.consumers;
-            this.props.navigation.navigate('AddExpenseShared', { expense, trip: this.props.navigation.state.params.trip });
-        } else {
+
+            this.formatPayersAPI(expense);
+            this.formatConsumersAPI(expense);
+            console.log(expense);
+            //==========================================================================================
+            //=========================AANVULLEN MET POST REQUEST NAAR API==============================
+            //==========================================================================================
+            return fetch('http://193.191.177.73:8080/karafinREST/addExpense/' + this.props.navigation.state.params.trip.id, {
+                method: 'POST',
+                header: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(expense)
+            })
+            .then((res) => {
+                console.log(res._bodyText);
+                this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip });
+            }).catch(error => console.log("network/rest error"));
+        } else if ((consumerTotal + this.state.shared) > expense.total) {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
+        } else {
+            alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
         }
     }
 
@@ -129,8 +169,21 @@ export default class AddExpenseConsumed extends Component {
                         <Text style={styles.remaining}>Remaining: { this.state.remaining }</Text>
                         {this.renderConsumers()}
 
-                        <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
-                            <Text style={styles.saveText}>{I18n.t('shared')}</Text>
+                        <View style={styles.separator}></View>
+
+                        <View style={styles.shared}>
+                            <Text style={styles.label}>{I18n.t('sharedcost')}</Text>
+                            <TextInput
+                                placeholder="Amount shared..."
+                                style={styles.inputField}
+                                keyboardType='numeric'
+                                placeholderTextColor="#bfbfbf"
+                                underlineColorAndroid="transparent"
+                                onChangeText={(shared) => this.setState({ shared: parseFloat(shared) })} />
+                        </View>
+
+                        <TouchableOpacity style={styles.saveButton} onPress={() => this.addExpense()}>
+                            <Text style={styles.saveText}>{I18n.t('addexpense')}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

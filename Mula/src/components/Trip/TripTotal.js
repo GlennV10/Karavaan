@@ -162,6 +162,9 @@ export default class TripTotal extends Component {
         {/* <Table>
           <Rows data={tableData} style={styles.row} textStyle={styles.text} />
         </Table> */}
+        <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigation.navigate('AddExpense', { trip: this.props.navigation.state.params.trip })}>
+            <Text style={styles.addTripButtonText} >+</Text>
+        </TouchableOpacity>
       </View>
 
     )
@@ -172,6 +175,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#d4e8e5',
+  },
+  addTripButton: {
+      backgroundColor: '#3B4859',
+      width: 50,
+      height: 50,
+      borderRadius: 50,
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      bottom: 10,
+      right: 10,
+  },
+  addTripButtonText: {
+      color: '#fff'
   },
   shownView: {
     padding: 20

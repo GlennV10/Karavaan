@@ -9,6 +9,7 @@ export default class AddExpensePayers extends Component {
         super(props);
         this.state = {
             payers: [],
+            remaining: this.props.navigation.state.params.expense.total
         }
     }
 
@@ -51,6 +52,7 @@ export default class AddExpensePayers extends Component {
     }
 
     updatePayerAmount(amount, participant) {
+        let total = 0;
         let payers = this.state.payers.slice();
         for (payer of payers) {
             if (payer.participant === participant) {
@@ -60,16 +62,17 @@ export default class AddExpensePayers extends Component {
                     payer.amount = 0;
                 }
             }
+            total += payer.amount;
             console.log(payers);
         }
-
+        this.setState({ remaining: (this.props.navigation.state.params.expense.total - total) });
         this.setState({ payers });
     }
 
     renderPayers() {
         return this.state.payers.map((payer, index) => {
             return (
-                <View key={index}>
+                <View style={styles.payer} key={index}>
                     <Text style={styles.label}>{payer.participant.firstName} {payer.participant.lastName}</Text>
                     <TextInput
                         placeholder="Amount paid..."
@@ -109,7 +112,10 @@ export default class AddExpensePayers extends Component {
             <ScrollView style={styles.container}>
                 <View>
                     <View style={styles.contentView}>
-                        <Text style={styles.title}>{I18n.t('payers')}</Text>
+                        <View style={styles.separator}>
+                            <Text style={styles.title}>{I18n.t('payers')}</Text>
+                        </View>
+                        <Text style={styles.remaining}>Remaining: { this.state.remaining }</Text>
                         { this.renderPayers() }
 
                         <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
@@ -128,8 +134,24 @@ const styles = StyleSheet.create({
         backgroundColor: '#d4e8e5',
         padding: 20
     },
+    separator: {
+        borderBottomColor: '#bbb',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        marginBottom: 5,
+        marginTop: 5
+    },
     contentView: {
         marginTop: 10
+    },
+    payer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row'
+    },
+    remaining: {
+        fontSize: 12,
+        textAlign: 'right',
+        opacity: .5
     },
     title: {
         marginLeft: 10,
@@ -137,13 +159,15 @@ const styles = StyleSheet.create({
         fontSize: 17
     },
     label: {
+        flex: .6,
         marginLeft: 10,
-        fontSize: 17
+        fontSize: 14
     },
     inputField: {
-        marginLeft: 13,
-        fontSize: 15,
-        padding: 10,
+        flex: .4,
+        marginLeft: 5,
+        fontSize: 13,
+        padding: 5,
         marginBottom: 2,
         color: 'black',
         borderBottomWidth: 0,
@@ -153,6 +177,7 @@ const styles = StyleSheet.create({
         marginLeft: 13
     },
     saveButton: {
+        marginTop: 10,
         height: 40,
         alignItems: 'center',
         backgroundColor: '#ffd185',
