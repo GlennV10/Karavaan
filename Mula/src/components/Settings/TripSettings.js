@@ -27,7 +27,7 @@ export default class TripSettings extends Component {
 
         await this.getTrip();
         let selectedCurrencies = [];
-        for(currency of this.state.tripRates) {
+        for (currency of this.state.tripRates) {
             selectedCurrencies.push(currency);
         }
         this.setState({ selectedCurrencies });
@@ -91,8 +91,7 @@ export default class TripSettings extends Component {
                         underlineColorAndroid="transparent"
                         placeholderTextColor="#818181"
                         keyboardType='numeric'
-                        onChangeText={(text) => console.log(text) & this.updateRate(rate, text)}
-                    />
+                        onChangeText={(text) => console.log(text) & this.updateRate(rate, text)} />
                 </View>
             )
         });
@@ -150,7 +149,7 @@ export default class TripSettings extends Component {
             .then((res) => res.json())
             .then((trip) => {
                 trip.
-                this.renderValutaToArray(trip.rates)
+                    this.renderValutaToArray(trip.rates)
             }).catch(error => console.log("network/rest error"));
     }
 
@@ -169,7 +168,7 @@ export default class TripSettings extends Component {
         const { selectedItems } = this.state;
         return (
             <ScrollView style={styles.container}>
-                <View style={styles.separator}>
+                <View>
                     <Text>{I18n.t('addcurrency')}</Text>
                     <MultiSelect
                         hideTags
@@ -191,7 +190,7 @@ export default class TripSettings extends Component {
                         displayKey="name"
                         searchInputStyle={{ color: '#303030' }}
                         submitButtonColor="#edc14f"
-                        submitButtonText={I18n.t('submit')}/>
+                        submitButtonText={I18n.t('submit')} />
                 </View>
 
                 <View style={styles.separator}>
