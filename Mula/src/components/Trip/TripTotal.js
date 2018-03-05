@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, Picker, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, ActivityIndicator, ScrollView, Picker, AsyncStorage } from 'react-native';
 import I18n from 'react-native-i18n';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 
@@ -11,6 +11,7 @@ export default class TripTotal extends Component {
       username: "",
       activeUser: "",
       users: [],
+      isLoading: true
     }
   }
 
@@ -87,24 +88,24 @@ export default class TripTotal extends Component {
     // }
     // return table;
 
-    let table = [];
+    let data = [];
     for (payerKey of Object.keys(this.state.overview)) {
       let payerData = [];
       payerData.push(payerKey);
       for (amount of this.state.overview[payerKey]) {
         payerData.push(amount.toString());
       }
-      table.push(payerData);
+      data.push(payerData);
     }
     return (
 
       <View>
         {this.state.users.map((item, index) => {
           if (item.email === this.state.activeUser) {
-            for (let i = 0; i < table.length; i++) {
+            for (let i = 0; i < data.length; i++) {
               console.log("test")
-              console.log(table[i][0])
-              if (table[i][0] === item.email) {
+              console.log(data[i][0])
+              if (data[i][0] === item.email) {
                 return (
                   <View style={styles.shownView} key={i + "view1"}>
                     <View style={styles.separator} key={i + "view2"}>
@@ -116,7 +117,7 @@ export default class TripTotal extends Component {
                           <Text key={i + "paidText"} style={styles.label}>{I18n.t('amountpaid')} </Text>
                         </View>
                         <View key={i + "paidrRghtFlexView"} style={styles.rightFlexView}>
-                          <Text key={i + "paidAmount"}>{parseFloat(table[i][1]).toFixed(2)}</Text>
+                          <Text key={i + "paidAmount"}>{parseFloat(data[i][1]).toFixed(2)}</Text>
                         </View>
                       </View>
 
@@ -125,7 +126,7 @@ export default class TripTotal extends Component {
                           <Text key={i + "consumedText"} style={styles.label}>{I18n.t('amountconsumed')} </Text>
                         </View>
                         <View key={i + "consumedRightFlexView"} style={styles.rightFlexView}>
-                          <Text key={i + "consumedAmount"}>{parseFloat(table[i][2]).toFixed(2)}</Text>
+                          <Text key={i + "consumedAmount"}>{parseFloat(data[i][2]).toFixed(2)}</Text>
                         </View>
                       </View>
 
@@ -134,7 +135,7 @@ export default class TripTotal extends Component {
                           <Text key={i + "balanceText"} style={styles.label}>{I18n.t('balans')} </Text>
                         </View>
                         <View key={i + "balanceRightFlexView"} style={styles.rightFlexView}>
-                          <Text key={i + "balanceAmount"}>{parseFloat(table[i][3]).toFixed(2)}</Text>
+                          <Text key={i + "balanceAmount"}>{parseFloat(data[i][3]).toFixed(2)}</Text>
                         </View>
                       </View>
                     </View>
@@ -150,21 +151,30 @@ export default class TripTotal extends Component {
 
       </View>
     )
+    this.setState({ isLoading: false })
   }
 
   render() {
     const tableData = this.renderTable();
 
-    return (
-      <View style={styles.container}>
-        {this.renderUserPicker()}
-        {tableData}
-        {/* <Table>
+
+     if (this.isLoading) {
+       return (
+         <View style={styles.containerIndicator}>
+           <ActivityIndicator />
+         </View>
+       )
+     } else {
+      return (
+        <View style={styles.container}>
+          {this.renderUserPicker()}
+          {tableData}
+          {/* <Table>
           <Rows data={tableData} style={styles.row} textStyle={styles.text} />
         </Table> */}
-      </View>
-
-    )
+        </View>
+      )
+    }
   }
 }
 
