@@ -67,36 +67,36 @@ export default class AddTrip extends Component{
         console.log("addTrip")
         //if(this.isValid()){
             console.log(this.state.teller)
-            /*var month = this.state.selectedStartDate.getUTCMonth() - 1;
-            var yeara =this.state.selectedStartDate.getFullYear() ;
-            var day = this.state.selectedStartDate.getUTCDate() ;
+            
     
-            var endmonth = this.state.selectedEndDate.getUTCMonth() - 1;
-            var yearb =this.state.selectedEndDate.getFullYear() ;
-            var endday = this.state.selectedEndDate.getUTCDate() ;*/
-    
-            if (this.state.connectionMode == "pony") {
-                return fetch('http://193.191.177.73:8080/karafinREST/addTrip', {
+            if (this.state.connectionMode == "online") {
+                return fetch('https://193.191.177.73:8181/karafinREST/addTrip', {
                     method: 'POST',
                     header: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        email: this.state.username,
-                        name: this.state.title,
-                        startDate: {
-                            dayOfMonth: day,
-                            month: month,
-                            year: yeara
+                        "email": this.state.username,
+                        "tripName": this.state.title,
+                        "startDate": {
+                            "dayOfMonth": parseInt(this.state.selectedStartDate.substring(0, 2)),
+                            "month": parseInt(this.state.selectedStartDate.substring(3, 5)),
+                            "year": parseInt(this.state.selectedStartDate.substring(6)),
+                            "hourOfDay": 0,
+                            "minute": 0
+
                         },
-                        endDate: {
-                            dayOfMonth: endday,
-                            month: endmonth,
-                            year: yearb
+                        "endDate": {
+                            "dayOfMonth": parseInt(this.state.selectedEndDate.substring(0, 2)),
+                            "month": parseInt(this.state.selectedEndDate.substring(3, 5)),
+                            "year": parseInt(this.state.selectedEndDate.substring(6)),
+                            "hourOfDay": 0,
+                            "minute": 0
                         },
-                        participants: this.state.selectedItems,
-                        currency: this.state.baseCurrency,
-                        rates: this.state.currencies
+                        "currency": this.state.baseCurrency,
+                        "rates": this.state.currencies
+
+   
                     })
                 })
                     .then((res) => res.json())
@@ -191,7 +191,7 @@ export default class AddTrip extends Component{
         return Object.keys(rate).map((val) => {
             var label = val + "(" + rate[val] + ")";
             return (
-                <Picker.Item value={val} label={label} key={val} />
+                <Picker.Item value={val} label={label} key={label} />
             )
         });
 
@@ -225,21 +225,15 @@ export default class AddTrip extends Component{
                     res = false;
                 }
                 
-                var dateType = /(\d{4})([\/-])(\d{1,2})\2(\d{1,2})/;
-                var startisMatch = dateType.test(this.state.selectedStartDate);
-                var endisMatch = dateType.test(this.state.selectedEndDate)
-                if(!startisMatch ||this.state.startDate == null ){
+                if(this.state.startDate == null ){
                     this.state.errors.push("please add a valid startDate ")
                     res = false;
                 }
-                if(!endisMatch || this.state.endDate == null){
+                if(this.state.endDate == null){
                     this.state.errors.push("please add a valid endDate ")
                     res = false;
                 }
-                if(this.state.selectedItems.length == 0){
-                    this.state.errors.push("please add some company ")
-                    res = false;
-                }
+                
             return res;
     }
     
@@ -350,7 +344,7 @@ export default class AddTrip extends Component{
 
                     <DatePicker
                         mode='date'
-                        format='YYYY-MM-DD'
+                        format='DD/MM/YYYY'
                         minDate={yearbefore}
                         maxDate={yearafter}
                         date={this.state.selectedStartDate}
@@ -368,7 +362,7 @@ export default class AddTrip extends Component{
                 
                     <DatePicker
                         mode='date'
-                        format='YYYY-MM-DD'
+                        format='DD/MM/YYYY'
                         minDate={yearbefore}
                         maxDate={yearafter}
                         date={this.state.selectedEndDate}
@@ -382,29 +376,6 @@ export default class AddTrip extends Component{
 
                 </View>
 
-                <View style={[styles.subItem, styles.separator]}>
-                    <Text style={styles.textfield}>{I18n.t('company')}</Text>
-                    <MultiSelect
-                        hideTags
-                        items={this.state.offlineFriends}
-                        uniqueKey="email"
-                        ref={(component) => { this.multiSelect = component }}
-                        selectedItems={selectedItems}
-                        onSelectedItemsChange={this.onSelectedItemsChange}
-                        selectText={I18n.t('company')}
-                        searchInputPlaceholderText={I18n.t('company')}
-                        onChangeInput={(item) => console.log(item)}
-                        displayKey="email"
-                        style={backgroundColor = "#d4e8e5"}
-                        selectedItemTextColor="#edc14f"
-                        selectedItemIconColor="#edc14f"
-                        itemTextColor="#303030"
-                        searchInputStyle={{ color: '#303030' }}
-                        submitButtonColor="#edc14f"
-                        submitButtonText={I18n.t('submit')}
-                        color="#303030" />
-                </View>
-                
 
                 <View style={[styles.subItem, styles.separator]}>
                     <Text>{I18n.t('tripcurrency')}</Text>
