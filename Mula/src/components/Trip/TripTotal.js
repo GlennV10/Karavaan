@@ -75,19 +75,6 @@ export default class TripTotal extends Component {
   }
 
   renderTable() {
-    // let table = [
-    //   ['Payer', 'Paid', 'Consumed', 'Pay/receive']
-    // ];
-    // for (payerKey of Object.keys(this.state.overview)) {
-    //   let payerData = [];
-    //   payerData.push(payerKey);
-    //   for (amount of this.state.overview[payerKey]) {
-    //     payerData.push(amount.toString());
-    //   }
-    //   table.push(payerData);
-    // }
-    // return table;
-
     let data = [];
     for (payerKey of Object.keys(this.state.overview)) {
       let payerData = [];
@@ -97,6 +84,7 @@ export default class TripTotal extends Component {
       }
       data.push(payerData);
     }
+
     return (
 
       <View>
@@ -139,9 +127,6 @@ export default class TripTotal extends Component {
                         </View>
                       </View>
                     </View>
-
-                    {/* <Text key={i + "consumed"}>Amount consumed: {parseFloat(table[i][2]).toFixed(2)}</Text>
-                    <Text key={i + "balance"}>Balance: {parseFloat(table[i][3]).toFixed(2)}</Text> */}
                   </View>
                 )
               }
@@ -158,13 +143,13 @@ export default class TripTotal extends Component {
     const tableData = this.renderTable();
 
 
-     if (this.isLoading) {
-       return (
-         <View style={styles.containerIndicator}>
-           <ActivityIndicator />
-         </View>
-       )
-     } else {
+    if (this.isLoading) {
+      return (
+        <View style={styles.containerIndicator}>
+          <ActivityIndicator />
+        </View>
+      )
+    } else {
       return (
         <View style={styles.container}>
           {this.renderUserPicker()}
