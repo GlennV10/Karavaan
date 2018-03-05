@@ -52,6 +52,7 @@ export default {
     savepic: 'Use as profile picture',
     lang: 'Language: ',
     currency: 'Currency: ',
+    addcurrency: 'Add currency: ',
     chooselanguage: '--- Choose Language ---',
     languageplaceholder: 'Choose language',
     choosecurr: '--- Choose currency ---',
