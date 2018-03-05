@@ -79,7 +79,7 @@ export default App = StackNavigator({
         gesturesEnabled: false,
         headerLeft: null,
         headerRight:
-          <TouchableOpacity onPress={()=>{ navigation.navigate('Settings', {imgUri : navigation.state.params.imgUri})}}>
+          <TouchableOpacity onPress={()=>{ navigation.navigate('Settings')}}>
               <Image source={require('./src/images/settings.png')} style={{width: 35, height: 35, marginRight: 5}}/>
           </TouchableOpacity>,
         drawer:() => ({
