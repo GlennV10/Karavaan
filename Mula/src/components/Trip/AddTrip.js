@@ -105,7 +105,7 @@ export default class AddTrip extends Component{
                         if (responseJson.addTrip_succes === "true") {
                             this.moveOn();
                         }
-                    })
+                    }).catch(error => console.log("network/rest error"));
             }
             else {
                 console.log("NOOOOO" + this.state.teller)
@@ -166,7 +166,8 @@ export default class AddTrip extends Component{
         if (this.state.loadRates) {
             return fetch('https://api.fixer.io/latest')
                 .then((resp) => resp.json())
-                .then((data) => this.parseRates(data));
+                .then((data) => this.parseRates(data))
+                .catch(error => console.log("network/fixer error"));
         }
     }
     getExchangeRatesWithBase(baseCurrency) {
@@ -175,7 +176,8 @@ export default class AddTrip extends Component{
         //if (this.state.loadRates) {
         return fetch(url)
             .then((resp) => resp.json())
-            .then((data) => this.parseRates(data));
+            .then((data) => this.parseRates(data))
+            .catch(error => console.log("network/fixer error"));
         //}
         console.log(url);
     }
@@ -289,7 +291,7 @@ export default class AddTrip extends Component{
                             // =======================================================
                             AsyncStorage.setItem('friends', JSON.stringify(this.state.offlineFriends));
 
-                        });
+                        }).catch(error => console.log("network/rest error"));
                 } else {
                     // Get offline data en render
                     console.log("Connection is offline");

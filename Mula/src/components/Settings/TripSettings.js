@@ -140,7 +140,7 @@ export default class TripSettings extends Component {
             .then((res) => res.json())
             .then((trip) => {
                 this.renderValutaToArray(trip.rates)
-            });
+            }).catch(error => console.log("network/rest error"));
     }
 
     renderValutaToArray(rate) {

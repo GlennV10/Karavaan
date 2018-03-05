@@ -54,7 +54,7 @@ export default class Splashscreen extends React.Component {
             AsyncStorage.getItem('userName').then((username) => {
                 console.log(username);
                 if(username != null){
-                    setTimeout(() => this.props.navigation.navigate('DashboardTrips'), 1500);
+                    this.goToDashBoard();
                 } else {
                     setTimeout(() => this.props.navigation.navigate('Login'), 1500);
                 }
@@ -62,6 +62,16 @@ export default class Splashscreen extends React.Component {
         } catch(error) {
             console.log(error);
         }
+    }
+
+    goToDashBoard() {
+        AsyncStorage.getItem('profilePic').then((profile) => {
+            let imgUri = "";
+            if(profile == null) {
+                imgUri = require('../../images/placeholder_user.png');
+            } else imgUri: profile;
+            setTimeout(() => this.props.navigation.navigate('DashboardTrips', {imgUri}), 1500);
+          }).catch(error => console.log(error));
     }
 
     render() {

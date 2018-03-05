@@ -44,7 +44,7 @@ export default class DetailEvent extends Component{
       .then((response) => {
         this.setState({ items: response.items });
         this.calculateUserDebts();
-      });
+      }).catch(error => console.log("network/rest error"));
     }
 
     payUserDebts() {

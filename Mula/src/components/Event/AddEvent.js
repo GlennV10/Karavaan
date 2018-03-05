@@ -78,7 +78,7 @@ export default class AddEvent extends Component{
                 this.setState({groups: responseJSon.groups});
                 console.log("ALLGROUPSSERVER RESPONSE");
                 console.log(responseJSon);
-            });
+            }).catch(error => console.log("network/rest error"));
         });
     }
 
@@ -139,7 +139,7 @@ export default class AddEvent extends Component{
             console.log(this.state.friends);
             // this.renderGroupMembers();
             this.renderPayer();
-        });
+        }).catch(error => console.log("network/rest error"));
     }
 
     getFriends(){
@@ -156,7 +156,7 @@ export default class AddEvent extends Component{
         .then((responseJson) => {
 
             this.setState({friends: responseJson.friends});
-        })
+        }).catch(error => console.log("network/rest error"));
     }
 
     //GET EXCHANGE RATES
@@ -164,7 +164,8 @@ export default class AddEvent extends Component{
         if(this.state.loadRates){
             return fetch('https://api.fixer.io/latest')
             .then((resp) => resp.json())
-            .then((data) => this.parseRates(data));
+            .then((data) => this.parseRates(data))
+            .catch(error => console.log("network/rest error"));
         }
     }
 
@@ -548,7 +549,7 @@ export default class AddEvent extends Component{
           //this.addItems(response.billId);
           this.addItems(response.bills[response.bills.length - 1].id);
         }
-      })
+      }).catch(error => console.log("network/rest error"));
     }
 
     addItems(billId) {
@@ -569,7 +570,7 @@ export default class AddEvent extends Component{
         .then((res) => res.json())
         .then((response) => {
           this.props.navigation.navigate('Dashboard');
-        })
+        }).catch(error => console.log("network/rest error"));
       }
     }
 
@@ -589,7 +590,7 @@ export default class AddEvent extends Component{
         .then((res) => res.json())
         .then((response) => {
           this.props.navigation.navigate('Dashboard');
-        })
+        }).catch(error => console.log("network/rest error"));
       }
     }
 
