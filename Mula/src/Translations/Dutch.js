@@ -54,6 +54,7 @@ export default {
     savepic: 'Gebruik als profielfoto',
     lang: 'Taal: ',
     currency: 'Munteenheid: ',
+    addcurrency: 'Voeg munteenheid toe: ',
     chooselanguage: '--- Kies taal ---',
     languageplaceholder: 'Kies taal',
     choosecurr: '--- Kies munteenheid ---',
