@@ -122,7 +122,17 @@ export default class AddExpenseShared extends Component {
     }
 
     shareSomeConsumers() {
-        
+        let sharedCount = 0;
+        for(share of this.state.sharing) { if(share.checked){ sharedCount++ } }
+
+        for(consumer of this.props.navigation.state.params.expense.consumers) {
+            for(share of this.state.sharing) {
+                if(consumer.participant === share.participant
+                    && share.checked) {
+                        consumer.amount += this.state.sharedBySome / sharedCount;
+                }
+            }
+        }
     }
 
     shareAllConsumers() {
@@ -134,49 +144,42 @@ export default class AddExpenseShared extends Component {
     }
 
     addExpense() {
-        let expense = this.props.navigation.state.params.expense;
-
-        let consumerTotal = 0;
-        for (consumer of this.state.consumers) {
-            consumerTotal += parseFloat(consumer.amount);
-        }
-
         if (this.state.remaining === 0) {
             this.shareAllConsumers();
-            // this.shareSomeConsumers();
-        //     for(let i = this.state.consumers.length - 1; i >= 0; i--) {
-        //         if (this.state.consumers[i].amount == 0) {
-        //             this.state.consumers.splice(i, 1);
-        //         } else {
-        //             this.state.consumers[i].amount += (this.state.shared / this.state.consumers.length);
-        //         }
-        //     }
-        //     for(let i = expense.payers.length - 1; i >= 0; i--) {
-        //         if (expense.payers[i].amount == 0) {
-        //             expense.payers.splice(i, 1);
-        //         }
-        //     }
-        //     expense.consumers = this.state.consumers;
-        //
-        //     this.formatPayersAPI(expense);
-        //     this.formatConsumersAPI(expense);
-        //     console.log(expense);
-        //     //==========================================================================================
-        //     //=========================AANVULLEN MET POST REQUEST NAAR API==============================
-        //     //==========================================================================================
-        //     return fetch('http://193.191.177.73:8080/karafinREST/add/' + this.props.navigation.state.params.trip.id, {
-        //         method: 'POST',
-        //         header: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify(expense)
-        //     })
-        //     .then((res) => {
-        //         console.log(res._bodyText);
-        //         this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip });
-        //     }).
-        //     catch(error => console.log("network/rest error"));
-        } else if (this.state.remaining > expense.total) {
+            this.shareSomeConsumers();
+
+            for(let i = this.props.navigation.state.params.expense.consumers.length - 1; i >= 0; i--) {
+                if(!(this.props.navigation.state.params.expense.consumers[i].checked)) {
+                    this.props.navigation.state.params.expense.consumers.slice(i, 1);
+                }
+            }
+
+            for(let i = this.props.navigation.state.params.expense.payers.length - 1; i >= 0; i--) {
+                if (this.props.navigation.state.params.expense.payers[i].amount == 0) {
+                    this.props.navigation.state.params.expense.payers.splice(i, 1);
+                }
+            }
+
+            this.formatPayersAPI(this.props.navigation.state.params.expense);
+            this.formatConsumersAPI(this.props.navigation.state.params.expense);
+            console.log(this.props.navigation.state.params.expense);
+
+            //==========================================================================================
+            //=========================AANVULLEN MET POST REQUEST NAAR API==============================
+            //==========================================================================================
+            return fetch('http://193.191.177.73:8080/karafinREST/addExpense/' + this.props.navigation.state.params.trip.id, {
+                method: 'POST',
+                header: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.props.navigation.state.params.expense)
+            })
+            .then((res) => {
+                console.log(res._bodyText);
+                this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip });
+            })
+            .catch(error => console.log("network/rest error"));
+        } else if (this.state.remaining > this.props.navigation.state.params.expense.total) {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
