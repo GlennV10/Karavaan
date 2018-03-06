@@ -41,6 +41,10 @@ export default {
     amountpaid: 'Paid: ',
     amountconsumed: 'Consumed: ',
     balans: 'Balance: ',
+    payments: 'Transactions',
+    owes: 'owes',
+    recieve: 'revieces from',
+    nopayments: 'NO TRANSACTIONS FOUND',
 
     //DashboardTrips
     notripsfound: 'NO TRIPS FOUND',

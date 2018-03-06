@@ -43,6 +43,10 @@ export default {
     amountpaid: 'Betaalt: ',
     amountconsumed: 'Verbruikt: ',
     balans: 'Balans: ',
+    payments: 'Transacties',
+    owes: 'verschuldigd aan',
+    recieve: 'krijgt van',
+    nopayments: 'GEEN TRANSACTIES GEVONDEN',
 
     //DashboardTrips
     notripsfound: 'GEEN REIZEN GEVONDEN',
