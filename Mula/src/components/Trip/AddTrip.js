@@ -38,8 +38,8 @@ export default class AddTrip extends Component{
             teller: 0,
             errors: [],
             paling:[],
-            company: ""
-
+            company: "",
+            formatCurrencies: []
         };
 
 
@@ -51,7 +51,6 @@ export default class AddTrip extends Component{
 
         this.getExchangeRates();
         AsyncStorage.getItem('id_teller')
-            .then(req => JSON.parse(req))
             .then((id_teller) => {
                 this.setState({ teller: id_teller })
             })
@@ -59,7 +58,6 @@ export default class AddTrip extends Component{
         console.log("MMMMm" + this.state.teller);
 
         AsyncStorage.getItem('userName')
-        .then(req => JSON.parse(req))
         .then((userName) => {
             this.setState({ username: userName })
         })
@@ -79,8 +77,12 @@ export default class AddTrip extends Component{
         //if(this.isValid()){
             console.log(this.state.paling)
             
-    
+            this.formatCurrenciesAPI();
+            console.log(this.state.formatCurrencies)
             if (this.state.connectionMode == "online") {
+                console.log("ONLINE")
+                
+                
                 return fetch('https://193.191.177.73:8181/karafinREST/addTrip', {
                     method: 'POST',
                     header: {
@@ -100,8 +102,8 @@ export default class AddTrip extends Component{
                             "year": parseInt(this.state.selectedEndDate.substring(6))
                             
                         },
-                        "currency": this.state.baseCurrency,
-                        "rates": this.state.paling
+                        "baseCurrency": this.state.baseCurrency,
+                        "rates": this.state.formatCurrencies
                     })
                 })
                     .then((res) => res.json())
@@ -114,7 +116,7 @@ export default class AddTrip extends Component{
                     }).catch(error => console.log("network/rest error"));
             }
             else {
-                console.log("NOOOOO" + this.state.teller)
+                
                 let trp = {
                     tripID: this.state.teller,
                     email: this.state.username,
@@ -124,7 +126,7 @@ export default class AddTrip extends Component{
                     users: this.state.selectedItems,
                     expenseList: [],
                     baseCurrency: this.state.baseCurrency,
-                    currencies: this.state.paling
+                    currencies: this.state.formatCurrencies
                     
                 }
                 AsyncStorage.getItem('trips')
@@ -156,7 +158,7 @@ export default class AddTrip extends Component{
     ////////////////////CURRENCY//////////////////////////////
     moveOn() {
         console.log('moveOn');
-        this.props.navigation.navigate('TripParticipants',{ trip: this.props.navigation.state.params.trip });
+        this.props.navigation.navigate('TripParticipants');
     }
 
     onSelectedCurrencyChange = selectedCurrencies => {
@@ -199,18 +201,19 @@ export default class AddTrip extends Component{
 
         console.log("running" + this.state.selectedCurrencies[0])
         for(let i= 0; i < this.state.selectedCurrencies.length; i++){
-            return Object.keys(this.state.rates).map((val) => {
-                if(val === this.state.selectedCurrencies[i]){
+            for(key of Object.keys(this.state.rates)){
+                if(key === this.state.selectedCurrencies[i]){
                     
-                    var cur = this.state.selectedCurrencies[i];
+                   
                     this.state.paling.push({
-                        rate: this.state.rates[val],
-                        val: val
+                        rate: this.state.rates[key],
+                        val: key
                     })
                 }
-                
-            });
+            }
+            
         }
+        console.log(this.state.paling)
 
     }
     renderValuta(rate) {
@@ -229,7 +232,7 @@ export default class AddTrip extends Component{
             var label = val + "(" + rate[val] + ")";
             
             array.push({
-                id: val,
+                id: label,
                 name: label
             })
             this.setState({ currencies: array });
@@ -279,7 +282,17 @@ export default class AddTrip extends Component{
         console.log(selectedGuides);
     } 
     
-
+    
+    formatCurrenciesAPI() {
+        console.log(this.state.paling)
+        let formatCurrencies = {};
+        for(currency of this.state.paling) {
+            let key = currency.val;
+            formatCurrencies[key] = currency.rate;
+        }
+        console.log(formatCurrencies)
+        this.setState({ formatCurrencies });
+    }
 
     
     
