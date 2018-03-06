@@ -47,6 +47,7 @@ export default class TripTotal extends Component {
     })
       .then((res) => res.json())
       .then((data) => this.setState({ overview: data, isLoading: false }))
+      .catch((error) => console.log(error));
   }
 
   getTripPayments(email) {
@@ -58,6 +59,7 @@ export default class TripTotal extends Component {
     })
       .then((res) => res.json())
       .then((data) => this.setState({ payments: data, isLoadingPayments: false }))
+      .catch((error) => console.log(error));
   }
 
   getTripUsers() {
