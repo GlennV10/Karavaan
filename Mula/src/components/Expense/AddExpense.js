@@ -3,7 +3,6 @@ import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, Touchable
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
-import CheckBox from 'react-native-checkbox';
 
 export default class AddExpense extends Component {
     constructor(props) {

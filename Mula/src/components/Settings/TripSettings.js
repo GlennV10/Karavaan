@@ -13,7 +13,8 @@ export default class TripSettings extends Component {
             username: "",
             password: "",
             language: "",
-            currency: "",
+            currencies: [],
+            selectedCurrencies: [],
             selectedItems: [],
             tripRates: []
         }
@@ -25,6 +26,11 @@ export default class TripSettings extends Component {
         });
 
         await this.getTrip();
+        let selectedCurrencies = [];
+        for (currency of this.state.tripRates) {
+            selectedCurrencies.push(currency);
+        }
+        this.setState({ selectedCurrencies });
         this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
         this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton))
     }
@@ -62,10 +68,14 @@ export default class TripSettings extends Component {
         //deletetrip
     }
 
+    onSelectedCurrencyChange = selectedCurrencies => {
+        this.setState({ selectedCurrencies });
+        console.log(selectedCurrencies);
+    };
+
     onSelectedItemsChange = selectedItems => {
         this.setState({ selectedItems });
         console.log(selectedItems);
-
     };
 
     renderChangeRates() {
@@ -81,8 +91,7 @@ export default class TripSettings extends Component {
                         underlineColorAndroid="transparent"
                         placeholderTextColor="#818181"
                         keyboardType='numeric'
-                        onChangeText={(text) => console.log(text) & this.updateRate(rate, text)}
-                    />
+                        onChangeText={(text) => console.log(text) & this.updateRate(rate, text)} />
                 </View>
             )
         });
@@ -139,7 +148,8 @@ export default class TripSettings extends Component {
         })
             .then((res) => res.json())
             .then((trip) => {
-                this.renderValutaToArray(trip.rates)
+                trip.
+                    this.renderValutaToArray(trip.rates)
             }).catch(error => console.log("network/rest error"));
     }
 
@@ -158,12 +168,29 @@ export default class TripSettings extends Component {
         const { selectedItems } = this.state;
         return (
             <ScrollView style={styles.container}>
-                <View style={styles.separator}>
-                    <Text>{I18n.t('currency')}</Text>
-                    <Picker selectedValue={this.state.currency} onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
-                        <Picker.Item label="Euro" value="Euro" />
-                        <Picker.Item label="USD" value="USD" />
-                    </Picker>
+                <View>
+                    <Text>{I18n.t('addcurrency')}</Text>
+                    <MultiSelect
+                        hideTags
+                        items={this.state.currencies}
+                        uniqueKey="id"
+                        ref={(component) => { this.multiSelect = component }}
+                        selectedItems={this.state.selectedCurrencies}
+                        onSelectedItemsChange={this.onSelectedCurrencyChange}
+                        selectText={I18n.t('pickcurrency')}
+                        searchInputPlaceholderText={I18n.t('pickcurrency')}
+                        onChangeInput={(item) => console.log(item)}
+                        backgroundColor="#d4e8e5"
+                        displayKey="name"
+                        style={backgroundColor = "#d4e8e5"}
+                        tagTextColor='#303030'
+                        selectedItemTextColor="#edc14f"
+                        selectedItemIconColor="#edc14f"
+                        itemTextColor="#303030"
+                        displayKey="name"
+                        searchInputStyle={{ color: '#303030' }}
+                        submitButtonColor="#edc14f"
+                        submitButtonText={I18n.t('submit')} />
                 </View>
 
                 <View style={styles.separator}>

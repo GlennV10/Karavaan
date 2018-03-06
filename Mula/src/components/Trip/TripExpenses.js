@@ -17,8 +17,8 @@ export default class TripExpenses extends Component {
     }
 
     componentWillMount() {
-        AsyncStorage.getItem('userName').then((username)=>{
-            this.setState({username});
+        AsyncStorage.getItem('userName').then((username) => {
+            this.setState({ username });
         })
         this.setState({ expenses: this.props.expenses });
     }
@@ -38,12 +38,12 @@ export default class TripExpenses extends Component {
                 let isAdmin = false;
 
                 for (participant of trip.participants) {
-                    if(participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
+                    if (participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
                         isAdmin = true;
                     }
                 }
 
-                if(!isAdmin) {
+                if (!isAdmin) {
                     Object.keys(expense.consumers).map((user) => {
                         console.log("expenseUser: " + user);
                         if (user == this.state.username) {
