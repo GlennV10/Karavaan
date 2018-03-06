@@ -4,7 +4,7 @@ import { StackNavigator } from 'react-navigation';
 import DatePicker from 'react-native-datepicker';
 import { Switch } from 'react-native-switch';
 import Autocomplete from 'react-native-autocomplete-input';
-import CheckBox from 'react-native-checkbox-heaven';
+
 import FontAwesome, { Icons } from 'react-native-fontawesome';
 import MultiSelect from 'react-native-multiple-select';
 import I18n from 'react-native-i18n';
@@ -32,11 +32,13 @@ export default class AddTrip extends Component{
             connectionMode: "",
             offlineFriends: {},
             loadTests: true,
-            onlineFriends: {},
+            onlineFriends: [],
             isLoading: true,
             trips: [],
             teller: 0,
-            errors: []
+            errors: [],
+            paling:[],
+            company: ""
 
         };
 
@@ -48,7 +50,6 @@ export default class AddTrip extends Component{
         selectedEndDate = new Date().toDateString
 
         this.getExchangeRates();
-        this.mainFetch();
         AsyncStorage.getItem('id_teller')
             .then(req => JSON.parse(req))
             .then((id_teller) => {
@@ -57,6 +58,12 @@ export default class AddTrip extends Component{
             .catch(error => console.log('Error loading teller'));
         console.log("MMMMm" + this.state.teller);
 
+        AsyncStorage.getItem('userName')
+        .then(req => JSON.parse(req))
+        .then((userName) => {
+            this.setState({ username: userName })
+        })
+        .catch(error => console.log('Error loading userName'));
     }
     
 
@@ -64,9 +71,13 @@ export default class AddTrip extends Component{
     addTrip() {
 
         this.state.errors = [];
-        console.log("addTrip")
+        this.state.paling =[];
+        this.renderPaling();
+
+
+        
         //if(this.isValid()){
-            console.log(this.state.teller)
+            console.log(this.state.paling)
             
     
             if (this.state.connectionMode == "online") {
@@ -81,26 +92,21 @@ export default class AddTrip extends Component{
                         "startDate": {
                             "dayOfMonth": parseInt(this.state.selectedStartDate.substring(0, 2)),
                             "month": parseInt(this.state.selectedStartDate.substring(3, 5)),
-                            "year": parseInt(this.state.selectedStartDate.substring(6)),
-                            "hourOfDay": 0,
-                            "minute": 0
-
+                            "year": parseInt(this.state.selectedStartDate.substring(6))                            
                         },
                         "endDate": {
                             "dayOfMonth": parseInt(this.state.selectedEndDate.substring(0, 2)),
                             "month": parseInt(this.state.selectedEndDate.substring(3, 5)),
-                            "year": parseInt(this.state.selectedEndDate.substring(6)),
-                            "hourOfDay": 0,
-                            "minute": 0
+                            "year": parseInt(this.state.selectedEndDate.substring(6))
+                            
                         },
                         "currency": this.state.baseCurrency,
-                        "rates": this.state.currencies
-
-   
+                        "rates": this.state.paling
                     })
                 })
                     .then((res) => res.json())
                     .then((response) => {
+                        
                         console.log("added trip successfully: " + responseJson.addTrip_succes);
                         if (responseJson.addTrip_succes === "true") {
                             this.moveOn();
@@ -118,7 +124,7 @@ export default class AddTrip extends Component{
                     users: this.state.selectedItems,
                     expenseList: [],
                     baseCurrency: this.state.baseCurrency,
-                    currencies: this.state.selectedCurrencies
+                    currencies: this.state.paling
                     
                 }
                 AsyncStorage.getItem('trips')
@@ -140,7 +146,7 @@ export default class AddTrip extends Component{
                 this.moveOn();
             }
         
-
+        
         //}
         //alert(this.state.errors)
         
@@ -150,7 +156,7 @@ export default class AddTrip extends Component{
     ////////////////////CURRENCY//////////////////////////////
     moveOn() {
         console.log('moveOn');
-        this.props.navigation.navigate('DashboardTrips');
+        this.props.navigation.navigate('TripParticipants',{ trip: this.props.navigation.state.params.trip });
     }
 
     onSelectedCurrencyChange = selectedCurrencies => {
@@ -189,11 +195,30 @@ export default class AddTrip extends Component{
         this.renderValutaToArray(data.rates);
         //}
     }
+    renderPaling() {
+
+        console.log("running" + this.state.selectedCurrencies[0])
+        for(let i= 0; i < this.state.selectedCurrencies.length; i++){
+            return Object.keys(this.state.rates).map((val) => {
+                if(val === this.state.selectedCurrencies[i]){
+                    
+                    var cur = this.state.selectedCurrencies[i];
+                    this.state.paling.push({
+                        rate: this.state.rates[val],
+                        val: val
+                    })
+                }
+                
+            });
+        }
+
+    }
     renderValuta(rate) {
         return Object.keys(rate).map((val) => {
             var label = val + "(" + rate[val] + ")";
+            
             return (
-                <Picker.Item value={val} label={label} key={label} />
+                <Picker.Item value={val} label={label} key={val} />
             )
         });
 
@@ -202,6 +227,7 @@ export default class AddTrip extends Component{
         var array = [];
         return Object.keys(rate).map((val) => {
             var label = val + "(" + rate[val] + ")";
+            
             array.push({
                 id: val,
                 name: label
@@ -239,6 +265,7 @@ export default class AddTrip extends Component{
             return res;
     }
     
+    
     //////////////////////////////////////////////////////////
     ////////////////////FRIENDS//////////////////////////////
 
@@ -253,62 +280,9 @@ export default class AddTrip extends Component{
     } 
     
 
-    mainFetch() {
-        // Get ... uit memory
-        console.log(AsyncStorage.getItem('userName'));
-        AsyncStorage.getItem('userName').then((username, error) => {
-            if (error) {
-                console.log(error);
-            }
-            // Set username state
-            this.setState({ username: username, loadJSON: false });
-            console.log("Setting username state #1" + this.state.username);
-            // Get connection status
-            AsyncStorage.getItem('connectionStatus').then((connection, error) => {
-                if (error) {
-                    console.log(error);
-                }
-                this.setState({ connectionMode: connection });
-                if (this.state.connectionMode == "online") {
-                    // =======================================================
-                    // Get online data
-                    // =======================================================
-                    console.log("Fetching online data #2");
-                    return fetch('http://193.191.177.73:8080/karafinREST/allPersons', {
-                        method: 'GET',
-                        header: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        }
-                    }).then((response) => response.json())
-                        .then((responseJson) => {
-                            
-                            console.log("Set loadingStates to false #3 "+ responseJson);
-                            this.setState({ isLoading: false, loadJSON: false, offlineFriends: Array.from(responseJson) });
-                        }).then(() => {
-                            // =======================================================
-                            // set asyncstorage data
-                            // =======================================================
-                            AsyncStorage.setItem('friends', JSON.stringify(this.state.offlineFriends));
 
-                        }).catch(error => console.log("network/rest error"));
-                } else {
-                    // Get offline data en render
-                    console.log("Connection is offline");
-                    AsyncStorage.getItem('friends').then((friendsJson, error) => {
-                        if (error) {
-                            console.log(error);
-                        }
-                        // Send JSON to renderfriends
-
-                        console.log("Parse friends with offline data #8");
-                        this.setState({ friends: JSON.parse(friendsJson), offlineFriends: JSON.parse(friendsJson), loadJSON: false, isLoading: false });
-                    });
-                }
-            })
-        })
-
-    }
+    
+    
     render() {
         const { selectedItems } = this.state;
         const { selectedGuides } = this.state;
@@ -317,6 +291,7 @@ export default class AddTrip extends Component{
         const { rates } = this.state;
         const { baseCurrency } = this.state;
         const { loadRates } = this.state;
+        const {company} = this.state;
         var month = new Date().getUTCMonth() + 1;
         var yeara = new Date().getFullYear() + 1;
         var yearb = new Date().getFullYear() - 1;
@@ -377,7 +352,7 @@ export default class AddTrip extends Component{
                     />
 
                 </View>
-
+                
 
                 <View style={[styles.subItem, styles.separator]}>
                     <Text>{I18n.t('tripcurrency')}</Text>
