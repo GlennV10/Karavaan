@@ -20,7 +20,8 @@ export default class TripSettings extends Component {
             tripParticipants: [],
             originalRates: [],
             rates: [],
-            tripRates: []
+            tripRates: [],
+            participants: []
         }
     }
 
@@ -63,7 +64,7 @@ export default class TripSettings extends Component {
 
     deleteTrip() {
         let trip = this.props.navigation.params.state.trip;
-        
+
         let url = 'http://193.191.177.73:8080/karafinREST/removeTrip/' + trip.id;
         return fetch(url, {
             method: 'POST',
@@ -112,6 +113,16 @@ export default class TripSettings extends Component {
         });
     }
 
+    renderParticipants() {
+        return this.state.participants.map((participant, index) => {
+            return (
+                <View key={index}>
+                    <Text>{ participant[0].firstName } { participant[0].lastName }</Text>
+                </View>
+            )
+        });
+    }
+
     updateRate(rate, text) {
         let tripCurrencyRates = this.state.tripRates.slice();
         for (r of tripCurrencyRates) {
@@ -126,9 +137,8 @@ export default class TripSettings extends Component {
 
     updateTrip() {
         let trip = this.props.navigation.state.params.trip;
-        trip.rates = this.state.tripCurrencyRates;
+        trip.rates = this.formatCurrenciesAPI(trip);
         console.log(trip.rates);
-        this.formatCurrenciesAPI(trip);
         let url = 'http://193.191.177.73:8080/karafinREST/updateTrip';
         return fetch(url, {
             method: 'PUT',
@@ -141,10 +151,10 @@ export default class TripSettings extends Component {
 
     formatCurrenciesAPI(trip) {
         let formatCurrencies = {};
-        for(currency of trip.rates) {
-            formatCurrencies[currency.name] = currency.value;
+        for(currency of this.state.selectedCurrencies) {
+            formatCurrencies[currency] = this.state.fixerRates[currency];
         }
-        trip.rates = formatCurrencies;
+        return formatCurrencies;
     }
 
     async saveTrip() {
@@ -185,6 +195,7 @@ export default class TripSettings extends Component {
         })
             .then((res) => res.json())
             .then((trip) => {
+                this.setState({ participants: trip.participants });
                 let participants = [];
                 for (participant of trip.participants) {
                     let newParticipant = {
@@ -196,7 +207,7 @@ export default class TripSettings extends Component {
                 this.setState({ tripParticipants: participants});
                 this.setState({ rates: trip.rates});
                 this.renderValutaToArray(trip.rates);
-                this.getExchangeRatesWithBase(trip.baseCurrency) 
+                this.getExchangeRatesWithBase(trip.baseCurrency)
                 trip.
                     this.renderValutaToArray(trip.rates)
             }).catch(error => console.log("network/rest error"));
@@ -221,7 +232,7 @@ export default class TripSettings extends Component {
         //if (this.state.loadRates) {
         return fetch(url)
             .then((resp) => resp.json())
-            .then((data) => this.parseRates(data))
+            .then((data) => this.parseRates(data) & this.setState({ fixerRates: data.rates }))
             .catch(error => console.log("network/fixer error"));
         //}
         console.log(url);
@@ -298,7 +309,6 @@ export default class TripSettings extends Component {
                 <View style={styles.separator}>
                     <Text>{I18n.t('changecurrency')}</Text>
                     {this.renderChangeRates()}
-
                 </View>
 
                 <View>
@@ -324,6 +334,9 @@ export default class TripSettings extends Component {
                         color="#303030" />
                 </View>
 
+                <View style={styles.separator}>
+                    { this.renderParticipants() }
+                </View>
 
                 <View>
                     <TouchableOpacity style={styles.button} onPress={() => this.saveTrip()}>
