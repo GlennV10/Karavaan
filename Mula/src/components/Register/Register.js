@@ -5,53 +5,46 @@ import I18n from 'react-native-i18n';
 
 export default class Register extends React.Component {
     state = {
-        username: "",
-        tempPassword: "",
-        tempPassword2: "",
-        email: "",
         firstName: "",
-        lastName:"",
-        passwordsSame: false,
-        password:"",
-        userCreated: false
+        lastName: "",
+        email: "",
+        password: "",
     }
 
-    checkReqs(){
-        if(this.state.firstName !== "" & this.state.lastName !== "" & this.state.email !== "" & this.validMail(this.state.email) & this.state.tempPassword === this.state.tempPassword2){
-            this.setState({password: this.state.tempPassword});
+    checkReqs() {
+        if(this.state.firstName !== "" &
+            this.state.lastName !== "" &
+            this.state.email !== "" &
+            this.validMail(this.state.email) &
+            this.state.password !== "") {
+
+            let person = {
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                email: this.state.email,
+                password: this.state.password
+            }
+
+            console.log(person);
+
             //POST Request
-            return fetch('http://193.191.177.169:8080/mula/Controller?action=addUser',{
+            return fetch('http://193.191.177.73:8080/karafinREST/addPerson', {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    email: this.state.email,
-                    psw: this.state.tempPassword,
-                    userName: this.state.firstName
-                })
+                body: JSON.stringify(person)
             })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                console.log(responseJson);
-                this.setState({userCreated: responseJson.success});
-            }).catch((error)=> console.log("ERROR: " + error))
-            .then(()=> this.succesfullCreation());
-        }else{
-            console.log("Not everything matched");
+            .then((res) => this.props.navigation.navigate('Login'))
+            .catch((error)=> console.log(error))
+        } else {
+            alert("Not everything matched");
         }
     }
 
     validMail(mail){
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(mail);
-    }
-
-    succesfullCreation(){
-        if(this.state.userCreated){
-            this.props.navigation.navigate('Login');
-        }
     }
 
     render() {
@@ -96,19 +89,9 @@ export default class Register extends React.Component {
                 secureTextEntry={true}
                 underlineColorAndroid="transparent"
                 placeholderTextColor="#bfbfbf"
-                onChangeText={(text)=>this.setState({tempPassword: text})}
+                onChangeText={(text)=>this.setState({password: text})}
                 ref={(input) => this.password1Input = input}
-                onSubmitEditing={() => this.password2Input.focus()}
                 returnKeyType="go"/>
-            <TextInput
-                placeholder={I18n.t('validatepass')}
-                style={styles.inputField}
-                secureTextEntry={true}
-                underlineColorAndroid="transparent"
-                placeholderTextColor="#bfbfbf"
-                onChangeText={(text)=>this.setState({tempPassword2: text})}
-                ref={(input) => this.password2Input = input}
-                onSubmitEditing={() => this.checkReqs()}/>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.registerButton}
                   onPress={() => this.checkReqs()}>
