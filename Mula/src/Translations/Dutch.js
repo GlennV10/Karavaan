@@ -134,6 +134,7 @@ export default {
     changecurrency: 'Verander wisselkoers van munt',
     addguides: 'Voeg reisbegeleiders toe',
     chooseguide: 'Kies begeleiders',
+    saved: 'Instellingen opgeslagen'
 
 
 }

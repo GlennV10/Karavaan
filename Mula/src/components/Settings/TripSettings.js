@@ -13,9 +13,13 @@ export default class TripSettings extends Component {
             username: "",
             password: "",
             language: "",
+            currenciesValue: [],
             currencies: [],
             selectedCurrencies: [],
             selectedItems: [],
+            tripParticipants: [],
+            originalRates: [],
+            rates: [],
             tripRates: []
         }
     }
@@ -24,19 +28,13 @@ export default class TripSettings extends Component {
         AsyncStorage.getItem('currency').then((currency) => {
             this.setState({ currency });
         });
-
         await this.getTrip();
-        let selectedCurrencies = [];
-        for (currency of this.state.tripRates) {
-            selectedCurrencies.push(currency);
-        }
-        this.setState({ selectedCurrencies });
-        this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
+        this.props.navigation.addListener("didFocus", () => this.getTrip() & BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
         this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton))
+        this.renderCurrentValutaToArrayLabel(this.props.navigation.state.params.trip.rates);
     }
 
     _handleBackButton = () => {
-        this.updateTripRate()
         this.props.navigation.navigate('DashboardTrips');
         return true;
     }
@@ -65,10 +63,27 @@ export default class TripSettings extends Component {
 
     deleteTrip() {
         let trip = this.props.navigation.params.state.trip;
-        //deletetrip
+        
+        let url = 'http://193.191.177.73:8080/karafinREST/removeTrip/' + trip.id;
+        return fetch(url, {
+            method: 'POST',
+            header: {
+                'Content-Type': 'application/json'
+            }})
+              .then((res) => res.json());
     }
 
     onSelectedCurrencyChange = selectedCurrencies => {
+        let tripRates = [];
+        for(currency of this.state.currenciesValue) {
+            for(selectedCurrency of selectedCurrencies) {
+                if (selectedCurrency == currency.name) {
+                    console.log(currency);
+                    tripRates.push(currency);
+                }
+            }
+        }
+        this.setState({ tripRates });
         this.setState({ selectedCurrencies });
         console.log(selectedCurrencies);
     };
@@ -109,10 +124,32 @@ export default class TripSettings extends Component {
         this.renderChangeRates();
     }
 
-    updateTripRate() {
-        //================================================================
-        //====================RATES MEEGEVEN MET TRIP=====================
-        //================================================================
+    updateTrip() {
+        let trip = this.props.navigation.state.params.trip;
+        trip.rates = this.state.tripCurrencyRates;
+        console.log(trip.rates);
+        this.formatCurrenciesAPI(trip);
+        let url = 'http://193.191.177.73:8080/karafinREST/updateTrip';
+        return fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(trip)
+        }).then((res) => console.log(res)).catch((error) => console.log(error))
+    }
+
+    formatCurrenciesAPI(trip) {
+        let formatCurrencies = {};
+        for(currency of trip.rates) {
+            formatCurrencies[currency.name] = currency.value;
+        }
+        trip.rates = formatCurrencies;
+    }
+
+    async saveTrip() {
+        await this.updateTrip();
+        Alert.alert(I18n.t('saved'));
     }
 
     checkAmount(text) {
@@ -135,7 +172,7 @@ export default class TripSettings extends Component {
         }
         containsComma = false;
 
-        return newText
+        return newText;
     }
 
     getTrip() {
@@ -148,6 +185,18 @@ export default class TripSettings extends Component {
         })
             .then((res) => res.json())
             .then((trip) => {
+                let participants = [];
+                for (participant of trip.participants) {
+                    let newParticipant = {
+                        email: participant[0].email,
+                        name: participant[0].firstName + " " +  participant[0].lastName
+                    }
+                    participants.push(newParticipant);
+                }
+                this.setState({ tripParticipants: participants});
+                this.setState({ rates: trip.rates});
+                this.renderValutaToArray(trip.rates);
+                this.getExchangeRatesWithBase(trip.baseCurrency) 
                 trip.
                     this.renderValutaToArray(trip.rates)
             }).catch(error => console.log("network/rest error"));
@@ -161,15 +210,69 @@ export default class TripSettings extends Component {
                 value: rate[val]
             })
         });
-        this.setState({ tripRates: array })
+        this.setState({ tripRates: array });
+        this.setState({ originalRates: array});
+        this.setState({ tripCurrencyRates: array });
+    }
+
+    getExchangeRatesWithBase(baseCurrency) {
+        console.log("Rates met base wordt uitgevoerd " + baseCurrency)
+        var url = "https://api.fixer.io/latest?base=" + baseCurrency;
+        //if (this.state.loadRates) {
+        return fetch(url)
+            .then((resp) => resp.json())
+            .then((data) => this.parseRates(data))
+            .catch(error => console.log("network/fixer error"));
+        //}
+        console.log(url);
+    }
+
+    parseRates(data) {
+        console.log(data.rates)
+        //if (this.state.loadRates) {
+        this.renderValutaToArrayLabel(data.rates);
+        this.renderValutaToArrayValue(data.rates);
+        //}
+    }
+
+    renderValutaToArrayValue(rate) {
+        var array = [];
+        Object.keys(rate).map((val) => {
+            array.push({
+                name: val,
+                value: rate[val]
+            })
+        });
+        this.setState({ currenciesValue: array });
+    }
+
+    renderValutaToArrayLabel(rate) {
+        var array = [];
+        Object.keys(rate).map((val) => {
+            var label = val + "(" + rate[val] + ")";
+            array.push({
+                id: val,
+                name: label
+            })
+        });
+        this.setState({ currencies: array });
+    }
+
+    renderCurrentValutaToArrayLabel(rate) {
+        var array = [];
+        Object.keys(rate).map((val) => {
+            array.push(val);
+        });
+        console.log(array);
+        this.setState({ selectedCurrencies: array });
     }
 
     render() {
         const { selectedItems } = this.state;
         return (
             <ScrollView style={styles.container}>
-                <View>
-                    <Text>{I18n.t('addcurrency')}</Text>
+                <View style={styles.separator}>
+                    <Text style={styles.textfieldaboveMultiSelect}>{I18n.t('addcurrency')}</Text>
                     <MultiSelect
                         hideTags
                         items={this.state.currencies}
@@ -187,7 +290,6 @@ export default class TripSettings extends Component {
                         selectedItemTextColor="#edc14f"
                         selectedItemIconColor="#edc14f"
                         itemTextColor="#303030"
-                        displayKey="name"
                         searchInputStyle={{ color: '#303030' }}
                         submitButtonColor="#edc14f"
                         submitButtonText={I18n.t('submit')} />
@@ -203,15 +305,15 @@ export default class TripSettings extends Component {
                     <Text style={styles.textfieldaboveMultiSelect}>{I18n.t('addguides')}</Text>
                     <MultiSelect
                         hideTags
-                        items={["test", "test"]}
+                        items={this.state.tripParticipants}
                         uniqueKey="email"
                         ref={(component) => { this.multiSelect = component }}
-                        selectedItems={selectedItems}
+                        selectedItems={this.state.selectedItems}
                         onSelectedItemsChange={this.onSelectedItemsChange}
                         selectText="Kies guides"
                         searchInputPlaceholderText={I18n.t('chooseguide')}
                         onChangeInput={(item) => console.log(item)}
-                        displayKey="userName"
+                        displayKey={"name"}
                         style={backgroundColor = "#d4e8e5"}
                         selectedItemTextColor="#edc14f"
                         selectedItemIconColor="#edc14f"
@@ -224,6 +326,9 @@ export default class TripSettings extends Component {
 
 
                 <View>
+                    <TouchableOpacity style={styles.button} onPress={() => this.saveTrip()}>
+                        <Text style={styles.buttonText}>{I18n.t('save')}</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.button} onPress={() => this.askToDeleteTrip()}>
                         <Text style={styles.buttonText}>{I18n.t('delete')}</Text>
                     </TouchableOpacity>

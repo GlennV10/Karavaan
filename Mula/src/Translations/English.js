@@ -138,5 +138,6 @@ export default {
     changecurrency: 'Change currency exchange rate',
     addguides: 'Voeg reisbegeleiders toe',
     chooseguide: 'Choose guides',
+    saved: 'Settings saved'
 
 }
