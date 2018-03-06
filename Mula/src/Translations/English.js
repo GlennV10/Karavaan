@@ -107,12 +107,18 @@ export default {
     payers: 'Who paid for it',
     whoconsumed: 'Who participated',
     back: 'Delete expense',
-    backmessage: 'Are you sure you want to delete this expense?', 
+    backmessage: 'Are you sure you want to delete this expense?',
 
     //AddEXpenseConsumed
     consumers: 'Who participated in the expense',
-    addexpense: 'Add expense',
+    shared: 'Shared',
     sharedcost: 'Shared cost',
+
+    //AddExpenseShared
+    shared: 'Shared costs',
+    addexpense: 'Add expense',
+    sharedbysome: 'Shared by some',
+    sharedbyall: 'Shared by all',
 
     //AddTrip
     tripname: 'Destination',

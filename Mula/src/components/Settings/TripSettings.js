@@ -106,8 +106,7 @@ export default class TripSettings extends Component {
                         underlineColorAndroid="transparent"
                         placeholderTextColor="#818181"
                         keyboardType='numeric'
-                        onChangeText={(text) => console.log(text) & this.updateRate(rate, text)}
-                    />
+                        onChangeText={(text) => console.log(text) & this.updateRate(rate, text)} />
                 </View>
             )
         });
@@ -198,6 +197,8 @@ export default class TripSettings extends Component {
                 this.setState({ rates: trip.rates});
                 this.renderValutaToArray(trip.rates);
                 this.getExchangeRatesWithBase(trip.baseCurrency) 
+                trip.
+                    this.renderValutaToArray(trip.rates)
             }).catch(error => console.log("network/rest error"));
     }
 
@@ -291,7 +292,7 @@ export default class TripSettings extends Component {
                         itemTextColor="#303030"
                         searchInputStyle={{ color: '#303030' }}
                         submitButtonColor="#edc14f"
-                        submitButtonText={I18n.t('submit')}/>
+                        submitButtonText={I18n.t('submit')} />
                 </View>
 
                 <View style={styles.separator}>
