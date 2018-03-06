@@ -119,7 +119,10 @@ export default {
     sharedcost: 'Shared cost',
 
     //AddExpenseShared
+    shared: 'Shared costs',
     addexpense: 'Add expense',
+    sharedbysome: 'Shared by some',
+    sharedbyall: 'Shared by all',
 
     //AddTrip
     tripname: 'Destination',
@@ -139,5 +142,6 @@ export default {
     changecurrency: 'Change currency exchange rate',
     addguides: 'Voeg reisbegeleiders toe',
     chooseguide: 'Choose guides',
+    saved: 'Settings saved'
 
 }

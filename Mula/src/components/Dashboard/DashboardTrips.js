@@ -20,10 +20,12 @@ export default class DashboardTrips extends Component {
     }
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     this.setState({ isLoading: true });
+    this.props.navigation.addListener("didFocus", () => this.getAllTrips() & BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
+    this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
     
-    AsyncStorage.getItem('userName').then((username)=>{
+    await AsyncStorage.getItem('userName').then((username)=>{
       this.setState({username});
       this.setUserTrips();
     });
@@ -71,9 +73,6 @@ export default class DashboardTrips extends Component {
 
   componentDidMount() {
     this.setState({ isLoading: false });
-    this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
-    this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
-
     // AsyncStorage.getItem('trips')
     //   .then(req => JSON.parse(req))
     //   .then(trips => console.log('Trips loaded from AsyncStorage') & console.log(trips) & this.setState({ trips }))
@@ -129,8 +128,8 @@ export default class DashboardTrips extends Component {
       }).catch(error => console.log("network/rest error"));
   }
 
-  getAllTrips() {
-    return fetch('http://193.191.177.73:8080/karafinREST/allTrips', {
+  async getAllTrips() {
+    return await fetch('http://193.191.177.73:8080/karafinREST/allTrips', {
         method: 'GET',
         header: {
             'Content-Type': 'application/json'

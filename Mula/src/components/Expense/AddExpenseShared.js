@@ -8,10 +8,32 @@ export default class AddExpenseShared extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            sharing: [],
             consumers: [],
-            remaining: this.props.navigation.state.params.expense.total,
-            shared: 0
+            remaining: 0,
+            consumedCount: 0,
+            consumedTotal: 0,
+            sharedByAll: 0,
+            sharedBySome: 0
         }
+    }
+
+    componentWillMount() {
+        let count = 0;
+        let total = 0;
+        let consumers = this.props.navigation.state.params.expense.consumers.slice();
+        for(let i = consumers.length - 1; i >= 0; i--) {
+            if (!(consumers[i].checked)) {
+                consumers.splice(i, 1);
+            } else {
+                total += consumers[i].amount;
+                count++;
+            }
+        }
+        this.setState({ consumers });
+        this.setState({ consumedCount: count })
+        this.setState({ consumedTotal: total });
+        this.setState({ remaining: (this.props.navigation.state.params.expense.total - total) })
     }
 
     componentDidMount() {
@@ -40,57 +62,45 @@ export default class AddExpenseShared extends Component {
     }
 
     populateConsumersState() {
-        let consumers = this.state.consumers.slice();
-        for (participant of this.props.navigation.state.params.trip.participants) {
-            let consumer = {
+        let sharing = this.state.sharing.slice();
+        for(participant of this.state.consumers) {
+            let share = {
                 checked: true,
-                participant: participant[0],
-                amount: 0, //this.props.navigation.state.params.expense.total / this.props.navigation.state.params.trip.participants.length
+                participant: participant.participant
             }
-            consumers.push(consumer);
+            sharing.push(share);
         }
-        this.setState({ consumers });
+        this.setState({ sharing });
     }
 
-    updateConsumerAmount(amount, participant) {
-        let total = 0;
-        let consumers = this.state.consumers.slice();
-        for(consumer of consumers) {
-            if (consumer.participant === participant) {
-                if (amount !== "") {
-                    consumer.amount = parseFloat(amount);
-                } else {
-                    consumer.amount = 0;
-                }
+    updateConsumerChecked(checked, participant) {
+        let sharing = this.state.sharing.slice();
+        for(share of sharing) {
+            if (share.participant === participant) {
+                share.checked = checked;
             }
-            total += consumer.amount;
         }
-        this.setState({ remaining: (this.props.navigation.state.params.expense.total - total) });
-        this.setState({ consumers });
+        this.setState({ sharing });
     }
-    
-    renderConsumers() {
-        return this.state.consumers.map((consumer, index) => {
-            return (
-                <View style={styles.consumer} key={index}>
-                    <View style={styles.checker}>
-                        <Switch
-                            value={consumer.checked}
-                            onValueChange={(checked) => this.updateConsumerChecked(checked, consumer.participant)}
-                          />
-                    </View>
-                    <Text style={styles.labelConsumers}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
-                    <TextInput
-                        editable={consumer.checked}
-                        placeholder="Amount..."
-                        keyboardType="numeric"
-                        style={styles.inputFieldConsumers}
-                        placeholderTextColor="#bfbfbf"
-                        underlineColorAndroid="transparent"
-                        onChangeText={(amount) => this.updateConsumerAmount(amount, consumer.participant)} />
-                </View>
-            )
-        });
+
+    updateSharedByAll(shared) {
+        if (shared !== "") {
+            this.setState({ sharedByAll: parseFloat(shared) })
+        } else {
+            shared = 0;
+            this.setState({ sharedByAll: 0 })
+        }
+        this.setState({ remaining: ((this.props.navigation.state.params.expense.total - this.state.consumedTotal) - parseFloat(shared) - parseFloat(this.state.sharedBySome)) })
+    }
+
+    updateSharedBySome(shared) {
+        if (shared !== "") {
+            this.setState({ sharedBySome: parseFloat(shared) })
+        } else {
+            shared = 0;
+            this.setState({ sharedBySome: 0 })
+        }
+        this.setState({ remaining: ((this.props.navigation.state.params.expense.total - this.state.consumedTotal) - parseFloat(shared) - parseFloat(this.state.sharedByAll)) })
     }
 
     formatPayersAPI(expense) {
@@ -111,32 +121,49 @@ export default class AddExpenseShared extends Component {
         expense.consumers = formatConsumers;
     }
 
-    addExpense() {
-        let expense = this.props.navigation.state.params.expense;
+    shareSomeConsumers() {
+        let sharedCount = 0;
+        for(share of this.state.sharing) { if(share.checked){ sharedCount++ } }
 
-        let consumerTotal = 0;
-        for (consumer of this.state.consumers) {
-            consumerTotal += parseFloat(consumer.amount);
+        for(consumer of this.props.navigation.state.params.expense.consumers) {
+            for(share of this.state.sharing) {
+                if(consumer.participant === share.participant
+                    && share.checked) {
+                        consumer.amount += this.state.sharedBySome / sharedCount;
+                }
+            }
         }
+    }
 
-        if ((consumerTotal + this.state.shared) == expense.total) {
-            for(let i = this.state.consumers.length - 1; i >= 0; i--) {
-                if (this.state.consumers[i].amount == 0) {
-                    this.state.consumers.splice(i, 1);
-                } else {
-                    this.state.consumers[i].amount += (this.state.shared / this.state.consumers.length);
+    shareAllConsumers() {
+        for(consumer of this.props.navigation.state.params.expense.consumers) {
+            if(consumer.checked) {
+                consumer.amount += this.state.sharedByAll / this.state.consumedCount;
+            }
+        }
+    }
+
+    addExpense() {
+        if (this.state.remaining === 0) {
+            this.shareAllConsumers();
+            this.shareSomeConsumers();
+
+            for(let i = this.props.navigation.state.params.expense.consumers.length - 1; i >= 0; i--) {
+                if(!(this.props.navigation.state.params.expense.consumers[i].checked)) {
+                    this.props.navigation.state.params.expense.consumers.splice(i, 1);
                 }
             }
-            for(let i = expense.payers.length - 1; i >= 0; i--) {
-                if (expense.payers[i].amount == 0) {
-                    expense.payers.splice(i, 1);
+
+            for(let i = this.props.navigation.state.params.expense.payers.length - 1; i >= 0; i--) {
+                if (this.props.navigation.state.params.expense.payers[i].amount == 0) {
+                    this.props.navigation.state.params.expense.payers.splice(i, 1);
                 }
             }
-            expense.consumers = this.state.consumers;
 
-            this.formatPayersAPI(expense);
-            this.formatConsumersAPI(expense);
-            console.log(expense);
+            this.formatPayersAPI(this.props.navigation.state.params.expense);
+            this.formatConsumersAPI(this.props.navigation.state.params.expense);
+            console.log(this.props.navigation.state.params.expense);
+
             //==========================================================================================
             //=========================AANVULLEN MET POST REQUEST NAAR API==============================
             //==========================================================================================
@@ -145,17 +172,33 @@ export default class AddExpenseShared extends Component {
                 header: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(expense)
+                body: JSON.stringify(this.props.navigation.state.params.expense)
             })
             .then((res) => {
-                console.log(res._bodyText);
                 this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip });
-            }).catch(error => console.log("network/rest error"));
-        } else if ((consumerTotal + this.state.shared) > expense.total) {
+            })
+            .catch(error => console.log("network/rest error"));
+        } else if (this.state.remaining > this.props.navigation.state.params.expense.total) {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te veel)");
         } else {
             alert("Totaal van de bedragen komt niet overeen met het totaal bedrag van de uitgave (te weinig)");
         }
+    }
+
+    renderConsumers() {
+        return this.state.sharing.map((consumer, index) => {
+            return (
+                <View style={styles.consumer} key={index}>
+                    <View style={styles.checker}>
+                        <Switch
+                            value={consumer.checked}
+                            onValueChange={(checked) => this.updateConsumerChecked(checked, consumer.participant)}
+                          />
+                    </View>
+                    <Text style={styles.labelConsumers}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
+                </View>
+            )
+        });
     }
 
     render() {
@@ -164,22 +207,32 @@ export default class AddExpenseShared extends Component {
                 <View>
                     <View style={styles.contentView}>
                         <View style={styles.separator}>
-                            <Text style={styles.title}>{I18n.t('consumers')}</Text>
+                            <Text style={styles.title}>{I18n.t('shared')}</Text>
                         </View>
                         <Text style={styles.remaining}>Remaining: { this.state.remaining }</Text>
-                        {this.renderConsumers()}
-
-                        <View style={styles.separator}></View>
-
                         <View style={styles.shared}>
-                            <Text style={styles.label}>{I18n.t('sharedcost')}</Text>
+                            <Text style={styles.label}>{I18n.t('sharedbysome')}</Text>
                             <TextInput
                                 placeholder="Amount shared..."
                                 style={styles.inputField}
                                 keyboardType='numeric'
                                 placeholderTextColor="#bfbfbf"
                                 underlineColorAndroid="transparent"
-                                onChangeText={(shared) => this.setState({ shared: parseFloat(shared) })} />
+                                onChangeText={(shared) => this.updateSharedBySome(shared) /*this.setState({ sharedBySome: parseFloat(shared) })*/} />
+                        </View>
+                        {this.renderConsumers()}
+
+                        <View style={styles.separator}></View>
+
+                        <View style={styles.shared}>
+                            <Text style={styles.label}>{I18n.t('sharedbyall')}</Text>
+                            <TextInput
+                                placeholder="Amount shared..."
+                                style={styles.inputField}
+                                keyboardType='numeric'
+                                placeholderTextColor="#bfbfbf"
+                                underlineColorAndroid="transparent"
+                                onChangeText={(shared) => this.updateSharedByAll(shared)} />
                         </View>
 
                         <TouchableOpacity style={styles.saveButton} onPress={() => this.addExpense()}>
@@ -231,19 +284,9 @@ const styles = StyleSheet.create({
         flex: .15
     },
     labelConsumers: {
-        flex: .6,
+        flex: .85,
         marginLeft: 10,
         fontSize: 14
-    },
-    inputFieldConsumers: {
-        flex: .25,
-        marginLeft: 5,
-        fontSize: 13,
-        padding: 5,
-        marginBottom: 2,
-        color: 'black',
-        borderBottomWidth: 0,
-        borderRadius: 5
     },
     label: {
         flex: .6,
