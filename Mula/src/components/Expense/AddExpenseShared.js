@@ -150,7 +150,7 @@ export default class AddExpenseShared extends Component {
 
             for(let i = this.props.navigation.state.params.expense.consumers.length - 1; i >= 0; i--) {
                 if(!(this.props.navigation.state.params.expense.consumers[i].checked)) {
-                    this.props.navigation.state.params.expense.consumers.slice(i, 1);
+                    this.props.navigation.state.params.expense.consumers.splice(i, 1);
                 }
             }
 
@@ -175,7 +175,6 @@ export default class AddExpenseShared extends Component {
                 body: JSON.stringify(this.props.navigation.state.params.expense)
             })
             .then((res) => {
-                console.log(res._bodyText);
                 this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip });
             })
             .catch(error => console.log("network/rest error"));
