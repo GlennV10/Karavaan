@@ -70,8 +70,8 @@ export default class TripSettings extends Component {
             method: 'POST',
             header: {
                 'Content-Type': 'application/json'
-            }})
-              .then((res) => res.json());
+            }
+        }).then((res) => console.log(res)).catch((error) => console.log(error));
     }
 
     onSelectedCurrencyChange = selectedCurrencies => {

@@ -51,7 +51,7 @@ export default class TripCategory extends Component {
                 'Content-Type': 'application/json'
                 } 
             })
-                .then((resp) => resp.json() )
+                .then((resp) => resp.json())
                 .then((trip) => {
                     console.log(trip.rates);
                     this.setState({baseCurrency: trip.baseCurrency});
@@ -61,7 +61,7 @@ export default class TripCategory extends Component {
                         users.push(participant[0]);
                     }
                     this.setState({users});
-                });
+                }).catch((error) => console.log(error));
         //}
     }
 
