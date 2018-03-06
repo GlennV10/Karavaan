@@ -40,7 +40,7 @@ export default {
 
     //TripTotal
     balancefor: 'Balans van',
-    amountpaid: 'Betaalt: ',
+    amountpaid: 'Betaald: ',
     amountconsumed: 'Verbruikt: ',
     balans: 'Balans: ',
     payments: 'Transacties',

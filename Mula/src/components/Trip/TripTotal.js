@@ -96,21 +96,21 @@ export default class TripTotal extends Component {
             return (
               <View style={styles.paymentsContainer} key={index + "container"}>
                 <View style={styles.paymentsLabel} key={index + "label"}>
-                  <Text>{payment[0][0]} {I18n.t('owes')} {payment[0][2]}:</Text>
+                  <Text>{payment[0][0]} - {payment[0][2]}:</Text>
                 </View >
                 <View style={styles.paymentsAmount} key={index + "amount"}>
-                  <Text>{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                  <Text style={styles.owes}>-{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
                 </View>
               </View>
             )
-          }  else if (payment[0][3] === this.state.activeUser) {
+          } else if (payment[0][3] === this.state.activeUser) {
             return (
               <View style={styles.paymentsContainer} key={index + "container"}>
                 <View style={styles.paymentsLabel} key={index + "label"}>
-                  <Text>{payment[0][2]} {I18n.t('recieve')} {payment[0][0]}:</Text>
+                  <Text>{payment[0][2]} - {payment[0][0]}:</Text>
                 </View >
                 <View style={styles.paymentsAmount} key={index + "amount"}>
-                  <Text>{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                  <Text style={styles.recieves}>+{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
                 </View>
               </View>
             )
@@ -197,34 +197,34 @@ export default class TripTotal extends Component {
                       <View style={styles.separator} key={i + "view2"}>
                         <Text key={index} style={styles.nameField}>{I18n.t('balancefor')} {item.firstName + " " + item.lastName}</Text>
                       </View>
-                        <View key={i + "balanceContainerView"} style={styles.balanceContainer}>
-                          <View key={i + "paidFlexView"} style={styles.flexViewContainer}>
-                            <View key={i + "paidLeftFlexView"} style={styles.leftFlexView}>
-                              <Text key={i + "paidText"} style={styles.label}>{I18n.t('amountpaid')} </Text>
-                            </View>
-                            <View key={i + "paidrRghtFlexView"} style={styles.rightFlexView}>
-                              <Text key={i + "paidAmount"}>{parseFloat(data[i][1]).toFixed(2)} {this.state.baseCurrency}</Text>
-                            </View>
+                      <View key={i + "balanceContainerView"} style={styles.balanceContainer}>
+                        <View key={i + "paidFlexView"} style={styles.flexViewContainer}>
+                          <View key={i + "paidLeftFlexView"} style={styles.leftFlexView}>
+                            <Text key={i + "paidText"} style={styles.label}>{I18n.t('amountpaid')} </Text>
                           </View>
-
-                          <View key={i + "consumedFlexView"} style={styles.flexViewContainer}>
-                            <View key={i + "consumedLeftFlexView"} style={styles.leftFlexView}>
-                              <Text key={i + "consumedText"} style={styles.label}>{I18n.t('amountconsumed')} </Text>
-                            </View>
-                            <View key={i + "consumedRightFlexView"} style={styles.rightFlexView}>
-                              <Text key={i + "consumedAmount"}>{parseFloat(data[i][2]).toFixed(2)} {this.state.baseCurrency}</Text>
-                            </View>
-                          </View>
-
-                          <View key={i + "balanceFlexView"} style={styles.flexViewContainer}>
-                            <View key={i + "balanceLeftFlexView"} style={styles.leftFlexView}>
-                              <Text key={i + "balanceText"} style={styles.label}>{I18n.t('balans')} </Text>
-                            </View>
-                            <View key={i + "balanceRightFlexView"} style={styles.rightFlexView}>
-                              <Text key={i + "balanceAmount"}>{parseFloat(data[i][3]).toFixed(2)} {this.state.baseCurrency}</Text>
-                            </View>
+                          <View key={i + "paidrRghtFlexView"} style={styles.rightFlexView}>
+                            <Text key={i + "paidAmount"}>{parseFloat(data[i][1]).toFixed(2)} {this.state.baseCurrency}</Text>
                           </View>
                         </View>
+
+                        <View key={i + "consumedFlexView"} style={styles.flexViewContainer}>
+                          <View key={i + "consumedLeftFlexView"} style={styles.leftFlexView}>
+                            <Text key={i + "consumedText"} style={styles.label}>{I18n.t('amountconsumed')} </Text>
+                          </View>
+                          <View key={i + "consumedRightFlexView"} style={styles.rightFlexView}>
+                            <Text key={i + "consumedAmount"}>{parseFloat(data[i][2]).toFixed(2)} {this.state.baseCurrency}</Text>
+                          </View>
+                        </View>
+
+                        <View key={i + "balanceFlexView"} style={styles.flexViewContainer}>
+                          <View key={i + "balanceLeftFlexView"} style={styles.leftFlexView}>
+                            <Text key={i + "balanceText"} style={styles.label}>{I18n.t('balans')} </Text>
+                          </View>
+                          <View key={i + "balanceRightFlexView"} style={styles.rightFlexView}>
+                            <Text key={i + "balanceAmount"}>{parseFloat(data[i][3]).toFixed(2)} {this.state.baseCurrency}</Text>
+                          </View>
+                        </View>
+                      </View>
                     </View>
                   )
                 }
@@ -253,8 +253,10 @@ export default class TripTotal extends Component {
         <View style={styles.container}>
           {this.renderUserPicker()}
           {tableData}
-         
-          <View style={styles.separator}><Text style={styles.transactions}>{I18n.t('payments')}</Text></View>
+
+          <View style={styles.separator}>
+            <Text style={styles.transactions}>{I18n.t('payments')}</Text>
+          </View>
 
           {this.renderPayments()}
 
@@ -283,6 +285,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 10,
+  },
+  owes: {
+    color: 'red'
+  },
+  recieves: {
+    color: 'green'
   },
   addTripButtonText: {
     color: '#fff'
