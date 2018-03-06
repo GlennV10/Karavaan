@@ -21,15 +21,15 @@ export default class Settings extends Component {
         }
     }
 
-    componentWillMount() {
+    async componentWillMount() {
+        await AsyncStorage.getItem('userName').then((username) => {
+            this.setState({ username });
+            this.setUser();
+        });
         AsyncStorage.getItem('language').then((language) => {
             this.setState({ language });
             if (language == "English") this.setState({ chosenLanguage: "English" });
             if (language == "Dutch") this.setState({ chosenLanguage: "Nederlands" });
-        });
-        AsyncStorage.getItem('userName').then((username) => {
-            this.setState({ username });
-            this.setUser();
         });
     }
 
