@@ -124,8 +124,7 @@ export default class AddTrip extends Component{
         })
         .then((res) => res.json())
         .then((response) => {
-            console.log(response);
-            this.props.navigation.navigate('TripParticipants', {trip});
+            this.props.navigation.navigate('TripParticipants', {trip: response});
         })
         .catch(error => console.log("network/rest error"));
             // }
