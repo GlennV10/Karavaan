@@ -18,15 +18,11 @@ export default class TripCategory extends Component {
     }
 
     componentWillMount() {
-        /*AsyncStorage.getItem('expenses')
-              .then(req => JSON.parse(req))
-              .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
-              .catch(error => console.log('Error loading expenses'));*/
         AsyncStorage.getItem('userName').then((username)=>{
             this.setState({username});
             this.setState({activeUser: username});
             this.calculateCategorytotal();
-        })
+        });
     }
 
     renderValutaToArray(rate) {
@@ -42,7 +38,7 @@ export default class TripCategory extends Component {
     }
 
     getExchangeRates() {
-        console.log("Getting rates...");
+        console.log("Getting rates..." + this.props.navigation.state.params.trip.id);
         var url = "http://193.191.177.73:8080/karafinREST/getTrip/" + this.props.navigation.state.params.trip.id;
         //if (this.state.loadRates) {
         return fetch(url, {
@@ -81,7 +77,7 @@ export default class TripCategory extends Component {
             });
             console.log(userExpense);
             if(categories.findIndex(i => i.category === expense.category) < 0) {
-                if(expense.currency == this.state.baseCurrency && userExpense !== 0){
+                if(userExpense !== 0){
                     let category = {
                         category: expense.category,
                         total: userExpense,
@@ -95,7 +91,7 @@ export default class TripCategory extends Component {
             } else {
                 for (let j = 0; j < categories.length; j++) {
                     if (categories[j].category === expense.category) {
-                        if(expense.currency == this.state.baseCurrency && userExpense !== 0){
+                        if(userExpense !== 0){
                             let category = {
                                 category: expense.category,
                                 total: userExpense,
@@ -113,6 +109,7 @@ export default class TripCategory extends Component {
                 }
             }
         }
+        console.log(categories);
         this.setState({ categories });
         this.setState({ isLoading: false })
     }
