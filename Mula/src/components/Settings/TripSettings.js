@@ -80,11 +80,14 @@ export default class TripSettings extends Component {
     }
 
     checkError(error) {
-        console.log(error)
         if (error === "Participant already added.") {
+            alert(I18n.t('alreadyadded'))
             this.clearFields()
+        } else if (error === "java.lang.NullPointerException") {
+            alert(I18n.t('falseemail'))
+            alert("fout email")
         } else {
-            console.log("Network/rest error doeme dummy")
+            console.log("Network/rest error")
         }
     }
 
@@ -104,8 +107,7 @@ export default class TripSettings extends Component {
 
             })
                 .then((response) => {
-                    console.log("added participants successfully: ");
-                    this.clearFields()
+                    this.checkError(response._bodyText)
                     this.renderParticipants()
                 }).catch(error => console.log("Invalid"));
         }
@@ -436,7 +438,7 @@ export default class TripSettings extends Component {
                         <View style={styles.separator}>
                             <TextInput
                                 ref="firstName"
-                                placeholder="firstName"
+                                placeholder={I18n.t('first')}
                                 value={this.state.firstName}
                                 style={styles.inputField}
                                 underlineColorAndroid="transparent"
@@ -446,7 +448,7 @@ export default class TripSettings extends Component {
                         <View style={styles.separator}>
                             <TextInput
                                 ref="lastName"
-                                placeholder="lastName"
+                                placeholder={I18n.t('last')}
                                 value={this.state.lastName}
                                 style={styles.inputField}
                                 underlineColorAndroid="transparent"

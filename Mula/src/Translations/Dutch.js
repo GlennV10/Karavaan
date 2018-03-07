@@ -149,6 +149,12 @@ export default {
     addparticipant: 'Voeg reiziger toe',
     createtrip: 'Voeg reis toe',
 
+    //TripParticipants
+    first: 'Voornaam',
+    last: 'Achternaam',
+    alreadyadded: 'Reiziger is reeds toegevoegd.',
+    falseemail: 'Het opgegeven email adres is niet correct.',
+
     //TripSettings
     delete: 'Verwijder',
     deletetrip: 'Bent u zeker dat u deze reis wil verwijderen?',
