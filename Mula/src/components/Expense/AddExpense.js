@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert, } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
@@ -294,27 +294,12 @@ export default class AddExpense extends Component {
                         <Picker style={styles.picker} selectedValue={this.state.category} onValueChange={(itemValue, itemIndex) => this.setCategory(itemValue)}>
                             <Picker.Item label={I18n.t('choosecategory')} value={I18n.t('categoryplaceholder')} />
                             {this.renderPickerCategories()}
-                            <Picker.Item label={I18n.t('addcategory')} value="add" />
                         </Picker>
                     </View>
 
                     <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
                         <Text style={styles.saveText}>{I18n.t('whopaid')}</Text>
                     </TouchableOpacity>
-
-                    <Prompt
-                        title={I18n.t('addcategory')}
-                        placeholder={I18n.t('newcategory')}
-                        visible={this.state.promptVisible}
-                        onCancel={() => this.setState({
-                            promptVisible: false,
-                            message: "You cancelled"
-                        })}
-                        onSubmit={(value) => this.setState({
-                            promptVisible: false,
-                            message: `You added "${value}"`,
-                            category: value
-                        })} />
                 </View >
             </ScrollView >
 

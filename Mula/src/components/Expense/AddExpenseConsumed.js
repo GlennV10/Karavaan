@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert, Switch } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert, Switch, KeyboardAvoidingView } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
@@ -54,7 +54,7 @@ export default class AddExpenseConsumed extends Component {
     updateConsumerAmount(amount, participant) {
         let total = 0;
         let consumers = this.state.consumers.slice();
-        for(consumer of consumers) {
+        for (consumer of consumers) {
             if (consumer.participant === participant) {
                 if (amount !== "") {
                     consumer.amount = parseFloat(amount);
@@ -93,7 +93,7 @@ export default class AddExpenseConsumed extends Component {
 
     updateConsumerChecked(checked, participant) {
         let consumers = this.state.consumers.slice();
-        for(consumer of consumers) {
+        for (consumer of consumers) {
             if (consumer.participant === participant) {
                 consumer.checked = checked;
             }
@@ -109,7 +109,7 @@ export default class AddExpenseConsumed extends Component {
                         <Switch
                             value={consumer.checked}
                             onValueChange={(checked) => this.updateConsumerChecked(checked, consumer.participant)}
-                          />
+                        />
                     </View>
                     <Text style={styles.labelConsumers}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
                     <TextInput
@@ -149,12 +149,15 @@ export default class AddExpenseConsumed extends Component {
                         <View style={styles.separator}>
                             <Text style={styles.title}>{I18n.t('consumers')}</Text>
                         </View>
-                        <Text style={styles.remaining}>{I18n.t('remaining')}: { this.state.remaining }</Text>
-                        {this.renderConsumers()}
+                        <Text style={styles.remaining}>{I18n.t('remaining')}: {this.state.remaining}</Text>
+                        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={-160}>
+                            {this.renderConsumers()}
+                        
 
                         <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
                             <Text style={styles.saveText}>{I18n.t('shared')}</Text>
                         </TouchableOpacity>
+                        </KeyboardAvoidingView>
                     </View>
                 </View>
             </ScrollView>
@@ -238,7 +241,8 @@ const styles = StyleSheet.create({
         height: 40,
         alignItems: 'center',
         backgroundColor: '#ffd185',
-        borderRadius: 5
+        borderRadius: 5,
+        marginBottom: 30
     },
     saveText: {
         fontSize: 15,
