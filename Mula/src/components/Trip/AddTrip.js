@@ -293,6 +293,14 @@ export default class AddTrip extends Component {
             res = false;
         }
 
+        // if (this.state.startDate == null) {
+        //
+        //     res = false;
+        // }
+        // if (this.state.endDate == null) {
+        //     res = false;
+        // }
+
         return res;
     }
 
