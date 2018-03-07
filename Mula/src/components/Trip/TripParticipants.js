@@ -73,15 +73,18 @@ export default class TripParticipants extends Component {
     }
 
     checkError(error) {
-        console.log(error)
         if (error === "Participant already added.") {
+            alert(I18n.t('alreadyadded'))
             this.clearFields()
+        } else if (error === "java.lang.NullPointerException") {
+            alert("fout email")
         } else {
-            console.log("Network/rest error doeme dummy")
+            console.log("Network/rest error")
         }
     }
 
     addParticipant() {
+        try {
         if (this.state.firstName === null || this.state.firstName === "") {
             alert("Firstname cannot be empty")
         } else if (this.state.lastName === null || this.state.lastName === ""){
@@ -97,11 +100,13 @@ export default class TripParticipants extends Component {
 
         })
             .then((response) => {
-                console.log("added participants successfully: ");
-                this.clearFields()
+                this.checkError(response._bodyText)
 
             }).catch(error => console.log("network/rest error"));
         }
+    } catch (error) {
+        alert("Email bestaat niet")
+    }
     }
 
     clearFields() {
@@ -132,7 +137,7 @@ export default class TripParticipants extends Component {
                 <View style={styles.separator}>
                     <TextInput
                         ref="firstName"
-                        placeholder="firstName"
+                        placeholder={I18n.t('first')}
                         value={this.state.firstName}
                         style={styles.inputField}
                         underlineColorAndroid="transparent"
@@ -142,7 +147,7 @@ export default class TripParticipants extends Component {
                 <View style={styles.separator}>
                     <TextInput
                         ref="lastName"
-                        placeholder="lastName"
+                        placeholder={I18n.t('last')}
                         value={this.state.lastName}
                         style={styles.inputField}
                         underlineColorAndroid="transparent"
@@ -162,14 +167,14 @@ export default class TripParticipants extends Component {
 
                 <View style={styles.addParticipantStyle}>
                     <Button color="#edc14f"
-                        title="add Participant"
+                        title={I18n.t('addparticipant')}
                         onPress={() => this.checkEmail()}
 
                     />
                 </View>
 
                 <Button color="#edc14f"
-                    title="Create trip"
+                    title={I18n.t('createtrip')}
                     onPress={() => this.moveOn()}
 
                 />

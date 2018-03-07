@@ -148,6 +148,12 @@ export default {
     addparticipant: 'Add traveler',
     createtrip: 'Add trip',
 
+    //TripParticipants
+    first: 'Firstname',
+    last: 'Lastname',
+    alreadyadded: 'Traveler has been added already.',
+    falseemail: 'The given email adress is incorrect.',
+
     //TripSettings
     delete: 'Delete',
     deletetrip: 'Are you sure you want to delete this trip?',
