@@ -75,7 +75,7 @@ export default class AddExpensePayers extends Component {
                 <View style={styles.payer} key={index}>
                     <Text style={styles.label}>{payer.participant.firstName} {payer.participant.lastName}</Text>
                     <TextInput
-                        placeholder="Amount paid..."
+                        placeholder={I18n.t('amountpaid')}
                         value={payer.amountToShow}
                         keyboardType="numeric"
                         style={styles.inputField}
@@ -115,7 +115,7 @@ export default class AddExpensePayers extends Component {
                         <View style={styles.separator}>
                             <Text style={styles.title}>{I18n.t('payers')}</Text>
                         </View>
-                        <Text style={styles.remaining}>Remaining: { this.state.remaining }</Text>
+                        <Text style={styles.remaining}>{I18n.t('remaining')}: { this.state.remaining }</Text>
                         { this.renderPayers() }
 
                         <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>

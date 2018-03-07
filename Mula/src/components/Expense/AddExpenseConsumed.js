@@ -91,7 +91,7 @@ export default class AddExpenseConsumed extends Component {
                     <Text style={styles.labelConsumers}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
                     <TextInput
                         editable={consumer.checked}
-                        placeholder="Amount..."
+                        placeholder={I18n.t('amountplaceholder')}
                         keyboardType="numeric"
                         style={styles.inputFieldConsumers}
                         placeholderTextColor="#bfbfbf"
@@ -126,7 +126,7 @@ export default class AddExpenseConsumed extends Component {
                         <View style={styles.separator}>
                             <Text style={styles.title}>{I18n.t('consumers')}</Text>
                         </View>
-                        <Text style={styles.remaining}>Remaining: { this.state.remaining }</Text>
+                        <Text style={styles.remaining}>{I18n.t('remaining')}: { this.state.remaining }</Text>
                         {this.renderConsumers()}
 
                         <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>

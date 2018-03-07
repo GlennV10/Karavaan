@@ -60,7 +60,7 @@ export default class AddTrip extends Component{
         selectedEndDate = new Date().toDateString
 
         this.getExchangeRates();
-        
+
         AsyncStorage.getItem('id_teller')
             .then((id_teller) => {
                 this.setState({ teller: id_teller })
@@ -119,6 +119,8 @@ export default class AddTrip extends Component{
             payments: {}
         }
 
+        console.log(trip);
+
         let participant = [];
         participant.push(this.state.admin);
         participant.push("ADMIN");
@@ -133,6 +135,7 @@ export default class AddTrip extends Component{
         })
         .then((res) => res.json())
         .then((response) => {
+            console.log(response);
             this.props.navigation.navigate('TripParticipants', {trip: response});
         })
         .catch(error => console.log("network/rest error"));

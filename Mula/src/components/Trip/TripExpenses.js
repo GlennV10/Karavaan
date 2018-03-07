@@ -26,7 +26,7 @@ export default class TripExpenses extends Component {
     }
 
     componentDidMount() {
-        this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
+        // this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -43,7 +43,7 @@ export default class TripExpenses extends Component {
 
     getExpenses() {
         let url = 'http://193.191.177.73:8080/karafinREST/getTrip/' + this.props.navigation.state.params.trip.id;
-    
+
         return fetch(url, {
               method: 'GET',
               header: {

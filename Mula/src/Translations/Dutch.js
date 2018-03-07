@@ -109,17 +109,26 @@ export default {
     groupexpense: 'Gezamenlijke kost',
     whopaid: 'Wie heeft betaald',
     date: 'Datum',
+    remaining: 'Nog te verdelen',
+    amountpaid: 'Betaald...',
 
     //AddExpensePayers
     payers: 'Wie heeft er betaald',
     whoconsumed: 'Wie nam er deel',
     back: 'Verwijder uitgave',
-    backmessage: 'Bent u zeker dat u de uitgave wil verwijderen?', 
+    backmessage: 'Bent u zeker dat u de uitgave wil verwijderen?',
 
     //AddEXpenseConsumed
     consumers: 'Wie nam er deel in de uitgave',
     addexpense: 'Voeg uitgave toe',
     sharedcost: 'Gemeenschappelijke kost',
+    amountplaceholder: 'Bedrag...',
+    amountsharedplaceholder: 'Bedrag...',
+
+    //AddExpenseShared
+    shared: 'Gemeenschappeijke kosten',
+    sharedbysome: 'Deel met geselecteerden',
+    sharedbyall: 'Deel met iedereen',
 
     //AddTrip
     tripname: 'Bestemming',

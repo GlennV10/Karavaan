@@ -143,7 +143,9 @@ export default class AddExpense extends Component {
             isNaN(expense.date.month) ||
             isNaN(expense.date.year) ||
             expense.category === "Choose category" ||
+            expense.category === "Kies categorie" ||
             expense.currency === "Choose currency" ||
+            expense.currency === "Kies munteenheid" ||
             expense.total < 0 || isNaN(expense.total)) {
             alert("Velden mogen niet leeg zijn");
         } else {
@@ -258,8 +260,8 @@ export default class AddExpense extends Component {
                         <DatePicker
                             mode='date'
                             format='DD/MM/YYYY'
-                            minDate={trip.startDate.dayOfMonth + "/" + (trip.startDate.month + 1) + "/" + trip.startDate.year}
-                            maxDate={trip.endDate.dayOfMonth + "/" + (trip.endDate.month + 1) + "/" + trip.endDate.year}
+                            minDate={trip.startDate.dayOfMonth + "/" + (trip.startDate.month + 0) + "/" + trip.startDate.year}
+                            maxDate={trip.endDate.dayOfMonth + "/" + (trip.endDate.month + 0) + "/" + trip.endDate.year}
                             date={this.state.selectedDate}
                             showIcon={true}
                             placeholder={I18n.t('dateplaceholder')}
