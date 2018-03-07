@@ -11,8 +11,9 @@ export default class TripParticipants extends Component{
             firstName: "",
             lastName: "",
             email:"",
-            trip: 0,
-            participants:[]
+            trip: this.props.navigation.state.params.trip,
+            participants:[],
+            dummies:[]
 
         };
 
@@ -20,7 +21,8 @@ export default class TripParticipants extends Component{
     }
 
     componentDidMount() {
-        
+        console.log(this.props.navigation.state.params.trip)
+        console.log(this.state.trip)
         
 
     }
@@ -28,19 +30,28 @@ export default class TripParticipants extends Component{
 
 
     addParticipant() {
-
         this.state.errors = [];
 
-
-        
-        //if(this.isValid()){
-            console.log(this.state.paling)
-            
-    
-            if (this.state.connectionMode == "online") {
                 if(this.state.email == null){
-                    var url = "https://193.191.177.73:8181/karafinREST/addPersonToTripFromEmail/"+this.state.userName+"/"+this.state.trip
-                    return fetch('url', {
+                    console.log("dummy")
+                    var url = "http://193.191.177.73:8181/karafinREST/addDummyPerson/"+this.state.firstName+"/"+this.state.lastName
+                    return fetch(url, {
+                        method: 'GET',
+                        header: {
+                            'Content-Type': 'application/json'
+                        }
+                        
+                    })
+                    
+                    .then((response) => {
+                        console.log("added dummy successfully: ");
+                        this.setState({email: response})
+                    }).catch(error => console.log("network/rest error"));
+                }
+                    
+                
+                var url = "http://193.191.177.73:8181/karafinREST/addPersonToTripFromEmail/"+this.state.email+"/"+this.state.trip
+                    return fetch(url, {
                         method: 'GET',
                         header: {
                             'Content-Type': 'application/json'
@@ -54,53 +65,9 @@ export default class TripParticipants extends Component{
                             
                         }).catch(error => console.log("network/rest error"));
                 }
-                else{
-                    var url = "dummy"
-                    return fetch('url', {
-                        method: 'GET',
-                        header: {
-                            'Content-Type': 'application/json'
-                        }
-                        
-                    })
-                    .then((res) => res.json())
-                    .then((response) => {
-                        console.log("added participants successfully: ");
-                        this.moveOn();
-                        
-                    }).catch(error => console.log("network/rest error"));
-                }
-            }
+            
                 
-            else {
-                AsyncStorage.getItem('participants')
-                .then(req => JSON.parse(req))
-                .then((trips) => {
-                    this.setState({ participants: participants})
-                })
-                .catch(error => console.log('Error loading participants'));
-                if(this.state.email != null){
-                    this.state.participants.push(
-                        {
-                            "trip": this.state.trip,
-                            "email": this.state.email
-                        }
-                    )
-                }
-                else{
-                    this.state.participants.push(
-                        {
-                            "trip": this.state.trip,
-                            "firstName": this.state.firstName,
-                            "lastName": this.state.lastName
-                        }
-                    )
-                }   
-                    
-                AsyncStorage.setItem('participants', JSON.stringify(this.state.participants))
-                .then(res => console.log(trips) & this.moveOn())
-                .catch(error => console.log('Error storing participants'));
-            }
+            
     
                 
         
@@ -109,7 +76,7 @@ export default class TripParticipants extends Component{
         //}
         //alert(this.state.errors)
         
-    }
+    
 
     //////////////////////////////////////////////////////////
     ////////////////////CURRENCY//////////////////////////////
@@ -161,7 +128,7 @@ export default class TripParticipants extends Component{
                 
                 <Button color="#edc14f"
                     title= "add Participant"
-                    onPress={() => this.addTrip() }
+                    onPress={() => this.addParticipant() }
 
                 />
                
