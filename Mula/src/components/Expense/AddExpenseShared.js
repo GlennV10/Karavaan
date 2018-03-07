@@ -85,7 +85,7 @@ export default class AddExpenseShared extends Component {
 
     updateSharedByAll(shared) {
         if (shared !== "") {
-            this.setState({ sharedByAll: parseFloat(shared) })
+            this.setState({ sharedByAll: parseFloat(shared).toFixed(2) })
         } else {
             shared = 0;
             this.setState({ sharedByAll: 0 })
@@ -95,7 +95,7 @@ export default class AddExpenseShared extends Component {
 
     updateSharedBySome(shared) {
         if (shared !== "") {
-            this.setState({ sharedBySome: parseFloat(shared) })
+            this.setState({ sharedBySome: parseFloat(shared).toFixed(2) })
         } else {
             shared = 0;
             this.setState({ sharedBySome: 0 })
