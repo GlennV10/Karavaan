@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert, KeyboardAvoidingView } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
@@ -44,7 +44,7 @@ export default class AddExpensePayers extends Component {
         for (participant of this.props.navigation.state.params.trip.participants) {
             let payer = {
                 participant: participant[0],
-                amount: 0
+                amount: 0,
             }
             payers.push(payer);
         }
@@ -65,8 +65,32 @@ export default class AddExpensePayers extends Component {
             total += payer.amount;
             console.log(payers);
         }
+        console.log(this.checkAmount(amount))
         this.setState({ remaining: (this.props.navigation.state.params.expense.total - total) });
         this.setState({ payers });
+    }
+
+
+    checkAmount(text) {
+        var newText = '';
+        let numbers = '0123456789';
+        var containsComma = false;
+
+        for (var i = 0; i < text.length; i++) {
+            if (numbers.indexOf(text[i]) > -1) {
+                newText = newText + text[i];
+            }
+            if (text[i] === ',' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+            if (text[i] === '.' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+        }
+        containsComma = false;
+        return parseFloat(newText)
     }
 
     renderPayers() {
@@ -75,7 +99,7 @@ export default class AddExpensePayers extends Component {
                 <View style={styles.payer} key={index}>
                     <Text style={styles.label}>{payer.participant.firstName} {payer.participant.lastName}</Text>
                     <TextInput
-                        placeholder="Amount paid..."
+                        placeholder={I18n.t('amountpaid')}
                         value={payer.amountToShow}
                         keyboardType="numeric"
                         style={styles.inputField}
@@ -110,20 +134,25 @@ export default class AddExpensePayers extends Component {
     render() {
         return (
             <ScrollView style={styles.container}>
+            
                 <View>
                     <View style={styles.contentView}>
                         <View style={styles.separator}>
                             <Text style={styles.title}>{I18n.t('payers')}</Text>
                         </View>
-                        <Text style={styles.remaining}>Remaining: { this.state.remaining }</Text>
-                        { this.renderPayers() }
+                        <Text style={styles.remaining}>{I18n.t('remaining')}: {this.state.remaining}</Text>
+                        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={-200}>
+                            {this.renderPayers()}
+                        
 
                         <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
                             <Text style={styles.saveText}>{I18n.t('whoconsumed')}</Text>
                         </TouchableOpacity>
+                        </KeyboardAvoidingView>
                     </View>
                 </View>
-            </ScrollView>
+                
+            </ScrollView >
         )
     }
 }
@@ -181,7 +210,8 @@ const styles = StyleSheet.create({
         height: 40,
         alignItems: 'center',
         backgroundColor: '#ffd185',
-        borderRadius: 5
+        borderRadius: 5,
+        marginBottom: 30
     },
     saveText: {
         fontSize: 15,

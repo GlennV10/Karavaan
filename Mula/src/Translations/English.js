@@ -10,6 +10,7 @@ export default {
     addExpense: 'New expense ',
     tripdetails: ': Overview',
     tripsettings: 'Trip settings',
+    addParticipants: 'Add travelers',
 
     //login
     email: 'Email',
@@ -36,6 +37,7 @@ export default {
 
     //TripExpenses
     noexpensesfound: 'NO EXPENSES FOUND',
+    deleteexpense: 'Are you sure you want to delete this expense?',
 
     //TripTotal
     balancefor: 'Balance of',
@@ -106,7 +108,9 @@ export default {
     addgroupexpense: 'Shared expense (on top of amount)',
     groupexpense: 'Shared expense',
     whopaid: 'Who paid',
-    date: 'Datum',
+    date: 'Date',
+    remaining: 'Remaining',
+    amountpaid: 'Amound paid...',
 
     //AddExpensePayers
     payers: 'Who paid for it',
@@ -115,6 +119,8 @@ export default {
     backmessage: 'Are you sure you want to delete this expense?',
 
     //AddEXpenseConsumed
+    amountplaceholder: 'Amount...',
+    amountsharedplaceholder: 'Amount shared...',
     consumers: 'Who participated in the expense',
     shared: 'Shared',
     sharedcost: 'Shared cost',
@@ -122,7 +128,7 @@ export default {
     //AddExpenseShared
     shared: 'Shared costs',
     addexpense: 'Add expense',
-    sharedbysome: 'Shared by some',
+    sharedbysome: 'Shared by selected people',
     sharedbyall: 'Shared by all',
 
     //AddTrip
@@ -138,7 +144,7 @@ export default {
     submit: 'Submit',
 
     //TripSettings
-    delete: 'Delete trip',
+    delete: 'Delete',
     deletetrip: 'Are you sure you want to delete this trip?',
     changecurrency: 'Change currency exchange rate',
     addguides: 'Voeg reisbegeleiders toe',

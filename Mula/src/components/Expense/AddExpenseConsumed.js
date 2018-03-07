@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert, Switch } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert, Switch, KeyboardAvoidingView } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
 import Prompt from 'react-native-prompt';
@@ -54,7 +54,7 @@ export default class AddExpenseConsumed extends Component {
     updateConsumerAmount(amount, participant) {
         let total = 0;
         let consumers = this.state.consumers.slice();
-        for(consumer of consumers) {
+        for (consumer of consumers) {
             if (consumer.participant === participant) {
                 if (amount !== "") {
                     consumer.amount = parseFloat(amount);
@@ -64,13 +64,36 @@ export default class AddExpenseConsumed extends Component {
             }
             total += consumer.amount;
         }
+        console.log(this.checkAmount(amount))
         this.setState({ remaining: (this.props.navigation.state.params.expense.total - total) });
         this.setState({ consumers });
     }
 
+    checkAmount(text) {
+        var newText = '';
+        let numbers = '0123456789';
+        var containsComma = false;
+
+        for (var i = 0; i < text.length; i++) {
+            if (numbers.indexOf(text[i]) > -1) {
+                newText = newText + text[i];
+            }
+            if (text[i] === ',' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+            if (text[i] === '.' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+        }
+        containsComma = false;
+        return parseFloat(newText)
+    }
+
     updateConsumerChecked(checked, participant) {
         let consumers = this.state.consumers.slice();
-        for(consumer of consumers) {
+        for (consumer of consumers) {
             if (consumer.participant === participant) {
                 consumer.checked = checked;
             }
@@ -86,12 +109,12 @@ export default class AddExpenseConsumed extends Component {
                         <Switch
                             value={consumer.checked}
                             onValueChange={(checked) => this.updateConsumerChecked(checked, consumer.participant)}
-                          />
+                        />
                     </View>
                     <Text style={styles.labelConsumers}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
                     <TextInput
                         editable={consumer.checked}
-                        placeholder="Amount..."
+                        placeholder={I18n.t('amountplaceholder')}
                         keyboardType="numeric"
                         style={styles.inputFieldConsumers}
                         placeholderTextColor="#bfbfbf"
@@ -126,12 +149,15 @@ export default class AddExpenseConsumed extends Component {
                         <View style={styles.separator}>
                             <Text style={styles.title}>{I18n.t('consumers')}</Text>
                         </View>
-                        <Text style={styles.remaining}>Remaining: { this.state.remaining }</Text>
-                        {this.renderConsumers()}
+                        <Text style={styles.remaining}>{I18n.t('remaining')}: {this.state.remaining}</Text>
+                        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={-160}>
+                            {this.renderConsumers()}
+                        
 
                         <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
                             <Text style={styles.saveText}>{I18n.t('shared')}</Text>
                         </TouchableOpacity>
+                        </KeyboardAvoidingView>
                     </View>
                 </View>
             </ScrollView>
@@ -215,7 +241,8 @@ const styles = StyleSheet.create({
         height: 40,
         alignItems: 'center',
         backgroundColor: '#ffd185',
-        borderRadius: 5
+        borderRadius: 5,
+        marginBottom: 30
     },
     saveText: {
         fontSize: 15,

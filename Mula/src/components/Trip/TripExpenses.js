@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions, Image, Text, TextInput, RefreshControl, Button, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Dimensions, Image, Text, TextInput, RefreshControl, Button, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage, Alert } from 'react-native';
 import I18n from 'react-native-i18n';
 // ############ Colors ############
 const red = '#C42525';
@@ -12,6 +12,7 @@ export default class TripExpenses extends Component {
         super(props);
         this.state = {
             username: "",
+            isAdmin: false,
             expenses: [],
             originalExpenses: [],
             isLoading: true,
@@ -36,7 +37,39 @@ export default class TripExpenses extends Component {
         this.checkAdmin();
     }
 
-    checkAdmin() {     
+    askToDeleteExpense(expense) {
+        Alert.alert(
+            I18n.t('delete'),
+            I18n.t('deleteexpense'), [{
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+            }, {
+                text: 'OK',
+                onPress: () => this.deleteExpense(expense)
+            },], {
+                cancelable: false
+            }
+        )
+        return true;
+    }
+
+    deleteExpense(expense) {
+        let url = 'http://193.191.177.73:8080/karafinREST/removeExpense/' + expense.id;
+        return fetch(url, {
+            method: 'DELETE',
+            header: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((res) => {
+            console.log(res);
+            this.props.navigation.navigate('TripDashboard', {trip: this.props.trip});
+        })
+        .catch((error) => console.log(error));
+    }
+
+    async checkAdmin() {
         let trip = this.props.navigation.state.params.trip;
         this.setState({ originalExpenses: trip.expenseList });
         this.setState({ expenses: trip.expenseList });
@@ -52,7 +85,6 @@ export default class TripExpenses extends Component {
             let expenses = [];
             this.state.originalExpenses.map((expense) => {
                 let userExpense = 0;
-                console.log(expense.consumers);
                 Object.keys(expense.consumers).map((user) => {
                     console.log("expenseUser: " + user);
                     if (user == this.state.username) {
@@ -64,7 +96,7 @@ export default class TripExpenses extends Component {
             });
             this.setState({ expenses }); 
         }
-        this.setState({ isLoading: false });
+        await this.setState({ isLoading: false });
     }
 
     renderExpenses() {
@@ -77,7 +109,7 @@ export default class TripExpenses extends Component {
         } else {
             return this.state.expenses.map((expense) => { 
                 return (
-                    <TouchableOpacity style={styles.expense} onPress={() => this.props.navigation.navigate('DetailExpense', { expense })} key={expense.id}>
+                    <TouchableOpacity style={styles.expense} onLongPress={() => this.askToDeleteExpense(expense) } onPress={() => this.props.navigation.navigate('DetailExpense', { expense })} key={expense.id}>
                         <View style={[styles.expenseContainer, styles.half]}>
                              <View style={styles.splitRow}>
                                 <Text style={[styles.expenseName]}>{expense.expenseName}</Text>

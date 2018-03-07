@@ -11,6 +11,7 @@ export default {
     addExpense: 'Nieuwe uitgave ',
     tripdetails: ': Overzicht',
     tripsettings: 'Reis instellingen',
+    addParticipants: 'Voeg reizigers toe',
 
     //login
     email: 'Email',
@@ -38,6 +39,7 @@ export default {
 
     //TripExpenses
     noexpensesfound: 'GEEN UITGAVEN GEVONDEN',
+    deleteexpense: 'Bent u zeker dat u deze uitgave wil verwijderen?',
 
     //TripTotal
     balancefor: 'Balans van',
@@ -109,17 +111,26 @@ export default {
     groupexpense: 'Gezamenlijke kost',
     whopaid: 'Wie heeft betaald',
     date: 'Datum',
+    remaining: 'Nog te verdelen',
+    amountpaid: 'Betaald...',
 
     //AddExpensePayers
     payers: 'Wie heeft er betaald',
     whoconsumed: 'Wie nam er deel',
     back: 'Verwijder uitgave',
-    backmessage: 'Bent u zeker dat u de uitgave wil verwijderen?', 
+    backmessage: 'Bent u zeker dat u de uitgave wil verwijderen?',
 
     //AddEXpenseConsumed
     consumers: 'Wie nam er deel in de uitgave',
     addexpense: 'Voeg uitgave toe',
     sharedcost: 'Gemeenschappelijke kost',
+    amountplaceholder: 'Bedrag...',
+    amountsharedplaceholder: 'Bedrag...',
+
+    //AddExpenseShared
+    shared: 'Gemeenschappeijke kosten',
+    sharedbysome: 'Deel met geselecteerden',
+    sharedbyall: 'Deel met iedereen',
 
     //AddTrip
     tripname: 'Bestemming',
@@ -134,7 +145,7 @@ export default {
     submit: 'Kies',
 
     //TripSettings
-    delete: 'Verwijder reis',
+    delete: 'Verwijder',
     deletetrip: 'Bent u zeker dat u deze reis wil verwijderen?',
     changecurrency: 'Verander wisselkoers van munt',
     addguides: 'Voeg reisbegeleiders toe',
