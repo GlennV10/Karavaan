@@ -13,6 +13,7 @@ export default class TripSettings extends Component {
             username: "",
             password: "",
             language: "",
+            trip: null,
             currenciesValue: [],
             currencies: [],
             selectedCurrencies: [],
@@ -95,8 +96,8 @@ export default class TripSettings extends Component {
     };
 
     onSelectedItemsChange = selectedItems => {
-        this.setState({ selectedItems });
         console.log(selectedItems);
+        this.setState({ selectedItems }, this.updateTripGuides(selectedItems));
     };
 
     renderChangeRates() {
@@ -138,6 +139,19 @@ export default class TripSettings extends Component {
         this.setState({ tripCurrencyRates })
         console.log(tripCurrencyRates);
         this.renderChangeRates();
+    }
+
+    updateTripGuides(guides) {
+        let trip = this.props.navigation.state.params.trip;
+        for(participant of trip.participants) {
+            if(!(participant[1] === 'ADMIN')) {
+                if(guides.includes(participant[0].email)) {
+                    participant[1] = 'GUIDE'
+                } else {
+                    participant[1] = 'PARTICIPANT'
+                }
+            }
+        }
     }
 
     updateTrip() {
@@ -200,15 +214,23 @@ export default class TripSettings extends Component {
         })
             .then((res) => res.json())
             .then((trip) => {
+                this.setState({ trip });
                 this.setState({ participants: trip.participants });
                 let participants = [];
+                let guides = [];
                 for (participant of trip.participants) {
-                    let newParticipant = {
-                        email: participant[0].email,
-                        name: participant[0].firstName + " " +  participant[0].lastName
+                    if(!(participant[1] === 'ADMIN')) {
+                        let newParticipant = {
+                          email: participant[0].email,
+                          name: participant[0].firstName + " " +  participant[0].lastName
+                        }
+                        participants.push(newParticipant);
                     }
-                    participants.push(newParticipant);
+                    if(participant[1] === 'GUIDE') {
+                        guides.push(participant[0].email)
+                    }
                 }
+                this.setState({ selectedItems: guides });
                 this.setState({ tripParticipants: participants});
                 this.setState({ rates: trip.rates});
                 this.renderValutaToArray(trip.rates);
