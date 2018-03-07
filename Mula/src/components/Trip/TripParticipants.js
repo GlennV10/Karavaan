@@ -82,7 +82,12 @@ export default class TripParticipants extends Component {
     }
 
     addParticipant() {
-        console.log(this.props.navigation.state.params.trip.id)
+        if (this.state.firstName === null || this.state.firstName === "") {
+            alert("Firstname cannot be empty")
+        } else if (this.state.lastName === null || this.state.lastName === ""){
+            alert("Lastname cannot be empty")
+        } else {
+            console.log(this.props.navigation.state.params.trip.id)
         var url = "http://193.191.177.73:8080/karafinREST/addPersonToTripFromEmail/" + this.state.email + "/" + this.props.navigation.state.params.trip.id
         return fetch(url, {
             method: 'POST',
@@ -96,6 +101,7 @@ export default class TripParticipants extends Component {
                 this.clearFields()
 
             }).catch(error => console.log("network/rest error"));
+        }
     }
 
     clearFields() {
@@ -119,9 +125,6 @@ export default class TripParticipants extends Component {
 
 
     render() {
-
-
-
         return (
             <ScrollView style={styles.container}>
 

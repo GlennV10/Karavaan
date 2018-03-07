@@ -144,6 +144,8 @@ export default {
     savetrip: 'Voeg reis toe',
     selectdate: 'Kies datum',
     submit: 'Kies',
+    addparticipant: 'Voeg reiziger toe',
+    createtrip: 'Voeg reis toe',
 
     //TripSettings
     delete: 'Verwijder',
