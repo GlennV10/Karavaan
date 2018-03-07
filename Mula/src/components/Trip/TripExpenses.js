@@ -76,7 +76,7 @@ export default class TripExpenses extends Component {
 
     getExpenses() {
         let url = 'http://193.191.177.73:8080/karafinREST/getTrip/' + this.props.trip.id;
-    
+
         return fetch(url, {
             method: 'GET',
             header: {
@@ -96,7 +96,7 @@ export default class TripExpenses extends Component {
         await this.getExpenses();
         let trip = this.state.trip;
         this.setState({ isAdmin: false });
-        
+
         for (participant of trip.participants) {
             if (participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
                 this.setState({ isAdmin: true });
@@ -114,9 +114,9 @@ export default class TripExpenses extends Component {
                         expense.userTotal = userExpense;
                         expenses.push(expense);
                     }
-                });              
+                });
             });
-            this.setState({ expenses }); 
+            this.setState({ expenses });
         }
         this.setState({ isLoading: false });
     }
@@ -129,7 +129,7 @@ export default class TripExpenses extends Component {
                 </View>
             )
         } else {
-            return this.state.expenses.map((expense) => { 
+            return this.state.expenses.map((expense) => {
                 return (
                     <TouchableOpacity style={styles.expense} onLongPress={() => this.askToDeleteExpense(expense) } onPress={() => this.props.navigation.navigate('DetailExpense', { expense })} key={expense.id}>
                         <View style={[styles.expenseContainer, styles.half]}>
@@ -137,7 +137,7 @@ export default class TripExpenses extends Component {
                                 <Text style={[styles.expenseName]}>{expense.expenseName}</Text>
                             </View>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseDate}>{expense.date.dayOfMonth}/{(expense.date.month + 1)}/{expense.date.year}</Text>
+                                <Text style={styles.expenseDate}>{expense.date.dayOfMonth}/{(expense.date.month)}/{expense.date.year}</Text>
                             </View>
                          </View>
                         <View style={[styles.expenseAmountContainer, styles.half]}>
