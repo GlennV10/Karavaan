@@ -28,12 +28,14 @@ export default class DashboardTrips extends Component {
     //   .catch(error => console.log('Error storing trips'));
   }
 
-  async componentDidMount() {
-    await AsyncStorage.getItem('userName').then((username)=>{
-      this.setState({username});
-      this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
-      this.props.navigation.addListener("willBlur", () => this.componentOnBlur());
+  componentDidMount() {
+      AsyncStorage.getItem('userName').then((username)=>{
+        console.log(username);
+        this.setState({username});
+        this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
+        this.props.navigation.addListener("willBlur", () => this.componentOnBlur());
     });
+
 
     // AsyncStorage.getItem('trips')
     //   .then(req => JSON.parse(req))
@@ -70,13 +72,6 @@ export default class DashboardTrips extends Component {
       }
     )
     return true;
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.trips !== nextState.trips) {
-      return true;
-    }
-    return false;
   }
 
   getUserTrips() {
@@ -147,7 +142,7 @@ export default class DashboardTrips extends Component {
     } else {
       return this.state.trips.map((trip) => {
         return (
-          <TouchableOpacity style={styles.trip} onLongPress={() => this.navigateToTripSettings(trip)} onPress={() => this.props.navigation.navigate('TripDashboard', { trip })} key={trip.id}>
+          <TouchableOpacity style={styles.trip} onLongPress={() => this.navigateToTripSettings(trip)} onPress={() => this.props.navigation.navigate('TripDashboard', { trip, user: this.state.username })} key={trip.id}>
             <View style={styles.splitRow}>
               <Text style={styles.tripName}>{trip.tripName}</Text>
             </View>
