@@ -94,7 +94,7 @@ export default class AddTrip extends Component {
         this.state.paling = [];
         // this.renderPaling();
 
-        //if(this.isValid()){
+        if(this.isValid()){
         // if (this.state.connectionMode == "online") {
         //     console.log("ONLINE")
 
@@ -174,7 +174,10 @@ export default class AddTrip extends Component {
         // }
 
 
-        //}
+        }
+        else{
+            alert(" Velden mogen niet leeg zijn ");
+        }
         //alert(this.state.errors)
 
     }
@@ -277,19 +280,19 @@ export default class AddTrip extends Component {
     }*/
 
     isValid() {
+        console.log("Validation")
         var res = true;
 
         if (this.state.title.length === 0 || this.state.title.length > 15) {
-            this.state.errors.push("please add a valid tripName ")
+            
             res = false;
         }
 
         if (this.state.startDate == null) {
-            this.state.errors.push("please add a valid startDate ")
+            
             res = false;
         }
         if (this.state.endDate == null) {
-            this.state.errors.push("please add a valid endDate ")
             res = false;
         }
 
@@ -410,12 +413,7 @@ export default class AddTrip extends Component {
                         onPress={() => this.formatCurrenciesAPI()}
 
                     />
-                    <View>
-                        <FlatList
-                            data={this.state.errors}
-                            renderItem={({ error }) => <Text>{error}</Text>}
-                        />
-                    </View>
+                    
                 </View>
             </ScrollView>
 
