@@ -11,34 +11,54 @@ export default class TripTotal extends Component {
       username: "",
       activeUser: "",
       users: [],
-      isLoading: true
+      isLoading: true,
+      isLoadingPayments: true,
+      payments: [],
+      baseCurrency: ""
     }
   }
 
-  componentWillMount() {
-    this.getTripOverview();
+  async componentWillMount() {
     this.getTripUsers();
 
-    AsyncStorage.getItem('userName').then((username) => {
+    await AsyncStorage.getItem('userName').then((username) => {
       this.setState({ username });
       this.setState({ activeUser: username });
     })
+
+    await this.getTripOverview(this.state.activeUser)
+    await this.getTripPayments(this.state.activeUser)
   }
 
-  updateUser(newActiveUser) {
+  async updateUser(newActiveUser) {
+    await this.getTripOverview(newActiveUser)
+    await this.getTripPayments(newActiveUser)
     this.setState({ activeUser: newActiveUser });
   }
 
 
-  getTripOverview() {
-    return fetch('http://193.191.177.73:8080/karafinREST/getTripOverview/' + this.props.tripID, {
+  getTripOverview(email) {
+    return fetch('http://193.191.177.73:8080/karafinREST/getTripOverview/' + this.props.tripID + '/' + email, {
       method: 'GET',
       header: {
         'Content-Type': 'application/json'
       }
     })
       .then((res) => res.json())
-      .then((overview) => this.setState({ overview }))
+      .then((data) => this.setState({ overview: data, isLoading: false }))
+      .catch((error) => console.log(error));
+  }
+
+  getTripPayments(email) {
+    return fetch('http://193.191.177.73:8080/karafinREST/paymentsForPersonInTrip/' + this.props.tripID + '/' + email, {
+      method: 'GET',
+      header: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => this.setState({ payments: data, isLoadingPayments: false }))
+      .catch((error) => console.log(error));
   }
 
   getTripUsers() {
@@ -48,8 +68,57 @@ export default class TripTotal extends Component {
       users.push(participant[0]);
     }
     this.setState({ users });
+    this.setState({ baseCurrency: trip.baseCurrency })
   }
 
+  renderPayments() {
+
+    if (this.state.isLoadingPayments) {
+      return (
+        <View style={styles.containerIndicator}>
+          <ActivityIndicator />
+        </View>
+      )
+    } else {
+      if (this.state.payments.length === undefined || this.state.payments.length === 0) {
+        return (
+          <View>
+            <Text style={styles.nopayments}>{I18n.t('nopayments')}</Text>
+          </View>
+        )
+      } else {
+        let pays = this.state.payments
+        let result = []
+
+        return this.state.payments.map((payment, index) => {
+          if (payment[0][1] === this.state.activeUser) {
+
+            return (
+              <View style={styles.paymentsContainer} key={index + "container"}>
+                <View style={styles.paymentsLabel} key={index + "label"}>
+                  <Text>{payment[0][0]} - {payment[0][2]}:</Text>
+                </View >
+                <View style={styles.paymentsAmount} key={index + "amount"}>
+                  <Text style={styles.owes}>-{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                </View>
+              </View>
+            )
+          } else if (payment[0][3] === this.state.activeUser) {
+            return (
+              <View style={styles.paymentsContainer} key={index + "container"}>
+                <View style={styles.paymentsLabel} key={index + "label"}>
+                  <Text>{payment[0][2]} - {payment[0][0]}:</Text>
+                </View >
+                <View style={styles.paymentsAmount} key={index + "amount"}>
+                  <Text style={styles.recieves}>+{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                </View>
+              </View>
+            )
+          }
+        })
+      }
+    }
+  }
   renderUserPicker() {
     let trip = this.props.navigation.state.params.trip;
     let isAdmin = false;
@@ -75,75 +144,81 @@ export default class TripTotal extends Component {
   }
 
   renderTable() {
-    let data = [];
-    for (payerKey of Object.keys(this.state.overview)) {
-      let payerData = [];
-      payerData.push(payerKey);
-      for (amount of this.state.overview[payerKey]) {
-        payerData.push(amount.toString());
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.containerIndicator}>
+          <ActivityIndicator />
+        </View>
+      )
+    } else {
+      let data = [];
+      for (payerKey of Object.keys(this.state.overview)) {
+        let payerData = [];
+        payerData.push(payerKey);
+        for (amount of this.state.overview[payerKey]) {
+          payerData.push(amount.toString());
+        }
+        data.push(payerData);
       }
-      data.push(payerData);
-    }
 
-    return (
+      return (
 
-      <View>
-        {this.state.users.map((item, index) => {
-          if (item.email === this.state.activeUser) {
-            for (let i = 0; i < data.length; i++) {
-              console.log("test")
-              console.log(data[i][0])
-              if (data[i][0] === item.email) {
-                return (
-                  <View style={styles.shownView} key={i + "view1"}>
-                    <View style={styles.separator} key={i + "view2"}>
-                      <Text key={index} style={styles.nameField}>{I18n.t('balancefor')} {item.firstName + " " + item.lastName}</Text>
-                    </View>
-                    <View key={i + "balanceContainerView"} style={styles.balanceContainer}>
-                      <View key={i + "paidFlexView"} style={styles.flexViewContainer}>
-                        <View key={i + "paidLeftFlexView"} style={styles.leftFlexView}>
-                          <Text key={i + "paidText"} style={styles.label}>{I18n.t('amountpaid')} </Text>
-                        </View>
-                        <View key={i + "paidrRghtFlexView"} style={styles.rightFlexView}>
-                          <Text key={i + "paidAmount"}>{parseFloat(data[i][1]).toFixed(2)}</Text>
-                        </View>
+        <View>
+          {this.state.users.map((item, index) => {
+            if (item.email === this.state.activeUser) {
+              for (let i = 0; i < data.length; i++) {
+                if (data[i][0] === item.email) {
+                  return (
+                    <View style={styles.shownView} key={i + "view1"}>
+                      <View style={styles.separator} key={i + "view2"}>
+                        <Text key={index} style={styles.nameField}>{I18n.t('balancefor')} {item.firstName + " " + item.lastName}</Text>
                       </View>
+                      <View key={i + "balanceContainerView"} style={styles.balanceContainer}>
+                        <View key={i + "paidFlexView"} style={styles.flexViewContainer}>
+                          <View key={i + "paidLeftFlexView"} style={styles.leftFlexView}>
+                            <Text key={i + "paidText"} style={styles.label}>{I18n.t('amountpaid')} </Text>
+                          </View>
+                          <View key={i + "paidrRghtFlexView"} style={styles.rightFlexView}>
+                            <Text key={i + "paidAmount"}>{parseFloat(data[i][1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                          </View>
+                        </View>
 
-                      <View key={i + "consumedFlexView"} style={styles.flexViewContainer}>
-                        <View key={i + "consumedLeftFlexView"} style={styles.leftFlexView}>
-                          <Text key={i + "consumedText"} style={styles.label}>{I18n.t('amountconsumed')} </Text>
+                        <View key={i + "consumedFlexView"} style={styles.flexViewContainer}>
+                          <View key={i + "consumedLeftFlexView"} style={styles.leftFlexView}>
+                            <Text key={i + "consumedText"} style={styles.label}>{I18n.t('amountconsumed')} </Text>
+                          </View>
+                          <View key={i + "consumedRightFlexView"} style={styles.rightFlexView}>
+                            <Text key={i + "consumedAmount"}>{parseFloat(data[i][2]).toFixed(2)} {this.state.baseCurrency}</Text>
+                          </View>
                         </View>
-                        <View key={i + "consumedRightFlexView"} style={styles.rightFlexView}>
-                          <Text key={i + "consumedAmount"}>{parseFloat(data[i][2]).toFixed(2)}</Text>
-                        </View>
-                      </View>
 
-                      <View key={i + "balanceFlexView"} style={styles.flexViewContainer}>
-                        <View key={i + "balanceLeftFlexView"} style={styles.leftFlexView}>
-                          <Text key={i + "balanceText"} style={styles.label}>{I18n.t('balans')} </Text>
-                        </View>
-                        <View key={i + "balanceRightFlexView"} style={styles.rightFlexView}>
-                          <Text key={i + "balanceAmount"}>{parseFloat(data[i][3]).toFixed(2)}</Text>
+                        <View key={i + "balanceFlexView"} style={styles.flexViewContainer}>
+                          <View key={i + "balanceLeftFlexView"} style={styles.leftFlexView}>
+                            <Text key={i + "balanceText"} style={styles.label}>{I18n.t('balans')} </Text>
+                          </View>
+                          <View key={i + "balanceRightFlexView"} style={styles.rightFlexView}>
+                            <Text key={i + "balanceAmount"}>{parseFloat(data[i][3]).toFixed(2)} {this.state.baseCurrency}</Text>
+                          </View>
                         </View>
                       </View>
                     </View>
-                  </View>
-                )
+                  )
+                }
               }
             }
-          }
-        })}
+          })}
 
-      </View>
-    )
-    this.setState({ isLoading: false })
+        </View>
+      )
+    }
+
   }
 
   render() {
     const tableData = this.renderTable();
 
 
-    if (this.isLoading) {
+    if (this.state.isLoading) {
       return (
         <View style={styles.containerIndicator}>
           <ActivityIndicator />
@@ -154,11 +229,15 @@ export default class TripTotal extends Component {
         <View style={styles.container}>
           {this.renderUserPicker()}
           {tableData}
-          {/* <Table>
-            <Rows data={tableData} style={styles.row} textStyle={styles.text} />
-          </Table> */}
+
+          <View style={styles.separator}>
+            <Text style={styles.transactions}>{I18n.t('payments')}</Text>
+          </View>
+
+          {this.renderPayments()}
+
           <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigation.navigate('AddExpense', { trip: this.props.navigation.state.params.trip })}>
-              <Text style={styles.addTripButtonText} >+</Text>
+            <Text style={styles.addTripButtonText} >+</Text>
           </TouchableOpacity>
         </View>
 
@@ -173,18 +252,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#d4e8e5',
   },
   addTripButton: {
-      backgroundColor: '#3B4859',
-      width: 50,
-      height: 50,
-      borderRadius: 50,
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'absolute',
-      bottom: 10,
-      right: 10,
+    backgroundColor: '#3B4859',
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+  },
+  owes: {
+    color: 'red'
+  },
+  recieves: {
+    color: 'green'
   },
   addTripButtonText: {
-      color: '#fff'
+    color: '#fff'
   },
   shownView: {
     padding: 20
@@ -192,6 +277,13 @@ const styles = StyleSheet.create({
   balanceContainer: {
     width: '80%',
     marginLeft: '20%'
+  },
+  nopayments: {
+    textAlign: 'center'
+  },
+  transactions: {
+    textAlign: 'center',
+    fontSize: 17
   },
   userPicker: {
     backgroundColor: "white",
@@ -216,12 +308,29 @@ const styles = StyleSheet.create({
     marginLeft: 2,
     marginBottom: 2,
   },
+  paymentsContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginLeft: 10,
+    marginRight: 10
+  },
+  paymentsLabel: {
+    flex: 0.75
+  },
+  paymentsAmount: {
+    flex: 0.25
+  },
   nameField: {
     textAlign: 'center',
     fontSize: 17
   },
   label: {
-    fontSize: 15
+    fontSize: 15,
+    marginBottom: 5
+  },
+  payments: {
+    padding: 25
   },
   text: { marginLeft: 5, padding: 5 },
   row: { height: 30 },

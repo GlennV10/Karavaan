@@ -10,6 +10,7 @@ export default {
     addExpense: 'New expense ',
     tripdetails: ': Overview',
     tripsettings: 'Trip settings',
+    addParticipants: 'Add travelers',
 
     //login
     email: 'Email',
@@ -18,6 +19,7 @@ export default {
     register: 'Register',
     error: "Oops, that didn't work out!",
     errormessage: "Email and/or password is incorrect.",
+    errorinternet: "No network connection",
 
     //Register
     firstname: 'First Name',
@@ -35,12 +37,17 @@ export default {
 
     //TripExpenses
     noexpensesfound: 'NO EXPENSES FOUND',
+    deleteexpense: 'Are you sure you want to delete this expense?',
 
     //TripTotal
     balancefor: 'Balance of',
     amountpaid: 'Paid: ',
     amountconsumed: 'Consumed: ',
     balans: 'Balance: ',
+    payments: 'Transactions',
+    owes: 'owes',
+    recieve: 'revieces from',
+    nopayments: 'NO TRANSACTIONS FOUND',
 
     //DashboardTrips
     notripsfound: 'NO TRIPS FOUND',
@@ -101,7 +108,9 @@ export default {
     addgroupexpense: 'Shared expense (on top of amount)',
     groupexpense: 'Shared expense',
     whopaid: 'Who paid',
-    date: 'Datum',
+    date: 'Date',
+    remaining: 'Remaining',
+    amountpaid: 'Amound paid...',
 
     //AddExpensePayers
     payers: 'Who paid for it',
@@ -110,6 +119,8 @@ export default {
     backmessage: 'Are you sure you want to delete this expense?',
 
     //AddEXpenseConsumed
+    amountplaceholder: 'Amount...',
+    amountsharedplaceholder: 'Amount shared...',
     consumers: 'Who participated in the expense',
     shared: 'Shared',
     sharedcost: 'Shared cost',
@@ -117,7 +128,7 @@ export default {
     //AddExpenseShared
     shared: 'Shared costs',
     addexpense: 'Add expense',
-    sharedbysome: 'Shared by some',
+    sharedbysome: 'Shared by selected people',
     sharedbyall: 'Shared by all',
 
     //AddTrip
@@ -133,10 +144,11 @@ export default {
     submit: 'Submit',
 
     //TripSettings
-    delete: 'Delete trip',
+    delete: 'Delete',
     deletetrip: 'Are you sure you want to delete this trip?',
     changecurrency: 'Change currency exchange rate',
     addguides: 'Voeg reisbegeleiders toe',
     chooseguide: 'Choose guides',
+    saved: 'Settings saved'
 
 }

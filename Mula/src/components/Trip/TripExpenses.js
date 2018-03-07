@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions, Image, Text, TextInput, Button, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Dimensions, Image, Text, TextInput, RefreshControl, Button, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage, Alert } from 'react-native';
 import I18n from 'react-native-i18n';
 // ############ Colors ############
 const red = '#C42525';
@@ -12,7 +12,9 @@ export default class TripExpenses extends Component {
         super(props);
         this.state = {
             username: "",
-            expenses: []
+            expenses: [],
+            isLoading: true,
+            refreshing: false
         }
     }
 
@@ -23,7 +25,82 @@ export default class TripExpenses extends Component {
         this.setState({ expenses: this.props.expenses });
     }
 
+    componentDidMount() {
+        // this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.state.expenses !== nextState.expenses) {
+            return true;
+        }
+        return false;
+    }
+
+    async _onRefresh() {
+        this.setState({ refreshing: true });
+        await this.getExpenses();
+    }
+
+    askToDeleteExpense(expense) {
+        Alert.alert(
+            I18n.t('delete'),
+            I18n.t('deleteexpense'), [{
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+            }, {
+                text: 'OK',
+                onPress: () => this.deleteExpense(expense)
+            },], {
+                cancelable: false
+            }
+        )
+        return true;
+    }
+
+    deleteExpense(expense) {
+        let url = 'http://193.191.177.73:8080/karafinREST/removeExpense/' + expense.id;
+        return fetch(url, {
+            method: 'DELETE',
+            header: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((res) => {
+            console.log(res);
+            this.props.navigation.navigate('TripDashboard', {trip: this.props.trip});
+        })
+        .catch((error) => console.log(error));
+    }
+
+    getExpenses() {
+        let url = 'http://193.191.177.73:8080/karafinREST/getTrip/' + this.props.navigation.state.params.trip.id;
+
+        return fetch(url, {
+              method: 'GET',
+              header: {
+                  'Content-Type': 'application/json'
+              }
+          })
+          .then((res) => res.json())
+          .then((userTrip) => {
+            console.log("refreshing expenses")
+            this.setState({expenses: userTrip.expenseList});
+            this.setState({refreshing: false});
+          }).catch(error => console.log("network/rest error"));
+    }
+
     renderExpenses() {
+        /*let userExpense = 0;
+        let trip = this.props.navigation.state.params.trip;
+        let isAdmin = false;
+
+        for (participant of trip.participants) {
+            if (participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
+                isAdmin = true;
+            }
+        }*/
+
         if (this.state.expenses.length === 0) {
             return (
                 <View style={styles.noExpensesView}>
@@ -53,7 +130,7 @@ export default class TripExpenses extends Component {
                 } else userExpense = expense.total;
 
                 return (
-                    <TouchableOpacity style={styles.expense} onPress={() => this.props.navigation.navigate('DetailExpense', { expense })} key={expense.id}>
+                    <TouchableOpacity style={styles.expense} onLongPress={() => this.askToDeleteExpense(expense) } onPress={() => this.props.navigation.navigate('DetailExpense', { expense })} key={expense.id}>
                         <View style={[styles.expenseContainer, styles.half]}>
                             <View style={styles.splitRow}>
                                 <Text style={[styles.expenseName]}>{expense.expenseName}</Text>

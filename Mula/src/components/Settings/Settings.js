@@ -22,36 +22,25 @@ export default class Settings extends Component {
     }
 
     componentWillMount() {
+        AsyncStorage.getItem('userName').then((username) => {
+            this.setUser(username);
+            this.setState({ username });
+        });
         AsyncStorage.getItem('language').then((language) => {
             this.setState({ language });
             if (language == "English") this.setState({ chosenLanguage: "English" });
             if (language == "Dutch") this.setState({ chosenLanguage: "Nederlands" });
         });
-        AsyncStorage.getItem('userName').then((username) => {
-            this.setState({ username });
-            this.setUser();
-        });
     }
 
     componentDidMount() {
-        AsyncStorage.getItem('userName').then((username) => {
-            this.setState({ username });
-        });
-
         AsyncStorage.getItem('currency').then((currency) => {
             this.setState({ currency });
         });
-        this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
-        this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton))
     }
 
-    _handleBackButton = () => {
-        this.props.navigation.navigate('DashboardTrips');
-        return true;
-    }
-
-    setUser() {
-        let url = 'http://193.191.177.73:8080/karafinREST/getPerson/' + this.state.username;
+    setUser(username) {
+        let url = 'http://193.191.177.73:8080/karafinREST/getPerson/' + username;
     
         return fetch(url, {
               method: 'GET',

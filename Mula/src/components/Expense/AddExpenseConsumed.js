@@ -64,8 +64,31 @@ export default class AddExpenseConsumed extends Component {
             }
             total += consumer.amount;
         }
+        console.log(this.checkAmount(amount))
         this.setState({ remaining: (this.props.navigation.state.params.expense.total - total) });
         this.setState({ consumers });
+    }
+
+    checkAmount(text) {
+        var newText = '';
+        let numbers = '0123456789';
+        var containsComma = false;
+
+        for (var i = 0; i < text.length; i++) {
+            if (numbers.indexOf(text[i]) > -1) {
+                newText = newText + text[i];
+            }
+            if (text[i] === ',' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+            if (text[i] === '.' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+        }
+        containsComma = false;
+        return parseFloat(newText)
     }
 
     updateConsumerChecked(checked, participant) {
@@ -91,7 +114,7 @@ export default class AddExpenseConsumed extends Component {
                     <Text style={styles.labelConsumers}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
                     <TextInput
                         editable={consumer.checked}
-                        placeholder="Amount..."
+                        placeholder={I18n.t('amountplaceholder')}
                         keyboardType="numeric"
                         style={styles.inputFieldConsumers}
                         placeholderTextColor="#bfbfbf"
@@ -126,7 +149,7 @@ export default class AddExpenseConsumed extends Component {
                         <View style={styles.separator}>
                             <Text style={styles.title}>{I18n.t('consumers')}</Text>
                         </View>
-                        <Text style={styles.remaining}>Remaining: { this.state.remaining }</Text>
+                        <Text style={styles.remaining}>{I18n.t('remaining')}: { this.state.remaining }</Text>
                         {this.renderConsumers()}
 
                         <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>

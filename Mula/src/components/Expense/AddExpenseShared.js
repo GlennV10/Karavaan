@@ -209,11 +209,11 @@ export default class AddExpenseShared extends Component {
                         <View style={styles.separator}>
                             <Text style={styles.title}>{I18n.t('shared')}</Text>
                         </View>
-                        <Text style={styles.remaining}>Remaining: { this.state.remaining }</Text>
+                        <Text style={styles.remaining}>{I18n.t('remaining')}: { this.state.remaining }</Text>
                         <View style={styles.shared}>
                             <Text style={styles.label}>{I18n.t('sharedbysome')}</Text>
                             <TextInput
-                                placeholder="Amount shared..."
+                                placeholder={I18n.t('amountsharedplaceholder')}
                                 style={styles.inputField}
                                 keyboardType='numeric'
                                 placeholderTextColor="#bfbfbf"
@@ -227,7 +227,7 @@ export default class AddExpenseShared extends Component {
                         <View style={styles.shared}>
                             <Text style={styles.label}>{I18n.t('sharedbyall')}</Text>
                             <TextInput
-                                placeholder="Amount shared..."
+                                placeholder={I18n.t('amountsharedplaceholder')}
                                 style={styles.inputField}
                                 keyboardType='numeric'
                                 placeholderTextColor="#bfbfbf"

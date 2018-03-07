@@ -11,23 +11,15 @@ export default class TripParticipants extends Component{
             firstName: "",
             lastName: "",
             email:"",
-            trip: this.props.navigation.state.params.trip,
+            trip: 0,
             participants:[],
-            dummies:[]
-
+            online: false
         };
-
-
     }
 
     componentDidMount() {
-        console.log(this.props.navigation.state.params.trip)
-        console.log(this.state.trip)
-        
 
     }
-    
-
 
     addParticipant() {
         this.state.errors = [];

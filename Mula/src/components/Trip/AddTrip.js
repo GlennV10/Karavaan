@@ -1,5 +1,5 @@
 import React, { Component, cloneElement } from 'react';
-import { StyleSheet, KeyboardAvoidingView, View, Image, Text, TextInput, Button, Modal, TouchableOpacity, ScrollView, Picker, AsyncStorage, Label,FlatList  } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView, View, Image, Text, Keyboard, TextInput, Button, Modal, TouchableOpacity, ScrollView, Picker, AsyncStorage, Label,FlatList  } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import DatePicker from 'react-native-datepicker';
 import { Switch } from 'react-native-switch';
@@ -45,13 +45,22 @@ export default class AddTrip extends Component{
     }
 
     componentWillMount() {
+        AsyncStorage.getItem('currency').then((currency) => {
+            this.setState({ baseCurrency: currency })
+        })
+        .catch(error => console.log('Error loading currency'));
     }
 
     componentDidMount() {
+        this.initialize();
+    }
+
+    initialize() {
         selectedStartDate = new Date().toDateString
         selectedEndDate = new Date().toDateString
 
         this.getExchangeRates();
+
         AsyncStorage.getItem('id_teller')
             .then((id_teller) => {
                 this.setState({ teller: id_teller })
@@ -110,6 +119,8 @@ export default class AddTrip extends Component{
             payments: {}
         }
 
+        console.log(trip);
+
         let participant = [];
         participant.push(this.state.admin);
         participant.push("ADMIN");
@@ -125,7 +136,7 @@ export default class AddTrip extends Component{
         .then((res) => res.json())
         .then((response) => {
             console.log(response);
-            this.props.navigation.navigate('TripParticipants', {trip});
+            this.props.navigation.navigate('TripParticipants', {trip: response});
         })
         .catch(error => console.log("network/rest error"));
             // }
@@ -258,6 +269,13 @@ export default class AddTrip extends Component{
         console.log(this.state.paling)
     }
 
+    /*renderCurrencyPicker() {
+        if(this.state.baseCurrency = "EURO")
+        return(
+
+        )
+    }*/
+
     isValid() {
         var res = true;
 
@@ -383,6 +401,7 @@ export default class AddTrip extends Component{
                         searchInputStyle={{ color: '#303030' }}
                         submitButtonColor="#edc14f"
                         submitButtonText={I18n.t('submit')}
+                        onPress={() => Keyboard.dismiss()}
                     />
                 </View>
 
