@@ -11,6 +11,7 @@ export default {
     addExpense: 'Nieuwe uitgave ',
     tripdetails: ': Overzicht',
     tripsettings: 'Reis instellingen',
+    addParticipants: 'Voeg reizigers toe',
 
     //login
     email: 'Email',

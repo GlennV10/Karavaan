@@ -10,6 +10,7 @@ export default {
     addExpense: 'New expense ',
     tripdetails: ': Overview',
     tripsettings: 'Trip settings',
+    addParticipants: 'Add travelers',
 
     //login
     email: 'Email',

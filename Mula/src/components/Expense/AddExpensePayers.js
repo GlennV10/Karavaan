@@ -44,7 +44,7 @@ export default class AddExpensePayers extends Component {
         for (participant of this.props.navigation.state.params.trip.participants) {
             let payer = {
                 participant: participant[0],
-                amount: 0
+                amount: 0,
             }
             payers.push(payer);
         }
@@ -65,8 +65,32 @@ export default class AddExpensePayers extends Component {
             total += payer.amount;
             console.log(payers);
         }
+        console.log(this.checkAmount(amount))
         this.setState({ remaining: (this.props.navigation.state.params.expense.total - total) });
         this.setState({ payers });
+    }
+
+    
+    checkAmount(text) {
+        var newText = '';
+        let numbers = '0123456789';
+        var containsComma = false;
+
+        for (var i = 0; i < text.length; i++) {
+            if (numbers.indexOf(text[i]) > -1) {
+                newText = newText + text[i];
+            }
+            if (text[i] === ',' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+            if (text[i] === '.' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+        }
+        containsComma = false;
+        return parseFloat(newText)
     }
 
     renderPayers() {
@@ -106,7 +130,7 @@ export default class AddExpensePayers extends Component {
 
         }
     }
-
+    
     render() {
         return (
             <ScrollView style={styles.container}>

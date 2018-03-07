@@ -64,8 +64,31 @@ export default class AddExpenseConsumed extends Component {
             }
             total += consumer.amount;
         }
+        console.log(this.checkAmount(amount))
         this.setState({ remaining: (this.props.navigation.state.params.expense.total - total) });
         this.setState({ consumers });
+    }
+
+    checkAmount(text) {
+        var newText = '';
+        let numbers = '0123456789';
+        var containsComma = false;
+
+        for (var i = 0; i < text.length; i++) {
+            if (numbers.indexOf(text[i]) > -1) {
+                newText = newText + text[i];
+            }
+            if (text[i] === ',' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+            if (text[i] === '.' && containsComma === false) {
+                newText = newText + '.';
+                containsComma = true;
+            }
+        }
+        containsComma = false;
+        return parseFloat(newText)
     }
 
     updateConsumerChecked(checked, participant) {

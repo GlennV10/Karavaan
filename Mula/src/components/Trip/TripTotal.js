@@ -25,8 +25,7 @@ export default class TripTotal extends Component {
       this.setState({ username });
       this.setState({ activeUser: username });
     })
-    console.log("testttt")
-    console.log(this.state.activeUser)
+
     await this.getTripOverview(this.state.activeUser)
     await this.getTripPayments(this.state.activeUser)
   }
@@ -82,7 +81,6 @@ export default class TripTotal extends Component {
       )
     } else {
       if (this.state.payments.length === undefined || this.state.payments.length === 0) {
-        console.log("leeg")
         return (
           <View>
             <Text style={styles.nopayments}>{I18n.t('nopayments')}</Text>
@@ -118,28 +116,6 @@ export default class TripTotal extends Component {
             )
           }
         })
-        // for (let i = 0; i < this.state.payments.length; i++) {
-        //   if (pays[i][0][1] === this.state.activeUser || pays[i][0][3] === this.state.activeUser) {
-        //     console.log(this.state.payments[0][0])
-        //     console.log("test payments")
-        //     console.log(this.state.payments[0][1])
-
-        //     return (
-        //       <View key={i}>
-        //         <Text>{pays[i][0][0]} owes {pays[i][0][2]}: {parseFloat(pays[i][1]).toFixed(2)}</Text>
-        //       </View >
-        //     )
-        //   }
-
-        // }
-        // }
-        // console.log(result)
-        // console.log("testPayments")
-        // return (
-        //   <View>
-        //     {result}
-        //   </View>
-        // )
       }
     }
   }
@@ -191,8 +167,6 @@ export default class TripTotal extends Component {
           {this.state.users.map((item, index) => {
             if (item.email === this.state.activeUser) {
               for (let i = 0; i < data.length; i++) {
-                console.log("test")
-                console.log(data[i][0])
                 if (data[i][0] === item.email) {
                   return (
                     <View style={styles.shownView} key={i + "view1"}>

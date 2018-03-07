@@ -31,13 +31,13 @@ export default class TripExpenses extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (this.state.expenses !== nextState.expenses) {
-          return true;
+            return true;
         }
         return false;
     }
 
     async _onRefresh() {
-        this.setState({refreshing: true});
+        this.setState({ refreshing: true });
         await this.getExpenses();
     }
 
