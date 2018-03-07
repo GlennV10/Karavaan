@@ -12,7 +12,7 @@ export default class AddExpense extends Component {
             amount: "",
             selectedDate: "",
             category: I18n.t('categoryplaceholder'),
-            currency: I18n.t('currencyplaceholder'),
+            currency: this.props.navigation.state.params.trip.baseCurrency,
             wayofsplit: I18n.t('splitplaceholder'),
             language: I18n.t('langtest'),
             check: false,

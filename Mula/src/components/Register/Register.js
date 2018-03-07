@@ -98,10 +98,7 @@ export default class Register extends React.Component {
       return (
         <View style={styles.container}>
              <View style={styles.logoContainer}>
-             <Image
-                 style={styles.logo}
-                 source={require('../../images/placeholder_user.png')}
-                 />
+             <Text style={styles.logo}>KARAFIN</Text>
          </View>
             <TextInput
                 placeholder={I18n.t('firstname')}
@@ -189,10 +186,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     logo:{
-        width: 100,
-        height: 100,
-        backfaceVisibility: 'hidden',
-        backgroundColor: 'transparent',
-        borderRadius: 50
+        fontSize: 40,
+        color: 'black'
     },
 });
