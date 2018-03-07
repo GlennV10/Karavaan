@@ -1,6 +1,7 @@
 export default {
     //Dashboard
     trips: 'Reizen',
+    dashboardsettings: 'U bent geen Admin of Begeleider van deze reis',
 
 
     //App.js -> stacknavigator titles

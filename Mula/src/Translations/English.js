@@ -1,6 +1,7 @@
 export default {
     //Dashboard
     trips: 'Trips',
+    dashboardsettings: 'You are not allowed to change settings from this trip',
 
     //App.js -> stacknavigator titles
     settings: 'Settings',

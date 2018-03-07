@@ -125,11 +125,28 @@ export default class DashboardTrips extends Component {
   }
 
   navigateToTripSettings(trip) {
+    let allowed = false;
     for (participant of trip.participants) {
       if(participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
-        this.props.navigation.navigate('TripSettings', { trip })
+        allowed = true;
+        this.props.navigation.navigate('TripSettings', { trip });
       }
-    }    
+    }
+    if(!allowed) {
+      Alert.alert(
+           "",
+           I18n.t('dashboardsettings'), [{
+               text: 'Cancel',
+               onPress: () => console.log('Cancel Pressed'),
+               style: 'cancel'
+           }, {
+               text: 'OK'
+           },], {
+               cancelable: false
+           }
+       )
+       return true;
+    }
   }
 
   renderTrips() {

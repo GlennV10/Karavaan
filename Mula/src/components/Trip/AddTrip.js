@@ -284,17 +284,17 @@ export default class AddTrip extends Component {
         var res = true;
 
         if (this.state.title.length === 0 || this.state.title.length > 15) {
-            
+
             res = false;
         }
 
-        if (this.state.startDate == null) {
-            
-            res = false;
-        }
-        if (this.state.endDate == null) {
-            res = false;
-        }
+        // if (this.state.startDate == null) {
+        //
+        //     res = false;
+        // }
+        // if (this.state.endDate == null) {
+        //     res = false;
+        // }
 
         return res;
     }
@@ -413,7 +413,7 @@ export default class AddTrip extends Component {
                         onPress={() => this.formatCurrenciesAPI()}
 
                     />
-                    
+
                 </View>
             </ScrollView>
 
