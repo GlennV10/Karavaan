@@ -17,12 +17,11 @@ export default class TripCategory extends Component {
       }
     }
 
-    componentWillMount() {
-        AsyncStorage.getItem('userName').then((username)=>{
-            this.setState({username});
-            this.setState({activeUser: username});
-            this.calculateCategorytotal();
-        });
+    async componentDidMount() {
+        let username = await AsyncStorage.getItem("userName");
+        console.log(username);
+        this.setState({ activeUser: this.props.user })
+        await this.calculateCategorytotal();
     }
 
     renderValutaToArray(rate) {

@@ -13,6 +13,7 @@ export default class TripExpenses extends Component {
         this.state = {
             username: "",
             isAdmin: false,
+            trip: null,
             expenses: [],
             originalExpenses: [],
             isLoading: true,
@@ -31,10 +32,14 @@ export default class TripExpenses extends Component {
 
     componentDidMount() {
         this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
+        this.props.navigation.addListener("willBlur", () => this.componentOnBlur());
     }
 
-    componentOnFocus() {
-        this.checkAdmin();
+    async componentOnFocus() {
+        await this.checkAdmin();
+    }
+
+    componentOnBlur() {
     }
 
     askToDeleteExpense(expense) {
@@ -69,12 +74,29 @@ export default class TripExpenses extends Component {
         .catch((error) => console.log(error));
     }
 
-    async checkAdmin() {
-        let trip = this.props.navigation.state.params.trip;
-        this.setState({ originalExpenses: trip.expenseList });
-        this.setState({ expenses: trip.expenseList });
-        this.setState({ isAdmin: false });
+    getExpenses() {
+        let url = 'http://193.191.177.73:8080/karafinREST/getTrip/' + this.props.trip.id;
+    
+        return fetch(url, {
+            method: 'GET',
+            header: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((res) => res.json())
+        .then((userTrip) => {
+            console.log("refreshing expenses")
+            this.setState({trip: userTrip});
+            this.setState({expenses: userTrip.expenseList});
+            this.setState({originalExpenses: userTrip.expenseList});
+        }).catch(error => console.log("network/rest error"));
+    }
 
+    async checkAdmin() {
+        await this.getExpenses();
+        let trip = this.state.trip;
+        this.setState({ isAdmin: false });
+        
         for (participant of trip.participants) {
             if (participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
                 this.setState({ isAdmin: true });
@@ -96,7 +118,7 @@ export default class TripExpenses extends Component {
             });
             this.setState({ expenses }); 
         }
-        await this.setState({ isLoading: false });
+        this.setState({ isLoading: false });
     }
 
     renderExpenses() {
@@ -120,7 +142,7 @@ export default class TripExpenses extends Component {
                          </View>
                         <View style={[styles.expenseAmountContainer, styles.half]}>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseAmount}>{(this.state.isAdmin) ? expense.total.toFixed(2) : expense.userTotal.toFixed(2)}</Text>
+                                <Text style={styles.expenseAmount}>{(this.state.isAdmin) ? expense.total.toFixed(2) : ((expense.userTotal != null) ? expense.userTotal.toFixed(2) : null)}</Text>
                             </View>
                             <View style={styles.splitRow}>
                                 <Text style={styles.expenseCurrency}>{expense.currency}</Text>
