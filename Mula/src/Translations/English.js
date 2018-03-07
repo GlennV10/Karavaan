@@ -49,6 +49,7 @@ export default {
     owes: 'owes',
     recieve: 'revieces from',
     nopayments: 'NO TRANSACTIONS FOUND',
+    taptocomplete: 'Tap a transaction to complete',
 
     //DashboardTrips
     notripsfound: 'NO TRIPS FOUND',

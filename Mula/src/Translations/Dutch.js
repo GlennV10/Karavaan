@@ -51,6 +51,7 @@ export default {
     owes: 'verschuldigd aan',
     recieve: 'krijgt van',
     nopayments: 'GEEN TRANSACTIES GEVONDEN',
+    taptocomplete: 'Druk op een transactie om te voltooien',
 
     //DashboardTrips
     notripsfound: 'GEEN REIZEN GEVONDEN',

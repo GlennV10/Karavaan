@@ -41,6 +41,7 @@ export default class TripTotal extends Component {
   }
 
   async rerenderTransactions() {
+    await this.getTripOverview(this.state.activeUser)
     await this.getTripPaymentsToComplete(this.state.activeUser)
     await this.getTripPayments(this.state.activeUser)
   }
@@ -315,6 +316,7 @@ export default class TripTotal extends Component {
 
           <View style={styles.separator}>
             <Text style={styles.transactions}>{I18n.t('paymentsToDo')}</Text>
+            <Text style={styles.subTransactions}>{I18n.t('taptocomplete')}</Text>
           </View>
 
           <ScrollView>
@@ -381,6 +383,10 @@ const styles = StyleSheet.create({
   transactions: {
     textAlign: 'center',
     fontSize: 17
+  },
+  subTransactions: {
+    textAlign: 'center',
+    fontSize: 15
   },
   userPicker: {
     backgroundColor: "white",
