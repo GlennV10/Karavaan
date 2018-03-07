@@ -41,7 +41,7 @@ export default class Settings extends Component {
 
     setUser(username) {
         let url = 'http://193.191.177.73:8080/karafinREST/getPerson/' + username;
-    
+
         return fetch(url, {
               method: 'GET',
               header: {
