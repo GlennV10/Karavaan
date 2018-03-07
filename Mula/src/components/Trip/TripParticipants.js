@@ -1,5 +1,5 @@
 import React, { Component, cloneElement } from 'react';
-import { StyleSheet, KeyboardAvoidingView, View, Image, Text, TextInput, Button, Modal, TouchableOpacity, ScrollView, Picker, AsyncStorage, Label,FlatList  } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView, View, Image, NetInfo, Text, TextInput, Button, Modal, TouchableOpacity, ScrollView, Picker, AsyncStorage, Label,FlatList  } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
 export default class TripParticipants extends Component{
@@ -13,25 +13,50 @@ export default class TripParticipants extends Component{
             email:"",
             trip: 0,
             participants:[],
-            online: false
+            connectionMode: false
         };
+        this._handleFirstConnectivityChange = this._handleFirstConnectivityChange.bind(this);
+    }
+
+    componentWillMount() {
+
     }
 
     componentDidMount() {
+        this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
+        this.props.navigation.addListener("willBlur", () => this.componentOnBlur());
+    }
 
+    componentOnFocus() {
+        NetInfo.addEventListener('connectionChange', this._handleFirstConnectivityChange);
+        this._handleFirstConnectivityChange();
+    }
+    
+    componentOnBlur() {
+        NetInfo.removeEventListener('connectionChange', this._handleFirstConnectivityChange);
+    }
+    
+    _handleFirstConnectivityChange() {
+        NetInfo.getConnectionInfo().then((connectionInfo) => {
+            if(connectionInfo.type == "none" || connectionInfo.type == "unknown") this.setState({ connectionMode: "offline" }) & console.log("went offline");
+            else this.setState({ connectionMode: "online" }) & console.log("went online");
+        }).catch((error) => console.log(error));
     }
 
     addParticipant() {
 
         this.state.errors = [];
-   
+
+
+        
         //if(this.isValid()){
-            console.log(this.state.paling)            
+            console.log(this.state.paling)
+            
     
-            if (this.state.online === true) {
+            if (this.state.connectionMode == "online") {
                 if(this.state.email == null){
                     var url = "https://193.191.177.73:8181/karafinREST/addPersonToTripFromEmail/"+this.state.userName+"/"+this.props.navigation.state.params.trip.id
-                    return fetch('url', {
+                    return fetch(url, {
                         method: 'GET',
                         header: {
                             'Content-Type': 'application/json'
@@ -47,7 +72,7 @@ export default class TripParticipants extends Component{
                 }
                 else{
                     var url = "dummy"
-                    return fetch('url', {
+                    return fetch(url, {
                         method: 'GET',
                         header: {
                             'Content-Type': 'application/json'
