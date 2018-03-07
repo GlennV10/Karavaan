@@ -114,7 +114,7 @@ export default class AddExpenseConsumed extends Component {
                     <Text style={styles.labelConsumers}>{consumer.participant.firstName} {consumer.participant.lastName}</Text>
                     <TextInput
                         editable={consumer.checked}
-                        placeholder="Amount..."
+                        placeholder={I18n.t('amountplaceholder')}
                         keyboardType="numeric"
                         style={styles.inputFieldConsumers}
                         placeholderTextColor="#bfbfbf"

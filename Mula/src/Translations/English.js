@@ -107,8 +107,14 @@ export default {
     addgroupexpense: 'Shared expense (on top of amount)',
     groupexpense: 'Shared expense',
     whopaid: 'Who paid',
+<<<<<<< HEAD
     date: 'Datum',
     remaining: 'Resterend',
+=======
+    date: 'Date',
+    remaining: 'Remaining',
+    amountpaid: 'Amound paid...',
+>>>>>>> 5e237466c05112b35b72982d1e5ccf4759d9a352
 
     //AddExpensePayers
     payers: 'Who paid for it',
@@ -117,6 +123,8 @@ export default {
     backmessage: 'Are you sure you want to delete this expense?',
 
     //AddEXpenseConsumed
+    amountplaceholder: 'Amount...',
+    amountsharedplaceholder: 'Amount shared...',
     consumers: 'Who participated in the expense',
     shared: 'Shared',
     sharedcost: 'Shared cost',
@@ -124,7 +132,7 @@ export default {
     //AddExpenseShared
     shared: 'Shared costs',
     addexpense: 'Add expense',
-    sharedbysome: 'Shared by some',
+    sharedbysome: 'Shared by selected people',
     sharedbyall: 'Shared by all',
 
     //AddTrip

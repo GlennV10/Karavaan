@@ -26,7 +26,7 @@ export default class TripExpenses extends Component {
     }
 
     componentDidMount() {
-        this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
+        // this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -43,6 +43,7 @@ export default class TripExpenses extends Component {
 
     getExpenses() {
         let url = 'http://193.191.177.73:8080/karafinREST/getTrip/' + this.props.navigation.state.params.trip.id;
+<<<<<<< HEAD
             return fetch(url, {
                 method: 'GET',
                 header: {
@@ -55,6 +56,21 @@ export default class TripExpenses extends Component {
                     this.setState({ expenses: userTrip.expenseList });
                     this.setState({ refreshing: false });
                 }).catch(error => console.log("network/rest error"));
+=======
+
+        return fetch(url, {
+              method: 'GET',
+              header: {
+                  'Content-Type': 'application/json'
+              }
+          })
+          .then((res) => res.json())
+          .then((userTrip) => {
+            console.log("refreshing expenses")
+            this.setState({expenses: userTrip.expenseList});
+            this.setState({refreshing: false});
+          }).catch(error => console.log("network/rest error"));
+>>>>>>> 5e237466c05112b35b72982d1e5ccf4759d9a352
     }
 
     renderExpenses() {
