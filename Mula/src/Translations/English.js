@@ -143,6 +143,8 @@ export default {
     savetrip: 'Add trip',
     selectdate: 'Select date',
     submit: 'Submit',
+    addparticipant: 'Add traveler',
+    createtrip: 'Add trip',
 
     //TripSettings
     delete: 'Delete',

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, ScrollView, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert } from 'react-native';
+import { AsyncStorage, ScrollView, StyleSheet, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Picker, Alert, KeyboardAvoidingView } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import I18n from 'react-native-i18n';
 import MultiSelect from 'react-native-multiple-select';
@@ -22,7 +22,11 @@ export default class TripSettings extends Component {
             originalRates: [],
             rates: [],
             tripRates: [],
-            participants: []
+            participants: [],
+            firstName: "",
+            lastName: "",
+            email: "",
+
         }
     }
 
@@ -44,6 +48,72 @@ export default class TripSettings extends Component {
     updateCurrency(newCurrency) {
         this.setState({ currency: newCurrency });
         AsyncStorage.setItem('currency', newCurrency).then(console.log("Currency updated to " + newCurrency));
+    }
+
+    async checkEmail() {
+        if (this.state.email === null || this.state.email === "") {
+            await this.addDummyParticipant()
+            await this.addParticipant()
+        } else {
+            await this.addParticipant()
+        }
+    }
+
+    addDummyParticipant() {
+        this.state.errors = [];
+        console.log("dummy")
+        var url = "http://193.191.177.73:8080/karafinREST/addDummyPerson/" + this.state.firstName + "/" + this.state.lastName
+        return fetch(url, {
+            method: 'POST',
+            header: {
+                'Content-Type': 'application/json'
+            }
+
+        })
+
+            .then((res) => res.json())
+            .then((response) => {
+                console.log("added dummy successfully: ");
+                console.log(response.email)
+                this.setState({ email: response.email })
+            }).catch(error => this.checkError(error));
+    }
+
+    checkError(error) {
+        console.log(error)
+        if (error === "Participant already added.") {
+            this.clearFields()
+        } else {
+            console.log("Network/rest error doeme dummy")
+        }
+    }
+
+    addParticipant() {
+        if (this.state.firstName === null || this.state.firstName === "") {
+            alert("Firstname cannot be empty")
+        } else if (this.state.lastName === null || this.state.lastName === "") {
+            alert("Lastname cannot be empty")
+        } else {
+            console.log(this.props.navigation.state.params.trip.id)
+            var url = "http://193.191.177.73:8080/karafinREST/addPersonToTripFromEmail/" + this.state.email + "/" + this.props.navigation.state.params.trip.id
+            return fetch(url, {
+                method: 'POST',
+                header: {
+                    'Content-Type': 'application/json'
+                }
+
+            })
+                .then((response) => {
+                    console.log("added participants successfully: ");
+                    this.clearFields()
+                    this.renderParticipants()
+                }).catch(error => console.log("Invalid"));
+        }
+    }
+
+    clearFields() {
+        this.setState({ firstName: "", lastName: "", email: "" })
+        this.getTrip();
     }
 
     askToDeleteTrip() {
@@ -73,17 +143,17 @@ export default class TripSettings extends Component {
                 'Content-Type': 'application/json'
             }
         })
-        .then((res) => {
-          console.log(res);
-          this.props.navigation.navigate('DashboardTrips');
-        })
-        .catch((error) => console.log(error));
+            .then((res) => {
+                console.log(res);
+                this.props.navigation.navigate('DashboardTrips');
+            })
+            .catch((error) => console.log(error));
     }
 
     onSelectedCurrencyChange = selectedCurrencies => {
         let tripRates = [];
-        for(currency of this.state.currenciesValue) {
-            for(selectedCurrency of selectedCurrencies) {
+        for (currency of this.state.currenciesValue) {
+            for (selectedCurrency of selectedCurrencies) {
                 if (selectedCurrency == currency.name) {
                     console.log(currency);
                     tripRates.push(currency);
@@ -123,7 +193,7 @@ export default class TripSettings extends Component {
         return this.state.participants.map((participant, index) => {
             return (
                 <View key={index}>
-                    <Text>{ participant[0].firstName } { participant[0].lastName }</Text>
+                    <Text>{participant[0].firstName} {participant[0].lastName}</Text>
                 </View>
             )
         });
@@ -143,9 +213,9 @@ export default class TripSettings extends Component {
 
     updateTripGuides(guides) {
         let trip = this.props.navigation.state.params.trip;
-        for(participant of trip.participants) {
-            if(!(participant[1] === 'ADMIN')) {
-                if(guides.includes(participant[0].email)) {
+        for (participant of trip.participants) {
+            if (!(participant[1] === 'ADMIN')) {
+                if (guides.includes(participant[0].email)) {
                     participant[1] = 'GUIDE'
                 } else {
                     participant[1] = 'PARTICIPANT'
@@ -170,7 +240,7 @@ export default class TripSettings extends Component {
 
     formatCurrenciesAPI(trip) {
         let formatCurrencies = {};
-        for(currency of this.state.selectedCurrencies) {
+        for (currency of this.state.selectedCurrencies) {
             formatCurrencies[currency] = this.state.fixerRates[currency];
         }
         return formatCurrencies;
@@ -220,20 +290,20 @@ export default class TripSettings extends Component {
                 let participants = [];
                 let guides = [];
                 for (participant of trip.participants) {
-                    if(!(participant[1] === 'ADMIN')) {
+                    if (!(participant[1] === 'ADMIN')) {
                         let newParticipant = {
-                          email: participant[0].email,
-                          name: participant[0].firstName + " " +  participant[0].lastName
+                            email: participant[0].email,
+                            name: participant[0].firstName + " " + participant[0].lastName
                         }
                         participants.push(newParticipant);
                     }
-                    if(participant[1] === 'GUIDE') {
+                    if (participant[1] === 'GUIDE') {
                         guides.push(participant[0].email)
                     }
                 }
                 this.setState({ selectedItems: guides });
-                this.setState({ tripParticipants: participants});
-                this.setState({ rates: trip.rates});
+                this.setState({ tripParticipants: participants });
+                this.setState({ rates: trip.rates });
                 this.renderValutaToArray(trip.rates);
                 this.getExchangeRatesWithBase(trip.baseCurrency)
                 trip.
@@ -250,7 +320,7 @@ export default class TripSettings extends Component {
             })
         });
         this.setState({ tripRates: array });
-        this.setState({ originalRates: array});
+        this.setState({ originalRates: array });
         this.setState({ tripCurrencyRates: array });
     }
 
@@ -361,9 +431,50 @@ export default class TripSettings extends Component {
                         submitButtonText={I18n.t('submit')}
                         color="#303030" />
                 </View>
+                <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100}>
+                    <View>
+                        <View style={styles.separator}>
+                            <TextInput
+                                ref="firstName"
+                                placeholder="firstName"
+                                value={this.state.firstName}
+                                style={styles.inputField}
+                                underlineColorAndroid="transparent"
+                                placeholderTextColor="#818181"
+                                onChangeText={(text) => console.log(text) & this.setState({ firstName: text })} />
+                        </View>
+                        <View style={styles.separator}>
+                            <TextInput
+                                ref="lastName"
+                                placeholder="lastName"
+                                value={this.state.lastName}
+                                style={styles.inputField}
+                                underlineColorAndroid="transparent"
+                                placeholderTextColor="#818181"
+                                onChangeText={(text) => console.log(text) & this.setState({ lastName: text })} />
+                        </View>
+                        <View style={styles.separator}>
+                            <TextInput
+                                ref="email"
+                                placeholder="email"
+                                value={this.state.email}
+                                style={styles.inputField}
+                                underlineColorAndroid="transparent"
+                                placeholderTextColor="#818181"
+                                onChangeText={(text) => console.log(text) & this.setState({ email: text })} />
+                        </View>
+
+                        <View style={styles.addParticipantStyle}>
+                            <TouchableOpacity style={styles.button}
+                                onPress={() => this.checkEmail()}>
+                                <Text style={styles.buttonText}>{I18n.t('addparticipant')}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </KeyboardAvoidingView>
 
                 <View style={styles.separator}>
-                    { this.renderParticipants() }
+                    {this.renderParticipants()}
                 </View>
 
                 <View style={styles.buttons}>
@@ -451,5 +562,8 @@ const styles = StyleSheet.create({
     },
     buttons: {
         marginBottom: 25
-    }
+    },
+    addParticipantStyle: {
+        marginBottom: 10
+    },
 });
