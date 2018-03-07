@@ -20,7 +20,7 @@ export default class TripCategory extends Component {
     async componentDidMount() {
         let username = await AsyncStorage.getItem("userName");
         console.log(username);
-        this.setState({ activeUser: this.props.user })
+        this.setState({ activeUser: username })
         await this.calculateCategorytotal();
     }
 
