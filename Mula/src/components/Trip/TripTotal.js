@@ -13,7 +13,9 @@ export default class TripTotal extends Component {
       users: [],
       isLoading: true,
       isLoadingPayments: true,
+      isLoadingPaymentsToComplete: true,
       payments: [],
+      paymentsToComplete: [],
       baseCurrency: ""
     }
   }
@@ -27,13 +29,20 @@ export default class TripTotal extends Component {
     })
 
     await this.getTripOverview(this.state.activeUser)
+    await this.getTripPaymentsToComplete(this.state.activeUser)
     await this.getTripPayments(this.state.activeUser)
   }
 
   async updateUser(newActiveUser) {
     await this.getTripOverview(newActiveUser)
+    await this.getTripPaymentsToComplete(newActiveUser)
     await this.getTripPayments(newActiveUser)
     this.setState({ activeUser: newActiveUser });
+  }
+
+  async rerenderTransactions() {
+    await this.getTripPaymentsToComplete(this.state.activeUser)
+    await this.getTripPayments(this.state.activeUser)
   }
 
 
@@ -61,6 +70,18 @@ export default class TripTotal extends Component {
       .catch((error) => console.log(error));
   }
 
+  getTripPaymentsToComplete(email) {
+    return fetch('http://193.191.177.73:8080/karafinREST/tripSummaryLoans/' + this.props.tripID + '/' + email, {
+      method: 'POST',
+      header: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => this.setState({ paymentsToComplete: data, isLoadingPaymentsToComplete: false }))
+      .catch((error) => console.log(error));
+  }
+
   getTripUsers() {
     let trip = this.props.navigation.state.params.trip;
     let users = [];
@@ -69,6 +90,67 @@ export default class TripTotal extends Component {
     }
     this.setState({ users });
     this.setState({ baseCurrency: trip.baseCurrency })
+  }
+
+  completePayment(payment) {
+    console.log(payment)
+    var url = 'http://193.191.177.73:8080/karafinREST/addPaymentToTrip/' + this.props.tripID + '/' + payment[0][1] + '/' + payment[0][3] + '/' + payment[1]
+    return fetch(url, {
+      method: 'POST',
+      header: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((result) =>  this.rerenderTransactions())
+      .catch((error) => console.log(error));
+  }
+
+  renderPaymentsToComplete() {
+    if (this.state.isLoadingPaymentsToComplete) {
+      return (
+        <View style={styles.containerIndicator}>
+          <ActivityIndicator />
+        </View>
+      )
+    } else {
+      if (this.state.paymentsToComplete.length === undefined || this.state.paymentsToComplete.length === 0) {
+        return (
+          <View>
+            <Text style={styles.nopayments}>{I18n.t('nopayments')}</Text>
+          </View>
+        )
+      } else {
+        let pays = this.state.paymentsToComplete
+        let result = []
+
+        return this.state.paymentsToComplete.map((payment, index) => {
+          if (payment[0][1] === this.state.activeUser) {
+
+            return (
+              <TouchableOpacity onPress={() => this.completePayment(payment)} style={styles.paymentsContainer} key={index + "container"}>
+                <View style={styles.paymentsLabel} key={index + "label"}>
+                  <Text>{payment[0][0]} - {payment[0][2]}:</Text>
+                </View >
+                <View style={styles.paymentsAmount} key={index + "amount"}>
+                  <Text style={styles.owes}>-{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                </View>
+              </TouchableOpacity>
+            )
+          } else if (payment[0][3] === this.state.activeUser) {
+            return (
+              <TouchableOpacity onPress={() => this.completePayment(payment)} style={styles.paymentsContainer} key={index + "container"}>
+                <View style={styles.paymentsLabel} key={index + "label"}>
+                  <Text>{payment[0][2]} - {payment[0][0]}:</Text>
+                </View >
+                <View style={styles.paymentsAmount} key={index + "amount"}>
+                  <Text style={styles.recieves}>+{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                </View>
+              </TouchableOpacity>
+            )
+          }
+        })
+      }
+    }
   }
 
   renderPayments() {
@@ -226,15 +308,27 @@ export default class TripTotal extends Component {
       )
     } else {
       return (
+
         <View style={styles.container}>
           {this.renderUserPicker()}
           {tableData}
 
           <View style={styles.separator}>
-            <Text style={styles.transactions}>{I18n.t('payments')}</Text>
+            <Text style={styles.transactions}>{I18n.t('paymentsToDo')}</Text>
           </View>
 
-          {this.renderPayments()}
+          <ScrollView>
+            <View style={styles.scrollViewMargin}>
+              {this.renderPaymentsToComplete()}
+            </View>
+          </ScrollView>
+
+          <View style={styles.separator}>
+            <Text style={styles.transactions}>{I18n.t('payments')}</Text>
+          </View>
+          <ScrollView>
+            {this.renderPayments()}
+          </ScrollView>
 
           <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigation.navigate('AddExpense', { trip: this.props.navigation.state.params.trip })}>
             <Text style={styles.addTripButtonText} >+</Text>
@@ -261,6 +355,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 10,
+  },
+  scrollViewMargin: {
+    marginBottom: 20
   },
   owes: {
     color: 'red'

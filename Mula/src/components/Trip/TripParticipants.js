@@ -70,7 +70,7 @@ export default class TripParticipants extends Component {
                 console.log(response.email)
                 this.setState({ email: response.email })
             }).catch(error => this.checkError(error));
-    } 
+    }
 
     checkError(error) {
         console.log(error)
@@ -99,7 +99,7 @@ export default class TripParticipants extends Component {
     }
 
     clearFields() {
-        this.setState({firstName: "", lastName: "", email: ""})
+        this.setState({ firstName: "", lastName: "", email: "" })
     }
 
     //}
@@ -157,12 +157,13 @@ export default class TripParticipants extends Component {
                         onChangeText={(text) => console.log(text) & this.setState({ email: text })} />
                 </View>
 
+                <View style={styles.addParticipantStyle}>
+                    <Button color="#edc14f"
+                        title="add Participant"
+                        onPress={() => this.checkEmail()}
 
-                <Button color="#edc14f"
-                    title="add Participant"
-                    onPress={() => this.checkEmail()}
-
-                />
+                    />
+                </View>
 
                 <Button color="#edc14f"
                     title="Create trip"
@@ -211,6 +212,9 @@ const styles = StyleSheet.create({
         borderBottomColor: '#bbb',
         borderBottomWidth: StyleSheet.hairlineWidth,
         marginBottom: 5
+    },
+    addParticipantStyle: {
+        marginBottom: 10
     }
 
 
