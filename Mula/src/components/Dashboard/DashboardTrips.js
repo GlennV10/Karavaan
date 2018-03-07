@@ -129,6 +129,14 @@ export default class DashboardTrips extends Component {
     this.setState({ trips, refreshing: false, isLoading: false });
   }
 
+  navigateToTripSettings(trip) {
+    for (participant of trip.participants) {
+      if(participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
+        this.props.navigation.navigate('TripSettings', { trip })
+      }
+    }    
+  }
+
   renderTrips() {
     if (this.state.trips.length === 0) {
       return (
@@ -139,7 +147,7 @@ export default class DashboardTrips extends Component {
     } else {
       return this.state.trips.map((trip) => {
         return (
-          <TouchableOpacity style={styles.trip} onLongPress={() => this.props.navigation.navigate('TripSettings', { trip })} onPress={() => this.props.navigation.navigate('TripDashboard', { trip })} key={trip.id}>
+          <TouchableOpacity style={styles.trip} onLongPress={() => this.navigateToTripSettings(trip)} onPress={() => this.props.navigation.navigate('TripDashboard', { trip })} key={trip.id}>
             <View style={styles.splitRow}>
               <Text style={styles.tripName}>{trip.tripName}</Text>
             </View>
