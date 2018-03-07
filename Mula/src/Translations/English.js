@@ -36,6 +36,7 @@ export default {
 
     //TripExpenses
     noexpensesfound: 'NO EXPENSES FOUND',
+    deleteexpense: 'Are you sure you want to delete this expense?',
 
     //TripTotal
     balancefor: 'Balance of',
@@ -142,7 +143,7 @@ export default {
     submit: 'Submit',
 
     //TripSettings
-    delete: 'Delete trip',
+    delete: 'Delete',
     deletetrip: 'Are you sure you want to delete this trip?',
     changecurrency: 'Change currency exchange rate',
     addguides: 'Voeg reisbegeleiders toe',

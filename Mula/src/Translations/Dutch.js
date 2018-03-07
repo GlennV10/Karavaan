@@ -38,6 +38,7 @@ export default {
 
     //TripExpenses
     noexpensesfound: 'GEEN UITGAVEN GEVONDEN',
+    deleteexpense: 'Bent u zeker dat u deze uitgave wil verwijderen?',
 
     //TripTotal
     balancefor: 'Balans van',
@@ -143,7 +144,7 @@ export default {
     submit: 'Kies',
 
     //TripSettings
-    delete: 'Verwijder reis',
+    delete: 'Verwijder',
     deletetrip: 'Bent u zeker dat u deze reis wil verwijderen?',
     changecurrency: 'Verander wisselkoers van munt',
     addguides: 'Voeg reisbegeleiders toe',

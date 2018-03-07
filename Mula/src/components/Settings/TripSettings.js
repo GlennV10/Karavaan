@@ -63,7 +63,7 @@ export default class TripSettings extends Component {
     }
 
     deleteTrip() {
-        let trip = this.props.navigation.params.state.trip;
+        let trip = this.props.navigation.state.params.trip;
 
         let url = 'http://193.191.177.73:8080/karafinREST/removeTrip/' + trip.id;
         return fetch(url, {
@@ -71,7 +71,12 @@ export default class TripSettings extends Component {
             header: {
                 'Content-Type': 'application/json'
             }
-        }).then((res) => console.log(res)).catch((error) => console.log(error));
+        })
+        .then((res) => {
+          console.log(res);
+          this.props.navigation.navigate('DashboardTrips');
+        })
+        .catch((error) => console.log(error));
     }
 
     onSelectedCurrencyChange = selectedCurrencies => {
