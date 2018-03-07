@@ -137,9 +137,10 @@ export default class TripDashboard extends React.Component {
         tabBarUnderlineStyle={{ backgroundColor: '#edc14f' }}
         tabBarBackgroundColor={'#e2e8e5'}
         tabBarActiveTextColor={'#303030'}
-        tabBarInactiveTextColor={'#303030'}>
+        tabBarInactiveTextColor={'#303030'}
+        onChangeTab={({i, ref}) => this.refs.expensesTab.getExpenses()}>
         <TripTotal tabLabel={I18n.t('balance')} navigation={nav} expenses={this.state.expenses} tripID={this.props.navigation.state.params.trip.id} />
-        <TripExpenses tabLabel={I18n.t('expenses')} navigation={nav} expenses={this.state.expenses} tripID={this.props.navigation.state.params.trip.id} />
+        <TripExpenses tabLabel={I18n.t('expenses')} ref="expensesTab" navigation={nav} expenses={this.state.expenses} tripID={this.props.navigation.state.params.trip.id} />
         <TripCategory tabLabel={I18n.t('category')} navigation={nav} expenses={this.state.expenses} tripID={this.props.navigation.state.params.trip.id} />
       </ScrollableTabView>
     );

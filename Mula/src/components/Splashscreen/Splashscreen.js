@@ -1,23 +1,16 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid, Image, AsyncStorage, TouchableOpacity, Linking} from 'react-native';
-import {StackNavigator} from 'react-navigation';
-import { NavigationActions } from 'react-navigation';
 import I18n from 'react-native-i18n';
 
 export default class Splashscreen extends React.Component {
 
+    constructor(props) {
+        super(props);
+    }
+
     componentWillMount() {
-       /*const resetAction = NavigationActions.reset({
-            index: 0,
-            actions: [
-
-              NavigationActions.navigate({ routeName: 'Login'}),
-            ]
-          })
-          this.props.navigation.dispatch(resetAction)*/
-
-        //setTimeout(() => this.props.navigation.navigate('Login'), 3000);
           this.checkSettings();
+          this.checkIfLoggedIn();
     }
 
     checkSettings() {
@@ -37,8 +30,8 @@ export default class Splashscreen extends React.Component {
                 }
             });
             AsyncStorage.getItem('currency').then((currency) => {
-                if(currency!= null) AsyncStorage.setItem('currency', currency).then(console.log("Currency" + currency + " written to memory."));
-                else {AsyncStorage.setItem('currency', "Euro").then(console.log("Currency 'Euro' written to memory."));}
+                if(currency!= null) console.log("Currency " + currency + " in memory.");
+                else {AsyncStorage.setItem('currency', "EUR").then(console.log("Currency 'EUR' written to memory."));}
             });
         } catch(error){
             console.log(error);
@@ -52,10 +45,11 @@ export default class Splashscreen extends React.Component {
     checkIfLoggedIn(){
         try{
             AsyncStorage.getItem('userName').then((username) => {
-                console.log(username);
                 if(username != null){
-                    this.goToDashBoard();
+                    console.log("Logged in");
+                    setTimeout(() => this.props.navigation.navigate('DashboardTrips'), 1500);
                 } else {
+                    console.log("Not logged in");
                     setTimeout(() => this.props.navigation.navigate('Login'), 1500);
                 }
             })
@@ -64,19 +58,7 @@ export default class Splashscreen extends React.Component {
         }
     }
 
-    goToDashBoard() {
-        AsyncStorage.getItem('profilePic').then((profile) => {
-            let imgUri = "";
-            if(profile == null) {
-                imgUri = require('../../images/placeholder_user.png');
-            } else imgUri: profile;
-            setTimeout(() => this.props.navigation.navigate('DashboardTrips', {imgUri}), 1500);
-          }).catch(error => console.log(error));
-    }
-
     render() {
-        this.checkIfLoggedIn();
-
         return (
         <View style={styles.container}>
             <TouchableOpacity 

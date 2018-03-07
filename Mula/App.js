@@ -102,10 +102,6 @@ export default App = StackNavigator({
         headerBackTitleStyle:{
             color: "#FFF"
         },
-        headerLeft:
-        <TouchableOpacity onPress={()=>{ navigation.navigate('DashboardTrips') }}>
-          <Image source={require('./src/images/left-arrow-png-left-icon-1600.png')} style={{width: 22, height: 22, marginLeft: 15}}/>
-        </TouchableOpacity>,
       }),
       screen: Settings
     },
@@ -140,10 +136,6 @@ export default App = StackNavigator({
         headerBackTitleStyle:{
             color: "#FFF"
         },
-        headerLeft:
-        <TouchableOpacity onPress={()=>{ navigation.navigate('DashboardTrips') }}>
-          <Image source={require('./src/images/left-arrow-png-left-icon-1600.png')} style={{width: 22, height: 22, marginLeft: 15}}/>
-        </TouchableOpacity>,
       }),
       screen: TripDashboard
     },
@@ -267,10 +259,6 @@ export default App = StackNavigator({
         headerBackTitleStyle: {
            color: "#FFF"
         },
-        headerLeft:
-        <TouchableOpacity onPress={()=>{ navigation.navigate('DashboardTrips') }}>
-          <Image source={require('./src/images/left-arrow-png-left-icon-1600.png')} style={{width: 22, height: 22, marginLeft: 15}}/>
-        </TouchableOpacity>,
       }),
       screen: TripSettings
     },

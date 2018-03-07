@@ -1,45 +1,92 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Button, ToolbarAndroid, Image, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Button, BackHandler, ToolbarAndroid, NetInfo, Image, TouchableOpacity, Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import I18n from 'react-native-i18n';
 
 export default class Register extends React.Component {
-    state = {
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
+    
+    constructor(props) {
+        super(props);
+        this.state = {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            online: false
+        }
+        this._handleFirstConnectivityChange = this._handleFirstConnectivityChange.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
+        this.props.navigation.addListener("willBlur", () => this.componentOnBlur());
+    }
+
+    componentOnFocus() {
+        NetInfo.addEventListener('connectionChange', this._handleFirstConnectivityChange);
+        this._handleFirstConnectivityChange();
+        BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
+    }
+    
+    componentOnBlur() {
+        NetInfo.removeEventListener('connectionChange', this._handleFirstConnectivityChange);
+        BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton)
+    }
+
+    _handleBackButton = () => {
+        this.props.navigation.navigate('Login');
+        return true;
+     }
+ 
+     _handleFirstConnectivityChange() {
+        NetInfo.getConnectionInfo().then((connectionInfo) => {
+            if(connectionInfo.type == "none" || connectionInfo.type == "unknown") this.setState({ online: false }) & console.log("went offline");
+            else this.setState({ online: true }) & console.log("went online");
+        }).catch((error) => console.log(error));
     }
 
     checkReqs() {
-        if(this.state.firstName !== "" &
+        if(this.state.online) {
+            if(this.state.firstName !== "" &
             this.state.lastName !== "" &
             this.state.email !== "" &
             this.validMail(this.state.email) &
             this.state.password !== "") {
 
-            let person = {
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
-                email: this.state.email,
-                password: this.state.password
+                let person = {
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: this.state.email,
+                    password: this.state.password
+                }
+
+                console.log(person);
+
+                //POST Request
+                return fetch('http://193.191.177.73:8080/karafinREST/addPerson', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(person)
+                })
+                .then((res) => this.props.navigation.navigate('Login'))
+                .catch((error)=> console.log(error))
+            } else {
+                alert("Not everything matched");
             }
-
-            console.log(person);
-
-            //POST Request
-            return fetch('http://193.191.177.73:8080/karafinREST/addPerson', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(person)
-            })
-            .then((res) => this.props.navigation.navigate('Login'))
-            .catch((error)=> console.log(error))
         } else {
-            alert("Not everything matched");
+            Alert.alert(
+                I18n.t('error'),
+                I18n.t('errorinternet'), [{
+                    text: 'OK',
+                    onPress: () => console.log('Ok pressed on Login internet error message'),
+                }], {
+                    cancelable: false
+                }
+            )
         }
+        
     }
 
     validMail(mail){

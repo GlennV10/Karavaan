@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AsyncStorage, StyleSheet, Vibration, View, Image, Text, TextInput, Button, TouchableOpacity, BackHandler, Alert} from 'react-native';
+import {AsyncStorage, StyleSheet, Vibration, View, Image, Text, TextInput, NetInfo, Button, TouchableOpacity, BackHandler, Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import I18n from 'react-native-i18n';
 
@@ -7,52 +7,38 @@ import sha1 from 'sha1';
 
 export default class Login extends Component{
 
-    state = {
-        fetchedChallenge: false,
-        autheticated: false,
-        password: "",
-        username: "" ,
-        alreadyLoggedIn: false,
-        checkLogin: true,
-        loadConnection: true
+    constructor(props) {
+        super(props);
+        this.state = {
+            fetchedChallenge: false,
+            autheticated: false,
+            password: "",
+            username: "" ,
+            alreadyLoggedIn: false,
+            checkLogin: true,
+            online: false
+        }
+        this._handleFirstConnectivityChange = this._handleFirstConnectivityChange.bind(this);
     }
 
     componentWillMount() {
-        this.checkSettings();
+
     }
 
     componentDidMount() {
-        this.props.navigation.addListener("didFocus", () => BackHandler.addEventListener('hardwareBackPress', this._handleBackButton));
-        this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
+        this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
+        this.props.navigation.addListener("willBlur", () => this.componentOnBlur());
     }
 
-    checkSettings() {
-        try {
-            AsyncStorage.getItem('language').then((language) => {
-                if(language!= null) {
-                    if(language=="English") {
-                        I18n.locale = "en";
-                    }
-                    if(language=="Dutch") {
-                        I18n.locale = "nl";
-                    }
-                }
-                else {
-                    AsyncStorage.setItem('language', "Dutch").then(console.log("Language 'Dutch' written to memory."));
-                    I18n.locale = 'nl';
-                }
-            });
-            AsyncStorage.getItem('currency').then((currency) => {
-                if(currency!= null) AsyncStorage.setItem('currency', currency).then(console.log("Currency" + currency + " written to memory."));
-                else {AsyncStorage.setItem('currency', "Euro").then(console.log("Currency 'Euro' written to memory."));}
-            });
-        } catch(error){
-            console.log(error);
-        }
+    componentOnFocus() {
+        NetInfo.addEventListener('connectionChange', this._handleFirstConnectivityChange);
+        this._handleFirstConnectivityChange();
+        BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
     }
-
-    componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton);
+    
+    componentOnBlur() {
+        NetInfo.removeEventListener('connectionChange', this._handleFirstConnectivityChange);
+        BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton)
     }
 
     _handleBackButton = () => {
@@ -73,69 +59,57 @@ export default class Login extends Component{
          return true;
     }
 
-    /*getChallenge(usernameField){
-        console.log(usernameField + "USERNAME GETCHALLENGE")
-        return fetch('http://193.191.177.169:8080/mula/Controller?action=login',{
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: usernameField
-            })
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            console.log("RESPONSE: "+ responseJson.challenge);
-            if(responseJson.challenge != null){
-                this.sendLoginRequest(responseJson.challenge);
-            }
+    _handleFirstConnectivityChange() {
+        NetInfo.getConnectionInfo().then((connectionInfo) => {
+            if(connectionInfo.type == "none" || connectionInfo.type == "unknown") this.setState({ online: false }) & console.log("went offline");
+            else this.setState({ online: true }) & console.log("went online");
+        }).catch((error) => console.log(error));
+    }
 
-        }).catch((error)=> console.log("ERROR: " + error));
-    }*/
-
-    sendLoginRequest(salt){
-        //var hashedPwd = sha1(sha1(this.state.password)+salt);
-        console.log(this.state.password);
-        url = "http://193.191.177.73:8080/karafinREST/checkPassword/" + this.state.username;
-        return fetch(url,{
-            method: 'POST',
-            body: JSON.stringify({
-                password: this.state.password
+    sendLoginRequest(){
+        if(this.state.online) {
+            url = "http://193.191.177.73:8080/karafinREST/checkPassword/" + this.state.username;
+            return fetch(url,{
+                method: 'POST',
+                body: JSON.stringify({
+                    password: this.state.password
+                })
             })
-        })
-        .then((response) => {
-            console.log(response._bodyText);
-            console.log(this.state.autheticated );
-            if(response._bodyText === "true"){
-                this.setState({autheticated: true});
-                this.moveOn();
-            } else {
-                 this.setState({autheticated: false});
-                 Vibration.vibrate(1000)
-                 Alert.alert(
-                    I18n.t('error'),
-                    I18n.t('errormessage'), [{
-                        text: 'Cancel',
-                        onPress: () => console.log('Cancel Pressed on Login error message'),
-                        style: 'cancel'
-                    }, {
-                        text: 'OK',
-                        onPress: () => console.log('Ok Pressed on Login error message'),
-                    },], {
-                        cancelable: false
-                    }
-                )
-                //return true;
-            }
-        }).catch((error)=> console.log("ERROR: " + error));
+            .then((response) => {
+                if(response._bodyText === "true"){
+                    this.setState({autheticated: true});
+                    this.moveOn();
+                } else {
+                    Vibration.vibrate(500);
+                    this.setState({autheticated: false});
+                    Alert.alert(
+                        I18n.t('error'),
+                        I18n.t('errormessage'), [{
+                            text: 'OK',
+                            onPress: () => console.log('Ok pressed on Login error message'),
+                        }], {
+                            cancelable: false
+                        }
+                    )
+                }
+            }).catch((error)=> console.log("ERROR: " + error));
+        }
+        else {
+            Alert.alert(
+                I18n.t('error'),
+                I18n.t('errorinternet'), [{
+                    text: 'OK',
+                    onPress: () => console.log('Ok pressed on Login internet error message'),
+                }], {
+                    cancelable: false
+                }
+            )
+        }
     }
 
     moveOn(){
 	    this.registerToDevice();
         if(this.state.autheticated){
-            console.log('test2');
             this.props.navigation.navigate('DashboardTrips');
         }
     }
@@ -172,31 +146,7 @@ export default class Login extends Component{
         }
     }
 
-    connectionMode(){
-        try{
-            //========================================================================
-            //                      SET INTERNET CONNECTION
-            //========================================================================
-            // AsyncStorage.setItem("connection", JSON.stringify(true)).then(console.log("Connection type set to true"));
-            AsyncStorage.setItem('connectionStatus', "online").then(()=> this.setState({loadConnection: false}));
-            //AsyncStorage.setItem('connectionStatus', "offline").then(()=> this.setState({loadConnection: false}));
-            //========================================================================
-        }catch(error){
-            console.log(error);
-        }
-        // try{
-        //     AsyncStorage.getItem('connection').then((status)=> this.setState({loadConnection: false}));
-        // }catch(error){
-        //     console.log(error);
-        // }
-
-    }
-
     render(){
-        if(this.state.loadConnection){
-            this.connectionMode();
-        }
-
         if(this.state.checkLogin){
             this.checkIfLoggedIn();
         }
@@ -226,10 +176,10 @@ export default class Login extends Component{
                         returnKeyType="go"
                         onChangeText={(passwordText) => this.setState({password: passwordText})}
                         ref={(input) => this.passwordInput = input}
-                        onSubmitEditing={() => this.sendLoginRequest(this.state.username)}></TextInput>
+                        onSubmitEditing={() => this.sendLoginRequest()}></TextInput>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.loginButton} onPress={() => this.sendLoginRequest(this.state.username)}>
+                    <TouchableOpacity style={styles.loginButton} onPress={() => this.sendLoginRequest()}>
                         <Text style={styles.buttonText}>{I18n.t('login')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.registerButton} onPress={() => this.props.navigation.navigate('Register')}>

@@ -18,6 +18,7 @@ export default {
     register: 'Register',
     error: "Oops, that didn't work out!",
     errormessage: "Email and/or password is incorrect.",
+    errorinternet: "No network connection",
 
     //Register
     firstname: 'First Name',

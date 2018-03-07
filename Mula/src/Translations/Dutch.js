@@ -19,6 +19,7 @@ export default {
     register: 'Registreer',
     error: 'Oops, dat ging fout!',
     errormessage: "Email en/of wachtwoord is niet correct.",
+    errorinternet: "Geen netwerkconnectie",
 
     //Register
     firstname: 'Voornaam',
