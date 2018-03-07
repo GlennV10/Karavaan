@@ -313,6 +313,14 @@ export default class AddTrip extends Component {
         this.addTrip()
     }
 
+    getStartDate(today) {
+        if(this.state.selectedStartDate === "") {
+            return today;
+        } else {
+            return this.state.selectedStartDate;
+        }
+    }
+
     render() {
         const { selectedItems } = this.state;
         const { selectedGuides } = this.state;
@@ -366,7 +374,7 @@ export default class AddTrip extends Component {
                     <DatePicker
                         mode='date'
                         format='DD/MM/YYYY'
-                        minDate={yearbefore}
+                        minDate={this.getStartDate(yearbefore)}
                         maxDate={yearafter}
                         date={this.state.selectedEndDate}
                         showIcon={true}
