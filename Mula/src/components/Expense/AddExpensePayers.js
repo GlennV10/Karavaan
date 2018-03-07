@@ -99,12 +99,8 @@ export default class AddExpensePayers extends Component {
                 <View style={styles.payer} key={index}>
                     <Text style={styles.label}>{payer.participant.firstName} {payer.participant.lastName}</Text>
                     <TextInput
-<<<<<<< HEAD
-                        placeholder="Amount paid..."
-=======
                         placeholder={I18n.t('amountpaid')}
                         value={payer.amountToShow}
->>>>>>> 5e237466c05112b35b72982d1e5ccf4759d9a352
                         keyboardType="numeric"
                         style={styles.inputField}
                         placeholderTextColor="#bfbfbf"

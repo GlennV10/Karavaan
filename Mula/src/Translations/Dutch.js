@@ -110,12 +110,8 @@ export default {
     groupexpense: 'Gezamenlijke kost',
     whopaid: 'Wie heeft betaald',
     date: 'Datum',
-<<<<<<< HEAD
-    remaining: 'Resterend',
-=======
     remaining: 'Nog te verdelen',
     amountpaid: 'Betaald...',
->>>>>>> 5e237466c05112b35b72982d1e5ccf4759d9a352
 
     //AddExpensePayers
     payers: 'Wie heeft er betaald',
