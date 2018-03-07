@@ -12,34 +12,25 @@ export default class TripParticipants extends Component{
             lastName: "",
             email:"",
             trip: 0,
-            participants:[]
-
+            participants:[],
+            online: false
         };
-
-
     }
 
     componentDidMount() {
-        
-        
 
     }
-    
-
 
     addParticipant() {
 
         this.state.errors = [];
-
-
-        
+   
         //if(this.isValid()){
-            console.log(this.state.paling)
-            
+            console.log(this.state.paling)            
     
-            if (this.state.connectionMode == "online") {
+            if (this.state.online === true) {
                 if(this.state.email == null){
-                    var url = "https://193.191.177.73:8181/karafinREST/addPersonToTripFromEmail/"+this.state.userName+"/"+this.state.trip
+                    var url = "https://193.191.177.73:8181/karafinREST/addPersonToTripFromEmail/"+this.state.userName+"/"+this.props.navigation.state.params.trip.id
                     return fetch('url', {
                         method: 'GET',
                         header: {
@@ -161,7 +152,7 @@ export default class TripParticipants extends Component{
                 
                 <Button color="#edc14f"
                     title= "add Participant"
-                    onPress={() => this.addTrip() }
+                    onPress={() => this.addParticipant() }
 
                 />
                

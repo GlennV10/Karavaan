@@ -31,31 +31,30 @@ export default class TripExpenses extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (this.state.expenses !== nextState.expenses) {
-          return true;
+            return true;
         }
         return false;
     }
 
     async _onRefresh() {
-        this.setState({refreshing: true});
+        this.setState({ refreshing: true });
         await this.getExpenses();
     }
 
     getExpenses() {
         let url = 'http://193.191.177.73:8080/karafinREST/getTrip/' + this.props.navigation.state.params.trip.id;
-    
-        return fetch(url, {
-              method: 'GET',
-              header: {
-                  'Content-Type': 'application/json'
-              }
-          })
-          .then((res) => res.json())
-          .then((userTrip) => {
-            console.log("refreshing expenses")
-            this.setState({expenses: userTrip.expenseList});
-            this.setState({refreshing: false});
-          }).catch(error => console.log("network/rest error"));
+            return fetch(url, {
+                method: 'GET',
+                header: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then((res) => res.json())
+                .then((userTrip) => {
+                    console.log("refreshing expenses")
+                    this.setState({ expenses: userTrip.expenseList });
+                    this.setState({ refreshing: false });
+                }).catch(error => console.log("network/rest error"));
     }
 
     renderExpenses() {

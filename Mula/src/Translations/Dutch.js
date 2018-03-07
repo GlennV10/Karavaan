@@ -11,6 +11,7 @@ export default {
     addExpense: 'Nieuwe uitgave ',
     tripdetails: ': Overzicht',
     tripsettings: 'Reis instellingen',
+    addParticipants: 'Voeg reizigers toe',
 
     //login
     email: 'Email',
@@ -109,6 +110,7 @@ export default {
     groupexpense: 'Gezamenlijke kost',
     whopaid: 'Wie heeft betaald',
     date: 'Datum',
+    remaining: 'Resterend',
 
     //AddExpensePayers
     payers: 'Wie heeft er betaald',

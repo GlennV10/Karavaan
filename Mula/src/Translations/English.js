@@ -10,6 +10,7 @@ export default {
     addExpense: 'New expense ',
     tripdetails: ': Overview',
     tripsettings: 'Trip settings',
+    addParticipants: 'Add travelers',
 
     //login
     email: 'Email',
@@ -107,6 +108,7 @@ export default {
     groupexpense: 'Shared expense',
     whopaid: 'Who paid',
     date: 'Datum',
+    remaining: 'Resterend',
 
     //AddExpensePayers
     payers: 'Who paid for it',
