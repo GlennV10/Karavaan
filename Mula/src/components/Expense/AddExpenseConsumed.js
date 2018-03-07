@@ -125,6 +125,59 @@ export default class AddExpenseConsumed extends Component {
         });
     }
 
+    formatPayersAPI(expense) {
+        let formatPayers = {};
+        for(payer of expense.payers) {
+            let key = payer.participant.email;
+            formatPayers[key] = payer.amount;
+        }
+        expense.payers = formatPayers;
+    }
+
+    formatConsumersAPI(expense) {
+        let formatConsumers = {};
+        for(consumer of expense.consumers) {
+            let key = consumer.participant.email;
+            formatConsumers[key] = consumer.amount;
+        }
+        expense.consumers = formatConsumers;
+    }
+
+    addExpense() {
+        this.props.navigation.state.params.expense.consumers = this.state.consumers;
+
+        for(let i = this.props.navigation.state.params.expense.consumers.length - 1; i >= 0; i--) {
+            if(!(this.props.navigation.state.params.expense.consumers[i].checked)) {
+                this.props.navigation.state.params.expense.consumers.splice(i, 1);
+            }
+        }
+
+        for(let i = this.props.navigation.state.params.expense.payers.length - 1; i >= 0; i--) {
+            if (this.props.navigation.state.params.expense.payers[i].amount == 0) {
+                this.props.navigation.state.params.expense.payers.splice(i, 1);
+            }
+        }
+
+        this.formatPayersAPI(this.props.navigation.state.params.expense);
+        this.formatConsumersAPI(this.props.navigation.state.params.expense);
+        console.log(this.props.navigation.state.params.expense);
+
+        //==========================================================================================
+        //=========================AANVULLEN MET POST REQUEST NAAR API==============================
+        //==========================================================================================
+        return fetch('http://193.191.177.73:8080/karafinREST/addExpense/' + this.props.navigation.state.params.trip.id, {
+            method: 'POST',
+            header: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.props.navigation.state.params.expense)
+        })
+        .then((res) => {
+            this.props.navigation.navigate('TripDashboard', { trip: this.props.navigation.state.params.trip });
+        })
+        .catch(error => console.log("network/rest error"));
+    }
+
     getExpense() {
         let expense = this.props.navigation.state.params.expense;
 
@@ -152,9 +205,15 @@ export default class AddExpenseConsumed extends Component {
                         <Text style={styles.remaining}>{I18n.t('remaining')}: {this.state.remaining}</Text>
                         <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={-160}>
                             {this.renderConsumers()}
-                        
 
-                        <TouchableOpacity style={styles.saveButton} onPress={() => this.getExpense()}>
+
+                        <TouchableOpacity style={styles.saveButton} onPress={() => {
+                          if(!(this.state.remaining === 0)){
+                              this.getExpense()
+                          } else {
+                              this.addExpense()
+                          }
+                        }}>
                             <Text style={styles.saveText}>{I18n.t('shared')}</Text>
                         </TouchableOpacity>
                         </KeyboardAvoidingView>
