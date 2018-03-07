@@ -76,7 +76,7 @@ export default class TripParticipants extends Component {
         if (error === "Participant already added.") {
             alert(I18n.t('alreadyadded'))
             this.clearFields()
-        } else if (error === "java.lang.NullPointerException") {
+        } else if (error === "Invalid arguments") {
             alert("fout email")
         } else {
             console.log("Network/rest error")

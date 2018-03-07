@@ -83,7 +83,7 @@ export default class TripSettings extends Component {
         if (error === "Participant already added.") {
             alert(I18n.t('alreadyadded'))
             this.clearFields()
-        } else if (error === "java.lang.NullPointerException") {
+        } else if (error === "Invalid arguments") {
             alert(I18n.t('falseemail'))
             alert("fout email")
         } else {
