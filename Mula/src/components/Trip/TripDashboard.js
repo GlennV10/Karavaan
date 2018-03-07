@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, Button, ToolbarAndroid, TouchableOpacity, ActivityIndicator, ScrollView, AsyncStorage, BackHandler, Alert } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Button, ToolbarAndroid, NetInfo, TouchableOpacity, ActivityIndicator, ScrollView, AsyncStorage, BackHandler, Alert } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TripExpenses from './TripExpenses'
@@ -11,124 +11,60 @@ export default class TripDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      expenses: []
+      expenses: [],
+      online: true,
     }
-  }
-
-  componentWillMount() {
-    this.props.navigation.addListener("didFocus", () => this._handleUpdate());
-    this.props.navigation.addListener("willBlur", () => BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton));
-
-    this.setState({ expenses: this.props.navigation.state.params.trip.expenseList });
-
-    // let expenses = [{
-    //     id: 1,
-    //     name: 'Restaurant A',
-    //     date: '9 maart 2018',
-    //     paidBy: 'Glenn',
-    //     consumers: [{
-    //         user: "Annelore",
-    //         amount: 10
-    //     },
-    //     {
-    //         user: "Deni",
-    //         amount: 10
-    //     },
-    //     {
-    //         user: "Jens",
-    //         amount: 10
-    //     },
-    //     {
-    //         user: "Glenn",
-    //         amount: 20
-    //     }],
-    //     category: 'Food',
-    //     currency: 'USD',
-    //     amount: 50,
-    //     tripID: 1
-    //   },
-    //   {
-    //     id: 2,
-    //     name: 'Taxi',
-    //     date: '10 maart 2018',
-    //     paidBy: 'Annelore',
-    //     consumers: [{user:"",amount:0}],
-    //     category: 'Taxi',
-    //     currency: 'CAD',
-    //     amount: 75,
-    //     tripID: 1
-    //   },
-    //   {
-    //     id: 6,
-    //     name: 'Drinks',
-    //     date: '10 maart 2018',
-    //     paidBy: 'Annelore',
-    //     consumers: [{user:"",amount:0}],
-    //     category: 'Drinks',
-    //     currency: 'CAD',
-    //     amount: 10,
-    //     tripID: 1
-    //   },
-    //   {
-    //     id: 5,
-    //     name: 'Taxi 2',
-    //     date: '11 maart 2018',
-    //     paidBy: 'Glenn',
-    //     consumers: [{user:"",amount:0}],
-    //     category: 'Taxi',
-    //     currency: 'CAD',
-    //     amount: 55,
-    //     tripID: 1
-    //   },
-    //   {
-    //     id: 3,
-    //     name: 'Restaurant B',
-    //     date: '21 april 2018',
-    //     paidBy: 'Deni',
-    //     consumers: [{user:"",amount:0}],
-    //     category: 'Food',
-    //     currency: 'AUD',
-    //     amount: 88,
-    //     tripID: 2
-    //   },
-    //   {
-    //     id: 4,
-    //     name: 'Restaurant C',
-    //     date: '12 september 2018',
-    //     paidBy: 'Jens',
-    //     consumers: [{user:"",amount:0}],
-    //     category: 'Food',
-    //     currency: 'EUR',
-    //     amount: 10,
-    //     tripID: 3
-    //   }]
-    //
-    // AsyncStorage.setItem('expenses', JSON.stringify(expenses))
-    //       .then(res => console.log('Expenses stored in AsyncStorage'))
-    //       .catch(error => console.log('Error storing expenses'));
+    this._handleFirstConnectivityChange = this._handleFirstConnectivityChange.bind(this);
   }
 
   componentDidMount() {
-    /*AsyncStorage.getItem('expenses')
-          .then(req => JSON.parse(req))
-          .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
-          .catch(error => console.log('Error loading expenses'));
-          console.log("geluktDash lolilol");*/
-  }
-
-  _handleUpdate = () => {
-    BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
-    this.state.expenses = this.props.navigation.state.params.trip.expenseList;
-    // AsyncStorage.getItem('expenses')
-    //         .then(req => JSON.parse(req))
-    //         .then(expenses => console.log('Expenses loaded from AsyncStorage') & console.log(expenses) & this.setState({ expenses }) & this.setState({isLoading : false}))
-    //         .catch(error => console.log('Error loading expenses'));
+    
+    this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
+    this.props.navigation.addListener("willBlur", () => this.componentOnBlur());
+    this._handleFirstConnectivityChange();
+    this.setState({ expenses: this.props.navigation.state.params.trip.expenseList });
   }
 
   _handleBackButton = () => {
-    this.props.navigation.navigate("DashboardTrips");
+    this.props.navigation.navigate('DashboardTrips');
     return true;
   }
+
+  componentOnFocus() {
+    NetInfo.addEventListener('connectionChange', this._handleFirstConnectivityChange);
+    this._handleFirstConnectivityChange();
+    BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton);
+  }
+
+  componentOnBlur() {
+    NetInfo.removeEventListener('connectionChange', this._handleFirstConnectivityChange);
+    BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton);
+  }
+
+  _handleFirstConnectivityChange() {
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+        if(connectionInfo.type == "none" || connectionInfo.type == "unknown") this.setState({ online: false }) & console.log("went offline");
+        else this.setState({ online: true }) & console.log("went online");
+    }).catch((error) => console.log(error));
+  }
+
+  getExpenses() {
+    if(this.state.online) {
+      let url = 'http://193.191.177.73:8080/karafinREST/getTrip/' + this.props.navigation.state.params.trip.id;
+
+      return fetch(url, {
+            method: 'GET',
+            header: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((res) => res.json())
+        .then((userTrip) => {
+          console.log("refreshing expenses")
+          this.setState({expenses: userTrip.expenseList});
+        }).catch(error => console.log("network/rest error"));
+  }
+}
 
   render() {
     const nav = this.props.navigation;
@@ -137,10 +73,9 @@ export default class TripDashboard extends React.Component {
         tabBarUnderlineStyle={{ backgroundColor: '#edc14f' }}
         tabBarBackgroundColor={'#e2e8e5'}
         tabBarActiveTextColor={'#303030'}
-        tabBarInactiveTextColor={'#303030'}
-        onChangeTab={({i, ref}) => this.refs.expensesTab.getExpenses()}>
+        tabBarInactiveTextColor={'#303030'}>
         <TripTotal tabLabel={I18n.t('balance')} navigation={nav} expenses={this.state.expenses} tripID={this.props.navigation.state.params.trip.id} />
-        <TripExpenses tabLabel={I18n.t('expenses')} ref="expensesTab" navigation={nav} expenses={this.state.expenses} trip={this.props.navigation.state.params.trip} />
+        <TripExpenses tabLabel={I18n.t('expenses')} navigation={nav} expenses={this.state.expenses} trip={this.props.navigation.state.params.trip} />
         <TripCategory tabLabel={I18n.t('category')} navigation={nav} expenses={this.state.expenses} tripID={this.props.navigation.state.params.trip.id} />
       </ScrollableTabView>
     );

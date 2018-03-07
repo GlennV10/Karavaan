@@ -12,7 +12,9 @@ export default class TripExpenses extends Component {
         super(props);
         this.state = {
             username: "",
+            isAdmin: false,
             expenses: [],
+            originalExpenses: [],
             isLoading: true,
             refreshing: false
         }
@@ -21,24 +23,18 @@ export default class TripExpenses extends Component {
     componentWillMount() {
         AsyncStorage.getItem('userName').then((username) => {
             this.setState({ username });
-        })
-        this.setState({ expenses: this.props.expenses });
+            this.setState({ originalExpenses: this.props.expenses });
+            this.setState({ expenses: this.props.expenses });
+            this.checkAdmin();
+        });
     }
 
     componentDidMount() {
-        // this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
+        this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.state.expenses !== nextState.expenses) {
-            return true;
-        }
-        return false;
-    }
-
-    async _onRefresh() {
-        this.setState({ refreshing: true });
-        await this.getExpenses();
+    componentOnFocus() {
+        this.checkAdmin();
     }
 
     askToDeleteExpense(expense) {
@@ -73,34 +69,37 @@ export default class TripExpenses extends Component {
         .catch((error) => console.log(error));
     }
 
-    getExpenses() {
-        let url = 'http://193.191.177.73:8080/karafinREST/getTrip/' + this.props.navigation.state.params.trip.id;
-
-        return fetch(url, {
-              method: 'GET',
-              header: {
-                  'Content-Type': 'application/json'
-              }
-          })
-          .then((res) => res.json())
-          .then((userTrip) => {
-            console.log("refreshing expenses")
-            this.setState({expenses: userTrip.expenseList});
-            this.setState({refreshing: false});
-          }).catch(error => console.log("network/rest error"));
-    }
-
-    renderExpenses() {
-        /*let userExpense = 0;
+    async checkAdmin() {
         let trip = this.props.navigation.state.params.trip;
-        let isAdmin = false;
+        this.setState({ originalExpenses: trip.expenseList });
+        this.setState({ expenses: trip.expenseList });
+        this.setState({ isAdmin: false });
 
         for (participant of trip.participants) {
             if (participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
-                isAdmin = true;
+                this.setState({ isAdmin: true });
             }
-        }*/
+        }
 
+        if (!this.state.isAdmin) {
+            let expenses = [];
+            this.state.originalExpenses.map((expense) => {
+                let userExpense = 0;
+                Object.keys(expense.consumers).map((user) => {
+                    console.log("expenseUser: " + user);
+                    if (user == this.state.username) {
+                        userExpense = expense.consumers[user];
+                        expense.userTotal = userExpense;
+                        expenses.push(expense);
+                    }
+                });              
+            });
+            this.setState({ expenses }); 
+        }
+        await this.setState({ isLoading: false });
+    }
+
+    renderExpenses() {
         if (this.state.expenses.length === 0) {
             return (
                 <View style={styles.noExpensesView}>
@@ -108,40 +107,20 @@ export default class TripExpenses extends Component {
                 </View>
             )
         } else {
-            return this.state.expenses.map((expense) => {
-
-                let userExpense = 0;
-                let trip = this.props.navigation.state.params.trip;
-                let isAdmin = false;
-
-                for (participant of trip.participants) {
-                    if (participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
-                        isAdmin = true;
-                    }
-                }
-
-                if (!isAdmin) {
-                    Object.keys(expense.consumers).map((user) => {
-                        console.log("expenseUser: " + user);
-                        if (user == this.state.username) {
-                            userExpense = expense.consumers[user];
-                        }
-                    });
-                } else userExpense = expense.total;
-
+            return this.state.expenses.map((expense) => { 
                 return (
                     <TouchableOpacity style={styles.expense} onLongPress={() => this.askToDeleteExpense(expense) } onPress={() => this.props.navigation.navigate('DetailExpense', { expense })} key={expense.id}>
                         <View style={[styles.expenseContainer, styles.half]}>
-                            <View style={styles.splitRow}>
+                             <View style={styles.splitRow}>
                                 <Text style={[styles.expenseName]}>{expense.expenseName}</Text>
                             </View>
                             <View style={styles.splitRow}>
                                 <Text style={styles.expenseDate}>{expense.date.dayOfMonth}/{(expense.date.month + 1)}/{expense.date.year}</Text>
                             </View>
-                        </View>
+                         </View>
                         <View style={[styles.expenseAmountContainer, styles.half]}>
                             <View style={styles.splitRow}>
-                                <Text style={styles.expenseAmount}>{userExpense.toFixed(2)}</Text>
+                                <Text style={styles.expenseAmount}>{(this.state.isAdmin) ? expense.total.toFixed(2) : expense.userTotal.toFixed(2)}</Text>
                             </View>
                             <View style={styles.splitRow}>
                                 <Text style={styles.expenseCurrency}>{expense.currency}</Text>
@@ -154,18 +133,26 @@ export default class TripExpenses extends Component {
     }
 
     render() {
-        return (
-            <View style={styles.container}>
-                <ScrollView style={styles.expenseList}>
-                    <View style={styles.spaceView}>
-                        {this.renderExpenses()}
-                    </View>
-                </ScrollView>
-                <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigation.navigate('AddExpense', { trip: this.props.navigation.state.params.trip })}>
-                    <Text style={styles.addTripButtonText} >+</Text>
-                </TouchableOpacity>
-            </View>
-        )
+        if (this.state.isLoading) {
+            return (
+              <View style={styles.containerIndicator}>
+                <ActivityIndicator />
+              </View>
+            )
+        } else {
+            return (
+                <View style={styles.container}>
+                    <ScrollView style={styles.expenseList}>
+                        <View style={styles.spaceView}>
+                            {this.renderExpenses()}
+                        </View>
+                    </ScrollView>
+                    <TouchableOpacity style={styles.addTripButton} onPress={() => this.props.navigation.navigate('AddExpense', { trip: this.props.navigation.state.params.trip })}>
+                        <Text style={styles.addTripButtonText} >+</Text>
+                    </TouchableOpacity>
+                </View>
+            )
+        }
     }
 }
 
