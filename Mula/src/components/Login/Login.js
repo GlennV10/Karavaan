@@ -153,9 +153,7 @@ export default class Login extends Component{
         return(
             <View style={styles.container}>
                 <View style={styles.logoContainer}>
-                    <Image
-                        style={styles.logo}
-                        source={require('../../images/MulaLogoFiles/primary.png')}/>
+                    <Text style={styles.logo}>KARAFIN</Text>
                 </View>
                 <View style={styles.formContainer}>
                     <TextInput
@@ -204,8 +202,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     logo:{
-        width: 150,
-        height: 33
+        fontSize: 40,
+        color: '#fff'
     },
     formContainer:{
         marginTop: 30

@@ -30,7 +30,7 @@ export default {
     //TripDashboard
     expenses: 'Uitgaven',
     category: 'Categoriën',
-    balance: 'Balans',
+    balance: 'Overzicht',
 
 
     //TripCategory
@@ -46,7 +46,8 @@ export default {
     amountpaid: 'Betaald: ',
     amountconsumed: 'Verbruikt: ',
     balans: 'Balans: ',
-    payments: 'Transacties',
+    paymentsToDo: 'Openstaande transacties',
+    payments: 'Voltooide transacties',
     owes: 'verschuldigd aan',
     recieve: 'krijgt van',
     nopayments: 'GEEN TRANSACTIES GEVONDEN',
@@ -112,7 +113,7 @@ export default {
     whopaid: 'Wie heeft betaald',
     date: 'Datum',
     remaining: 'Nog te verdelen',
-    amountpaid: 'Betaald...',
+    amountpaid2: 'Betaald...',
 
     //AddExpensePayers
     payers: 'Wie heeft er betaald',

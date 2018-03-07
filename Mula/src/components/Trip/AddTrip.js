@@ -323,128 +323,88 @@ export default class AddTrip extends Component {
         return (
 
             <ScrollView style={styles.container}>
-                
-                    <View style={styles.separator}>
-                        <TextInput
-                            ref="tripName"
-                            placeholder={I18n.t('tripname')}
-                            style={styles.inputField}
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="#818181"
-                            onChangeText={(text) => this.setState({ title: text })} />
-                    </View>
 
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
-                        <Text>{this.state.selectedStartDate}</Text>
-                        {/*this.isFieldInError('startDate') && this.getErrorsInField('startDate').map(errorMessage => <Text>{errorMessage}</Text>) */}
+                <View style={styles.separator}>
+                    <TextInput
+                        ref="tripName"
+                        placeholder={I18n.t('tripname')}
+                        style={styles.inputField}
+                        underlineColorAndroid="transparent"
+                        placeholderTextColor="#818181"
+                        onChangeText={(text) => this.setState({ title: text })} />
+                </View>
 
-                        <DatePicker
-                            mode='date'
-                            format='DD/MM/YYYY'
-                            minDate={yearbefore}
-                            maxDate={yearafter}
-                            date={this.state.selectedStartDate}
-                            showIcon={true}
-                            placeholder={I18n.t('selectdate')}
-                            hideText={true}
-                            // date={this.state.selectedDate}
-                            style={[styles.input, styles.datePickerStyle]}
-                            onDateChange={(date) => this.setState({ selectedStartDate: date })}
-                        />
-                    </View>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <Text>{this.state.selectedStartDate}</Text>
+                    {/*this.isFieldInError('startDate') && this.getErrorsInField('startDate').map(errorMessage => <Text>{errorMessage}</Text>) */}
 
-                    <View style={[{ flex: 1, flexDirection: 'row' }, styles.separator]}>
-                        <Text>{this.state.selectedEndDate}</Text>
-                        <DatePicker
-                            mode='date'
-                            format='DD/MM/YYYY'
-                            minDate={yearbefore}
-                            maxDate={yearafter}
-                            date={this.state.selectedEndDate}
-                            showIcon={true}
-                            placeholder={I18n.t('selectdate')}
-                            hideText={true}
-                            // date={this.state.selectedDate}
-                            style={[styles.input, styles.datePickerStyle]}
-                            onDateChange={(date) => this.setState({ selectedEndDate: date })}
-                        />
-                    </View>
+                    <DatePicker
+                        mode='date'
+                        format='DD/MM/YYYY'
+                        minDate={yearbefore}
+                        maxDate={yearafter}
+                        date={this.state.selectedStartDate}
+                        showIcon={true}
+                        placeholder={I18n.t('selectdate')}
+                        hideText={true}
+                        // date={this.state.selectedDate}
+                        style={[styles.input, styles.datePickerStyle]}
+                        onDateChange={(date) => this.setState({ selectedStartDate: date })}
+                    />
+                </View>
 
-                    <View style={[styles.subItem, styles.separator]}>
-                        <Text>{I18n.t('tripcurrency')}</Text>
-                        <Picker style={{ flex: .50, backgroundColor: "#FFFFFF" }}
-                            onValueChange={currency => this.setState({ baseCurrency: currency }) & this.setState({ loadRates: true }) & this.getExchangeRatesWithBase(currency)}
-                            selectedValue={this.state.baseCurrency}>
-                            <Picker.Item value="EUR" label="EUR" key="EUR" />
-                            <Picker.Item value="USD" label="USD" key="USD" />
-                        </Picker>
-                    </View>
+                <View style={[{ flex: 1, flexDirection: 'row' }, styles.separator]}>
+                    <Text>{this.state.selectedEndDate}</Text>
+                    <DatePicker
+                        mode='date'
+                        format='DD/MM/YYYY'
+                        minDate={yearbefore}
+                        maxDate={yearafter}
+                        date={this.state.selectedEndDate}
+                        showIcon={true}
+                        placeholder={I18n.t('selectdate')}
+                        hideText={true}
+                        // date={this.state.selectedDate}
+                        style={[styles.input, styles.datePickerStyle]}
+                        onDateChange={(date) => this.setState({ selectedEndDate: date })}
+                    />
+                </View>
 
-                    <View>
-                        <Text style={styles.textfield}>{I18n.t('othercurrency')}</Text>
-                        <MultiSelect
-                            hideTags
-                            items={this.state.currencies}
-                            uniqueKey="currency"
-                            ref={(component) => { this.multiSelect = component }}
-                            selectedItems={selectedCurrencies}
-                            onSelectedItemsChange={this.onSelectedCurrencyChange}
-                            selectText={I18n.t('pickcurrency')}
-                            searchInputPlaceholderText={I18n.t('pickcurrency')}
-                            onChangeInput={(item) => console.log(item)}
-                            backgroundColor="#d4e8e5"
-                            displayKey="name"
-                            style={backgroundColor = "#d4e8e5"}
-                            tagTextColor='#303030'
-                            selectedItemTextColor="#edc14f"
-                            selectedItemIconColor="#edc14f"
-                            itemTextColor="#303030"
-                            displayKey="name"
-                            searchInputStyle={{ color: '#303030' }}
-                            submitButtonColor="#edc14f"
-                            submitButtonText={I18n.t('submit')}
-                        />
-                    </View>
-                    {/* <View style={[styles.subItem, styles.separator]}>
-                <Text style ={styles.textfield}>Select your base currency</Text>
-                <Picker style={{flex:.50}}
-                    onValueChange={currency => this.setState({baseCurrency: currency}) &this.setState({loadRates: true}) & this.getExchangeRatesWithBase(currency) & this.renderValutaToArray(this.state.rates)}
-                    selectedValue={this.state.baseCurrency}>
-                    <Picker.Item value= {this.state.baseCurrency} label={this.state.baseCurrency} key={this.state.baseCurrency}/>
-                    {this.renderValutaWithoutRate(this.state.rates)}
-                </Picker>
-            </View>
-
-
-            <View style={[styles.subItem]}>
-                <Text style ={styles.textfield}>Select the other currency you're going to use on the trip</Text>
-                <MultiSelect
-                    hideTags
-                    items={this.state.currencies}
-                    uniqueKey="id"
-                    ref={(component) => { this.multiSelect = component }}
-                    selectedItems={selectedCurrencies}
-                    onSelectedItemsChange={this.onSelectedCurrencyChange}
-                    selectText="Pick your currencies"
-                    searchInputPlaceholderText="Search currency..."
-                    onChangeInput={ (item)=> console.log(item)}
-                    backgroundColor ="#d4e8e5"
-                    displayKey="name"
-                    tagTextColor='#303030'
-                    selectedItemTextColor="#edc14f"
-                    selectedItemIconColor="#edc14f"
-                    itemTextColor="#303030"
-                    displayKey="name"
-                    searchInputStyle={{ color: '#303030' }}
-                    submitButtonColor="#edc14f"
-                    submitButtonText="Submit"
-                    color = "#edc14f"
-
-
-
-                />
-
-            </View>*/}
+                <View style={[styles.subItem, styles.separator]}>
+                    <Text>{I18n.t('tripcurrency')}</Text>
+                    <Picker style={{ flex: .50, backgroundColor: "#FFFFFF" }}
+                        onValueChange={currency => this.setState({ baseCurrency: currency }) & this.setState({ loadRates: true }) & this.getExchangeRatesWithBase(currency)}
+                        selectedValue={this.state.baseCurrency}>
+                        <Picker.Item value="EUR" label="EUR" key="EUR" />
+                        <Picker.Item value="USD" label="USD" key="USD" />
+                    </Picker>
+                </View>
+                <View>
+                    <Text style={styles.textfield}>{I18n.t('othercurrency')}</Text>
+                    <MultiSelect
+                        hideTags
+                        items={this.state.currencies}
+                        uniqueKey="currency"
+                        ref={(component) => { this.multiSelect = component }}
+                        selectedItems={selectedCurrencies}
+                        onSelectedItemsChange={this.onSelectedCurrencyChange}
+                        selectText={I18n.t('pickcurrency')}
+                        searchInputPlaceholderText={I18n.t('pickcurrency')}
+                        onChangeInput={(item) => console.log(item)}
+                        backgroundColor="#d4e8e5"
+                        displayKey="name"
+                        style={backgroundColor = "#d4e8e5"}
+                        tagTextColor='#303030'
+                        selectedItemTextColor="#edc14f"
+                        selectedItemIconColor="#edc14f"
+                        itemTextColor="#303030"
+                        displayKey="name"
+                        searchInputStyle={{ color: '#303030' }}
+                        submitButtonColor="#edc14f"
+                        submitButtonText={I18n.t('submit')}
+                    />
+                </View>
+                <View style={styles.bottommargin}>
                     <Button color="#edc14f"
                         title={I18n.t('savetrip')}
                         onPress={() => this.formatCurrenciesAPI()}
@@ -456,7 +416,7 @@ export default class AddTrip extends Component {
                             renderItem={({ error }) => <Text>{error}</Text>}
                         />
                     </View>
-                
+                </View>
             </ScrollView>
 
         );
@@ -496,5 +456,48 @@ const styles = StyleSheet.create({
         borderBottomColor: '#bbb',
         borderBottomWidth: StyleSheet.hairlineWidth,
         marginBottom: 5
+    },
+    bottommargin: {
+        marginBottom: 20
     }
 });
+{/* <View style={[styles.subItem, styles.separator]}>
+                <Text style ={styles.textfield}>Select your base currency</Text>
+                <Picker style={{flex:.50}}
+                    onValueChange={currency => this.setState({baseCurrency: currency}) &this.setState({loadRates: true}) & this.getExchangeRatesWithBase(currency) & this.renderValutaToArray(this.state.rates)}
+                    selectedValue={this.state.baseCurrency}>
+                    <Picker.Item value= {this.state.baseCurrency} label={this.state.baseCurrency} key={this.state.baseCurrency}/>
+                    {this.renderValutaWithoutRate(this.state.rates)}
+                </Picker>
+            </View>
+
+
+            <View style={[styles.subItem]}>
+                <Text style ={styles.textfield}>Select the other currency you're going to use on the trip</Text>
+                <MultiSelect
+                    hideTags
+                    items={this.state.currencies}
+                    uniqueKey="id"
+                    ref={(component) => { this.multiSelect = component }}
+                    selectedItems={selectedCurrencies}
+                    onSelectedItemsChange={this.onSelectedCurrencyChange}
+                    selectText="Pick your currencies"
+                    searchInputPlaceholderText="Search currency..."
+                    onChangeInput={ (item)=> console.log(item)}
+                    backgroundColor ="#d4e8e5"
+                    displayKey="name"
+                    tagTextColor='#303030'
+                    selectedItemTextColor="#edc14f"
+                    selectedItemIconColor="#edc14f"
+                    itemTextColor="#303030"
+                    displayKey="name"
+                    searchInputStyle={{ color: '#303030' }}
+                    submitButtonColor="#edc14f"
+                    submitButtonText="Submit"
+                    color = "#edc14f"
+
+
+
+                />
+
+            </View>*/}

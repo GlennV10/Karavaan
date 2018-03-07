@@ -29,7 +29,7 @@ export default {
     //TripDashboard
     expenses: 'Expenses',
     category: 'Categories',
-    balance: 'Balance',
+    balance: 'Overview',
 
     //TripCategory
     nocategoriesfound: 'NO CATEGORIES FOUND',
@@ -44,7 +44,8 @@ export default {
     amountpaid: 'Paid: ',
     amountconsumed: 'Consumed: ',
     balans: 'Balance: ',
-    payments: 'Transactions',
+    paymentsToDo: 'Incomplete transactions',
+    payments: 'Completed transactions',
     owes: 'owes',
     recieve: 'revieces from',
     nopayments: 'NO TRANSACTIONS FOUND',
@@ -110,7 +111,7 @@ export default {
     whopaid: 'Who paid',
     date: 'Date',
     remaining: 'Remaining',
-    amountpaid: 'Amound paid...',
+    amountpaid2: 'Amound paid...',
 
     //AddExpensePayers
     payers: 'Who paid for it',

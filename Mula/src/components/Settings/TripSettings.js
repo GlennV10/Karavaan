@@ -179,6 +179,7 @@ export default class TripSettings extends Component {
     async saveTrip() {
         await this.updateTrip();
         Alert.alert(I18n.t('saved'));
+        this.props.navigation.navigate('DashboardTrips')
     }
 
     checkAmount(text) {
@@ -365,7 +366,7 @@ export default class TripSettings extends Component {
                     { this.renderParticipants() }
                 </View>
 
-                <View>
+                <View style={styles.buttons}>
                     <TouchableOpacity style={styles.button} onPress={() => this.saveTrip()}>
                         <Text style={styles.buttonText}>{I18n.t('save')}</Text>
                     </TouchableOpacity>
@@ -447,5 +448,8 @@ const styles = StyleSheet.create({
     currencyInput: {
         flex: .6,
         textAlign: 'center'
+    },
+    buttons: {
+        marginBottom: 25
     }
 });

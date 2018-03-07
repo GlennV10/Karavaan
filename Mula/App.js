@@ -136,6 +136,10 @@ export default App = StackNavigator({
         headerBackTitleStyle:{
             color: "#FFF"
         },
+        headerLeft:
+        <TouchableOpacity onPress={()=>{ navigation.navigate('DashboardTrips') }}>
+          <Image source={require('./src/images/left-arrow-png-left-icon-1600.png')} style={{width: 22, height: 22, marginLeft: 15}}/>
+        </TouchableOpacity>,
       }),
       screen: TripDashboard
     },
@@ -198,7 +202,11 @@ export default App = StackNavigator({
         },
         headerBackTitleStyle:{
             color: "#FFF"
-        }
+        },
+        headerLeft:
+        <TouchableOpacity onPress={()=>{ navigation.navigate('TripDashboard', {trip : navigation.state.params.trip}) }}>
+          <Image source={require('./src/images/left-arrow-png-left-icon-1600.png')} style={{width: 22, height: 22, marginLeft: 15}}/>
+        </TouchableOpacity>,
       }),
       screen: AddExpense
     },
@@ -213,7 +221,11 @@ export default App = StackNavigator({
         },
         headerBackTitleStyle:{
             color: "#FFF"
-        }
+        },
+        headerLeft:
+        <TouchableOpacity onPress={()=>{ navigation.navigate('TripDashboard', {trip : navigation.state.params.trip}) }}>
+          <Image source={require('./src/images/left-arrow-png-left-icon-1600.png')} style={{width: 22, height: 22, marginLeft: 15}}/>
+        </TouchableOpacity>,
       }),
       screen: AddExpensePayers
     },
@@ -228,7 +240,11 @@ export default App = StackNavigator({
         },
         headerBackTitleStyle:{
             color: "#FFF"
-        }
+        },
+        headerLeft:
+        <TouchableOpacity onPress={()=>{ navigation.navigate('TripDashboard', {trip : navigation.state.params.trip}) }}>
+          <Image source={require('./src/images/left-arrow-png-left-icon-1600.png')} style={{width: 22, height: 22, marginLeft: 15}}/>
+        </TouchableOpacity>,
       }),
       screen: AddExpenseConsumed
     },
@@ -243,7 +259,11 @@ export default App = StackNavigator({
         },
         headerBackTitleStyle:{
             color: "#FFF"
-        }
+        },
+        headerLeft:
+        <TouchableOpacity onPress={()=>{ navigation.navigate('TripDashboard', {trip : navigation.state.params.trip}) }}>
+          <Image source={require('./src/images/left-arrow-png-left-icon-1600.png')} style={{width: 22, height: 22, marginLeft: 15}}/>
+        </TouchableOpacity>,
       }),
       screen: AddExpenseShared
     },
