@@ -107,8 +107,8 @@ export default class Login extends Component{
         }
     }
 
-    moveOn(){
-	    this.registerToDevice();
+    async moveOn(){
+	    await this.registerToDevice();
         if(this.state.autheticated){
             this.props.navigation.navigate('DashboardTrips');
         }
@@ -180,7 +180,7 @@ export default class Login extends Component{
                     <TouchableOpacity style={styles.loginButton} onPress={() => this.sendLoginRequest()}>
                         <Text style={styles.buttonText}>{I18n.t('login')}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.registerButton} onPress={() => this.props.navigation.navigate('Register')}>
+                    <TouchableOpacity style={styles.registerButton} onPress={() => setImmediate(() => this.props.navigation.navigate('Register'))}>
                         <Text style={styles.buttonText}>{I18n.t('register')}</Text>
                     </TouchableOpacity>
                 </View>

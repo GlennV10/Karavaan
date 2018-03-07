@@ -17,12 +17,15 @@ export default class TripDashboard extends React.Component {
     this._handleFirstConnectivityChange = this._handleFirstConnectivityChange.bind(this);
   }
 
+  componentWillMount() {
+    this.setState({ expenses: this.props.navigation.state.params.trip.expenseList });
+  }
+
   componentDidMount() {
     
     this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
     this.props.navigation.addListener("willBlur", () => this.componentOnBlur());
     this._handleFirstConnectivityChange();
-    this.setState({ expenses: this.props.navigation.state.params.trip.expenseList });
   }
 
   _handleBackButton = () => {
