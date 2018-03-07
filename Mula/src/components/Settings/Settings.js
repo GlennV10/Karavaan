@@ -17,7 +17,8 @@ export default class Settings extends Component {
             friendtoadd: "",
             currentpass: "",
             newpass: "",
-            repeatnewpass: ""
+            repeatnewpass: "",
+            user: ""
         }
     }
 
@@ -50,6 +51,7 @@ export default class Settings extends Component {
           })
           .then((res) => res.json())
           .then((user) => {
+            this.setState({ user });
             this.setState({name: user.firstName + " " + user.lastName});
           }).catch(error => console.log("network/rest error"));
       }
@@ -121,27 +123,45 @@ export default class Settings extends Component {
         }
     }
 
+    checkPassword() {
+      url = "http://193.191.177.73:8080/karafinREST/checkPassword/" + this.state.username;
+      return fetch(url,{
+          method: 'POST',
+          body: JSON.stringify({
+              password: this.state.currentpass
+          })
+      })
+      .then((response) => {
+          return response._bodyText
+      })
+      .catch((error)=> console.log("ERROR: " + error));
+    }
+
     changePass() {
-        if (this.state.newpass == this.state.repeatnewpass) {
-            try {
-                return fetch('http://193.191.177.169:8080/mula/Controller?action=changePassword', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: this.state.username,
-                        currentpass: this.currentpass,
-                        newpass: this.state.newpass
+        if(this.checkPassword())  {
+            if (this.state.newpass == this.state.repeatnewpass) {
+                let user = this.state.user;
+                user.password = this.state.newpass;
+                user.oldPassword = this.state.currentpass;
+                try {
+                    return fetch('http://193.191.177.73:8080/karafinREST/updatePerson/' + this.state.username, {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(user)
                     })
-                })
-            }
-            catch (error) {
-                alert(I18n.t('notexist'));
+                    .then((res) => alert(res._bodyText))
+                }
+                catch (error) {
+                    alert(I18n.t('notexist'));
+                }
+            } else {
+                alert(I18n.t('nomatch'))
             }
         } else {
-            alert(I18n.t('nomatch'))
+            alert("Old password didn't match");
         }
     }
 
