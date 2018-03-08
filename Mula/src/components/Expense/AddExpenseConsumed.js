@@ -214,7 +214,7 @@ export default class AddExpenseConsumed extends Component {
                               this.addExpense()
                           }
                         }}>
-                            <Text style={styles.saveText}>{I18n.t('shared')}</Text>
+                            <Text style={styles.saveText}>{(!this.state.remaining === 0) ? I18n.t('shared') : I18n.t('addexpense')}</Text>
                         </TouchableOpacity>
                         </KeyboardAvoidingView>
                     </View>

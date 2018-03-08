@@ -13,6 +13,8 @@ export default class TripCategory extends Component {
         baseCurrency: "",
         selectedCurrency: "",
         rates: [],
+        expenses: [],
+        participants: [],
         isLoading: true
       }
     }
@@ -20,8 +22,14 @@ export default class TripCategory extends Component {
     async componentDidMount() {
         let username = await AsyncStorage.getItem("userName");
         console.log(username);
-        this.setState({ activeUser: username })
-        await this.calculateCategorytotal();
+        this.setState({ activeUser: username });
+        this.setState({ username });
+        this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
+        this.calculateCategorytotal();
+    }
+
+    componentOnFocus() {
+        //this.calculateCategorytotal();
     }
 
     renderValutaToArray(rate) {
@@ -48,9 +56,11 @@ export default class TripCategory extends Component {
             })
                 .then((resp) => resp.json())
                 .then((trip) => {
-                    console.log(trip.rates);
                     this.setState({baseCurrency: trip.baseCurrency});
                     this.renderValutaToArray(trip.rates);
+                    console.log(trip.rates);
+                    this.setState({ expenses: trip.expenseList })
+                    this.setState({ participants: trip.participants })
                     let users = [];
                     for (participant of trip.participants) {
                         users.push(participant[0]);
@@ -62,21 +72,30 @@ export default class TripCategory extends Component {
 
     async calculateCategorytotal() {
         let categories = [];
+        let expenses = [];
 
         await this.getExchangeRates();
         this.setState({ selectedCurrency: this.state.baseCurrency });
         console.log(this.state.selectedCurrency);
-        for (expense of this.props.expenses) {
+        for (expense of this.state.expenses) {
             let userExpense = 0;
+            let consumed = false;
+            let payed = false;
             Object.keys(expense.consumers).map((user) => {
                 console.log(user);
                 if(user == this.state.activeUser) {
                     userExpense = expense.consumers[user];
+                    if(expense.consumers[user] != 0) consumed = true;
+                }
+            });
+            Object.keys(expense.payers).map((user) => {
+                if(user == this.state.activeUser) {
+                    payed = true;
                 }
             });
             console.log(userExpense);
-            if(categories.findIndex(i => i.category === expense.category) < 0) {
-                if(userExpense !== 0){
+            if(categories.findIndex(i => i.category === expense.category) < 1) {
+                if(payed || consumed) {
                     let category = {
                         category: expense.category,
                         total: userExpense,
@@ -85,23 +104,19 @@ export default class TripCategory extends Component {
                     for (currency of this.state.rates) {
                         if (expense.currency == currency.name) category.total = userExpense / currency.value;
                     }
+                    expenses.push(expense);
                     categories.push(category);
                 }
             } else {
                 for (let j = 0; j < categories.length; j++) {
                     if (categories[j].category === expense.category) {
-                        if(userExpense !== 0){
-                            let category = {
-                                category: expense.category,
-                                total: userExpense,
-                                expenses: 1
-                            };
-                            categories.push(category);
-                        }
-                        for(currency of this.state.rates) {
-                            if(expense.currency == currency.name && userExpense !== 0) {
-                                categories[j].total += (userExpense/currency.value);
-                                categories[j].expenses++;
+                        if(payed || consumed) {
+                            expenses.push(expense);
+                            for(currency of this.state.rates) {
+                                if(expense.currency == currency.name) {
+                                    categories[j].total += (userExpense/currency.value);
+                                    categories[j].expenses++;
+                                }
                             }
                         }
                     }
@@ -110,6 +125,7 @@ export default class TripCategory extends Component {
         }
         console.log(categories);
         this.setState({ categories });
+        this.setState({ expenses });
         this.setState({ isLoading: false })
     }
 
@@ -145,7 +161,7 @@ export default class TripCategory extends Component {
 
     getCategoryExpenses(category) {
         let expenses = [];
-        for (expense of this.props.expenses) {
+        for (expense of this.state.expenses) {
             if (expense.category === category) {
                 expenses.push(expense);
             }
@@ -187,8 +203,7 @@ export default class TripCategory extends Component {
     }
 
     renderCurrencyPicker() {
-        let trip = this.props.navigation.state.params.trip;
-        if (this.props.expenses.length > 0) {
+        if (this.state.expenses.length > 0) {
             return (
                 <Picker
                     style={styles.currencyPicker}
@@ -203,14 +218,13 @@ export default class TripCategory extends Component {
     }
 
     renderUserPicker() {
-        let trip = this.props.navigation.state.params.trip;
         let isAdmin = false;
-        for (participant of trip.participants) {
+        for (participant of this.state.participants) {
             if(participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
                 isAdmin = true;
             }
         }
-        if(this.props.expenses.length > 0 && isAdmin) {        
+        if(this.state.categories.length > 0 && isAdmin) {
             return(
                 <Picker
                     style={styles.currencyPicker}
@@ -235,8 +249,8 @@ export default class TripCategory extends Component {
             return (
                 <View style={styles.container}>
                     <View style={{ backgroundColor: '#d1d5da' }}>
-                        <View style={styles.separator}>{ this.renderCurrencyPicker() }</View>
                         <View style={styles.separator}>{ this.renderUserPicker() }</View>
+                        <View style={styles.separator}>{ this.renderCurrencyPicker() }</View>
                     </View>
                     <ScrollView style={styles.categoryList}>
                         { this.renderCategories() }
