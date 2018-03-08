@@ -26,20 +26,24 @@ export default class TripExpenses extends Component {
             this.setState({ username });
             this.setState({ originalExpenses: this.props.expenses });
             this.setState({ expenses: this.props.expenses });
-            this.checkAdmin();
+            try {
+                this.checkAdmin();
+            } catch (error) {
+                console.log(error);
+            }
         });
     }
 
     componentDidMount() {
         this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
-        this.props.navigation.addListener("willBlur", () => this.componentOnBlur());
     }
 
-    async componentOnFocus() {
-        await this.checkAdmin();
-    }
-
-    componentOnBlur() {
+    componentOnFocus() {
+        try {
+            this.checkAdmin();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     askToDeleteExpense(expense) {
@@ -86,7 +90,7 @@ export default class TripExpenses extends Component {
         .then((res) => res.json())
         .then((userTrip) => {
             console.log("refreshing expenses")
-            this.setState({trip: userTrip});
+            this.setState({participants: userTrip.participants});
             this.setState({expenses: userTrip.expenseList});
             this.setState({originalExpenses: userTrip.expenseList});
         }).catch(error => console.log("network/rest error"));
@@ -94,10 +98,9 @@ export default class TripExpenses extends Component {
 
     async checkAdmin() {
         await this.getExpenses();
-        let trip = this.state.trip;
         this.setState({ isAdmin: false });
 
-        for (participant of trip.participants) {
+        for (participant of this.state.participants) {
             if (participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
                 this.setState({ isAdmin: true });
             }

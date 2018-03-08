@@ -44,22 +44,19 @@ export default class AddTrip extends Component {
         };
     }
 
-    componentWillMount() {
-        AsyncStorage.getItem('currency').then((currency) => {
-            this.setState({ baseCurrency: currency })
-        })
-            .catch(error => console.log('Error loading currency'));
-    }
-
     componentDidMount() {
         this.initialize();
     }
 
-    initialize() {
-        selectedStartDate = new Date().toDateString
-        selectedEndDate = new Date().toDateString
+    async initialize() {
+        selectedStartDate = new Date().toDateString;
+        selectedEndDate = new Date().toDateString;
 
-        this.getExchangeRates();
+        await AsyncStorage.getItem('currency').then((currency) => {
+            this.setState({ baseCurrency: currency })
+        }).catch(error => console.log('Error loading currency'));
+
+        this.getExchangeRatesWithBase(this.state.baseCurrency);
 
         AsyncStorage.getItem('id_teller')
             .then((id_teller) => {
