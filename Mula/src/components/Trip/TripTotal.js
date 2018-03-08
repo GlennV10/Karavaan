@@ -16,12 +16,15 @@ export default class TripTotal extends Component {
       isLoadingPaymentsToComplete: true,
       payments: [],
       paymentsToComplete: [],
-      baseCurrency: ""
+      baseCurrency: "",
+      expenses: [],
+      participants: [],
+      rates: [],
     }
   }
 
   async componentWillMount() {
-    this.getTripUsers();
+    this.getExpenses();
 
     await AsyncStorage.getItem('userName').then((username) => {
       this.setState({ username });
@@ -46,6 +49,28 @@ export default class TripTotal extends Component {
     await this.getTripPayments(this.state.activeUser)
   }
 
+  getExpenses() {
+    let url = 'http://193.191.177.73:8080/karafinREST/getTrip/' + this.props.tripID;
+
+    return fetch(url, {
+        method: 'GET',
+        header: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((res) => res.json())
+    .then((userTrip) => {
+        console.log("refreshing expenses")
+        this.setState({participants: userTrip.participants});
+        this.setState({expenses: userTrip.expenseList});
+        this.setState({baseCurrency: userTrip.baseCurrency});
+        let users = [];
+        for (participant of this.state.participants) {
+          users.push(participant[0]);
+        }
+        this.setState({ users });
+    }).catch(error => console.log("network/rest error"));
+  }
 
   getTripOverview(email) {
     return fetch('http://193.191.177.73:8080/karafinREST/getTripOverview/' + this.props.tripID + '/' + email, {
@@ -81,16 +106,6 @@ export default class TripTotal extends Component {
       .then((res) => res.json())
       .then((data) => this.setState({ paymentsToComplete: data, isLoadingPaymentsToComplete: false }))
       .catch((error) => console.log(error));
-  }
-
-  getTripUsers() {
-    let trip = this.props.navigation.state.params.trip;
-    let users = [];
-    for (participant of trip.participants) {
-      users.push(participant[0]);
-    }
-    this.setState({ users });
-    this.setState({ baseCurrency: trip.baseCurrency })
   }
 
   completePayment(payment) {
@@ -203,14 +218,13 @@ export default class TripTotal extends Component {
     }
   }
   renderUserPicker() {
-    let trip = this.props.navigation.state.params.trip;
     let isAdmin = false;
-    for (participant of trip.participants) {
+    for (participant of this.state.participants) {
       if (participant[0].email == this.state.username && (participant[1] == "ADMIN" || participant[1] == "GUIDE")) {
         isAdmin = true;
       }
     }
-    if (this.props.expenses.length > 0 && isAdmin) {
+    if (this.state.expenses.length > 0 && isAdmin) {
       return (
         <View style={{ backgroundColor: '#d1d5da' }}>
           <Picker
