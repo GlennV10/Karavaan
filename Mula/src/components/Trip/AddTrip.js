@@ -97,81 +97,81 @@ export default class AddTrip extends Component {
         //if(this.isValid()){
         // if (this.state.connectionMode == "online") {
         //     console.log("ONLINE")
-        if (this.state.title.length != 0 ) {
-        let trip = {
-            tripName: this.state.title,
-            startDate: {
-                dayOfMonth: parseInt(this.state.selectedStartDate.substring(0, 2)),
-                month: parseInt(this.state.selectedStartDate.substring(3, 5)),
-                year: parseInt(this.state.selectedStartDate.substring(6))
-            },
-            endDate: {
-                dayOfMonth: parseInt(this.state.selectedEndDate.substring(0, 2)),
-                month: parseInt(this.state.selectedEndDate.substring(3, 5)),
-                year: parseInt(this.state.selectedEndDate.substring(6))
+        if (this.state.title.length != 0) {
+            let trip = {
+                tripName: this.state.title,
+                startDate: {
+                    dayOfMonth: parseInt(this.state.selectedStartDate.substring(0, 2)),
+                    month: parseInt(this.state.selectedStartDate.substring(3, 5)),
+                    year: parseInt(this.state.selectedStartDate.substring(6))
+                },
+                endDate: {
+                    dayOfMonth: parseInt(this.state.selectedEndDate.substring(0, 2)),
+                    month: parseInt(this.state.selectedEndDate.substring(3, 5)),
+                    year: parseInt(this.state.selectedEndDate.substring(6))
 
-            },
-            baseCurrency: this.state.baseCurrency,
-            rates: this.state.formatCurrencies,
-            participants: [],
-            expenseList: [],
-            categories: [],
-            payments: {}
-        }
+                },
+                baseCurrency: this.state.baseCurrency,
+                rates: this.state.formatCurrencies,
+                participants: [],
+                expenseList: [],
+                categories: [],
+                payments: {}
+            }
 
-        console.log(trip);
+            console.log(trip);
 
-        let participant = [];
-        participant.push(this.state.admin);
-        participant.push("ADMIN");
-        trip.participants.push(participant);
+            let participant = [];
+            participant.push(this.state.admin);
+            participant.push("ADMIN");
+            trip.participants.push(participant);
 
-        return fetch('http://193.191.177.73:8080/karafinREST/addTrip', {
-            method: 'POST',
-            header: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(trip)
-        })
-            .then((res) => res.json())
-            .then((response) => {
-                console.log(response);
-                this.props.navigation.navigate('TripParticipants', { trip: response });
+            return fetch('http://193.191.177.73:8080/karafinREST/addTrip', {
+                method: 'POST',
+                header: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(trip)
             })
-            .catch(error => console.log("network/rest error"));
-        // }
-        // else {
-        //
-        //     let trp = {
-        //         tripID: this.state.teller,
-        //         email: this.state.username,
-        //         name: this.state.title,
-        //         startDate: this.state.selectedStartDate,
-        //         endDate: this.state.selectedEndDate,
-        //         users: this.state.selectedItems,
-        //         expenseList: [],
-        //         baseCurrency: this.state.baseCurrency,
-        //         currencies: this.state.formatCurrencies
-        //
-        //     }
-        //     AsyncStorage.getItem('trips')
-        //         .then(req => JSON.parse(req))
-        //         .then((trips) => {
-        //             trips.push(trp);
-        //             AsyncStorage.setItem('trips', JSON.stringify(trips))
-        //                 .then(res => console.log(trips))
-        //                 .catch(error => console.log('Error storing trips'));
-        //         })
-        //         .catch(error => console.log('Error loading trips'));
-        //     var tel = parseInt(this.state.teller) + 1;
-        //     console.log("TEL:" + tel);
-        //
-        //     AsyncStorage.setItem('id_teller', JSON.stringify(tel))
-        //         .then(res => console.log(teller))
-        //         .catch(error => console.log('Error storing teller BBBB'));
-        //
-        //     this.moveOn();
-        // }
+                .then((res) => res.json())
+                .then((response) => {
+                    console.log(response);
+                    this.props.navigation.navigate('TripParticipants', { trip: response });
+                })
+                .catch(error => console.log("network/rest error"));
+            // }
+            // else {
+            //
+            //     let trp = {
+            //         tripID: this.state.teller,
+            //         email: this.state.username,
+            //         name: this.state.title,
+            //         startDate: this.state.selectedStartDate,
+            //         endDate: this.state.selectedEndDate,
+            //         users: this.state.selectedItems,
+            //         expenseList: [],
+            //         baseCurrency: this.state.baseCurrency,
+            //         currencies: this.state.formatCurrencies
+            //
+            //     }
+            //     AsyncStorage.getItem('trips')
+            //         .then(req => JSON.parse(req))
+            //         .then((trips) => {
+            //             trips.push(trp);
+            //             AsyncStorage.setItem('trips', JSON.stringify(trips))
+            //                 .then(res => console.log(trips))
+            //                 .catch(error => console.log('Error storing trips'));
+            //         })
+            //         .catch(error => console.log('Error loading trips'));
+            //     var tel = parseInt(this.state.teller) + 1;
+            //     console.log("TEL:" + tel);
+            //
+            //     AsyncStorage.setItem('id_teller', JSON.stringify(tel))
+            //         .then(res => console.log(teller))
+            //         .catch(error => console.log('Error storing teller BBBB'));
+            //
+            //     this.moveOn();
+            // }
 
 
         }
@@ -314,7 +314,7 @@ export default class AddTrip extends Component {
     }
 
     getStartDate(today) {
-        if(this.state.selectedStartDate === "") {
+        if (this.state.selectedStartDate === "") {
             return today;
         } else {
             return this.state.selectedStartDate;
@@ -426,12 +426,6 @@ export default class AddTrip extends Component {
                         onPress={() => this.formatCurrenciesAPI()}
 
                     />
-                    <View>
-                        <FlatList
-                            data={this.state.errors}
-                            renderItem={({ error }) => <Text>{error}</Text>}
-                        />
-                    </View>
                 </View>
             </ScrollView>
 

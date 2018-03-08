@@ -1,6 +1,7 @@
 import React, { Component, cloneElement } from 'react';
 import { StyleSheet, KeyboardAvoidingView, View, Image, NetInfo, Text, TextInput, Button, Modal, TouchableOpacity, ScrollView, Picker, AsyncStorage, Label, FlatList } from 'react-native';
 import { StackNavigator } from 'react-navigation';
+import I18n from 'react-native-i18n';
 
 export default class TripParticipants extends Component {
 
@@ -77,9 +78,10 @@ export default class TripParticipants extends Component {
             alert(I18n.t('alreadyadded'))
             this.clearFields()
         } else if (error === "Invalid arguments") {
-            alert("fout email")
+            this.clearEmail()
+            alert(I18n.t('falseemail'))
         } else {
-            console.log("Network/rest error")
+            this.clearFields()
         }
     }
 
@@ -111,6 +113,10 @@ export default class TripParticipants extends Component {
 
     clearFields() {
         this.setState({ firstName: "", lastName: "", email: "" })
+    }
+
+    clearEmail() {
+        this.setState({ email: "" })
     }
 
     //}

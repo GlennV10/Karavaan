@@ -84,10 +84,10 @@ export default class TripSettings extends Component {
             alert(I18n.t('alreadyadded'))
             this.clearFields()
         } else if (error === "Invalid arguments") {
+            this.clearEmail()
             alert(I18n.t('falseemail'))
-            alert("fout email")
         } else {
-            console.log("Network/rest error")
+            this.clearFields()
         }
     }
 
@@ -191,8 +191,9 @@ export default class TripSettings extends Component {
         });
     }
 
-    renderParticipants() {
+    renderParticipants() {        
         return this.state.participants.map((participant, index) => {
+            this.state.tripParticipants.push(participant)
             return (
                 <View key={index}>
                     <Text>{participant[0].firstName} {participant[0].lastName}</Text>
@@ -229,6 +230,7 @@ export default class TripSettings extends Component {
     updateTrip() {
         let trip = this.props.navigation.state.params.trip;
         trip.rates = this.formatCurrenciesAPI(trip);
+        trip.participants = this.state.tripParticipants;
         console.log(trip.rates);
         let url = 'http://193.191.177.73:8080/karafinREST/updateTrip';
         return fetch(url, {
