@@ -163,7 +163,7 @@ export default class TripParticipants extends Component {
                 <View style={styles.separator}>
                     <TextInput
                         ref="email"
-                        placeholder="email"
+                        placeholder="Email"
                         value={this.state.email}
                         style={styles.inputField}
                         underlineColorAndroid="transparent"
