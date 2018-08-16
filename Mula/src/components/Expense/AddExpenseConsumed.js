@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert, Switch, KeyboardAvoidingView } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
-import Prompt from 'react-native-prompt';
 
 export default class AddExpenseConsumed extends Component {
     constructor(props) {

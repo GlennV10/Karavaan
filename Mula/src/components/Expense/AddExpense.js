@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, ScrollView, View, Image, Text, TextInput, Button, TouchableOpacity, Picker, AsyncStorage, BackHandler, Alert, } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import I18n from 'react-native-i18n';
-import Prompt from 'react-native-prompt';
 
 export default class AddExpense extends Component {
     constructor(props) {
@@ -64,7 +63,7 @@ export default class AddExpense extends Component {
 
     setCategory(item) {
         if (item == "add") {
-            this.setState({ promptVisible: true });
+
         } else {
             this.setState({ category: item });
         }
