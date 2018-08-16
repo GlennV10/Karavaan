@@ -196,7 +196,7 @@ export default class AddTrip extends Component {
 
     getExchangeRates() {
         if (this.state.loadRates) {
-            return fetch('https://api.fixer.io/latest')
+            return fetch('http://api.openrates.io/latest')
                 .then((resp) => resp.json())
                 .then((data) => this.parseRates(data))
                 .catch(error => console.log("network/fixer error"));
@@ -205,7 +205,7 @@ export default class AddTrip extends Component {
 
     getExchangeRatesWithBase(baseCurrency) {
         console.log("Rates met base wordt uitgevoerd" + baseCurrency)
-        var url = "https://api.fixer.io/latest?base=" + baseCurrency;
+        var url = "http://api.openrates.io/latest?base=" + baseCurrency;
         //if (this.state.loadRates) {
         return fetch(url)
             .then((resp) => resp.json())
