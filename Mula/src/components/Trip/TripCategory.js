@@ -203,7 +203,7 @@ export default class TripCategory extends Component {
     }
 
     renderCurrencyPicker() {
-        if (this.state.expenses.length > 0) {
+        if (this.state.categories.length > 0) {
             return (
                 <Picker
                     style={styles.currencyPicker}

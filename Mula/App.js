@@ -8,7 +8,6 @@ import Splashscreen from './src/components/Splashscreen/Splashscreen';
 import Login from './src/components/Login/Login';
 import Register from './src/components/Register/Register';
 import Settings from './src/components/Settings/Settings';
-import Gallery from './src/components/Settings/Gallery';
 import DashboardTrips from './src/components/Dashboard/DashboardTrips';
 import TripDashboard from './src/components/Trip/TripDashboard';
 import TripCategoryExpenses from './src/components/Trip/TripCategoryExpenses';
@@ -104,25 +103,6 @@ export default App = StackNavigator({
         },
       }),
       screen: Settings
-    },
-    Gallery: {
-      navigationOptions: ({ navigation }) => ({
-        title: "Gallery",
-        headerStyle:{
-          backgroundColor: '#6fc2b0'
-        },
-        headerTitleStyle:{
-            color: '#FFF'
-        },
-        headerBackTitleStyle:{
-            color: "#FFF"
-        },
-        headerLeft:
-        <TouchableOpacity onPress={()=>{ navigation.navigate('Settings', {imgUri : navigation.state.params.imgUri}) }}>
-          <Image source={require('./src/images/left-arrow-png-left-icon-1600.png')} style={{width: 22, height: 22, marginLeft: 15}}/>
-        </TouchableOpacity>,
-      }),
-      screen: Gallery
     },
     TripDashboard: {
       navigationOptions: ({ navigation }) => ({

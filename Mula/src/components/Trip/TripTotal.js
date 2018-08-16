@@ -19,7 +19,9 @@ export default class TripTotal extends Component {
       baseCurrency: "",
       expenses: [],
       participants: [],
+      selectedCurrency: "",
       rates: [],
+      previousCurrency: [],
     }
   }
 
@@ -64,6 +66,9 @@ export default class TripTotal extends Component {
         this.setState({participants: userTrip.participants});
         this.setState({expenses: userTrip.expenseList});
         this.setState({baseCurrency: userTrip.baseCurrency});
+        this.setState({selectedCurrency: userTrip.baseCurrency});
+        this.setState({previousCurrency: userTrip.baseCurrency});
+        this.renderValutaToArray(userTrip.rates);
         let users = [];
         for (participant of this.state.participants) {
           users.push(participant[0]);
@@ -92,7 +97,23 @@ export default class TripTotal extends Component {
       }
     })
       .then((res) => res.json())
-      .then((data) => this.setState({ payments: data, isLoadingPayments: false }))
+      .then((data) => {
+        let currentRate = 1;
+        let previousRate = 1;
+        for (payment of data) {
+            for (currency of this.state.rates) {
+              if (currency.name == this.state.selectedCurrency) {
+                currentRate = currency.value;
+              }
+              if (currency.name == this.state.previousCurrency) {
+                previousRate = currency.value;
+              }
+            }
+          payment[1] = payment[1] / previousRate * currentRate;
+        }
+        this.setState({ payments: data, isLoadingPayments: false 
+      })
+    })
       .catch((error) => console.log(error));
   }
 
@@ -121,6 +142,23 @@ export default class TripTotal extends Component {
       .catch((error) => console.log(error));
   }
 
+  renderValutaToArray(rate) {
+    var array = [];
+    array.push({ name: this.state.baseCurrency, value: 1 });
+    Object.keys(rate).map((val) => {
+        array.push({
+            name: val,
+            value: rate[val]
+        })
+    });
+    this.setState({ rates: array });
+  }
+
+  updateCurrency(newCurrency) {
+    this.setState({ previousCurrency: this.state.selectedCurrency });
+    this.setState({ selectedCurrency: newCurrency });
+  }
+
   renderPaymentsToComplete() {
     if (this.state.isLoadingPaymentsToComplete) {
       return (
@@ -142,13 +180,22 @@ export default class TripTotal extends Component {
         return this.state.paymentsToComplete.map((payment, index) => {
           if (payment[0][1] === this.state.activeUser) {
 
+            let currentRate = 1;
+            for (currency of this.state.rates) {
+              if (currency.name == this.state.selectedCurrency) {
+                currentRate = currency.value;
+              }
+            }
+
+            payment[1] = payment[1] * currentRate;
+
             return (
               <TouchableOpacity onPress={() => this.completePayment(payment)} style={styles.paymentsContainer} key={index + "container"}>
                 <View style={styles.paymentsLabel} key={index + "label"}>
                   <Text>{payment[0][0]} - {payment[0][2]}:</Text>
                 </View >
                 <View style={styles.paymentsAmount} key={index + "amount"}>
-                  <Text style={styles.owes}>-{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                  <Text style={styles.owes}>-{parseFloat(payment[1]).toFixed(2)} {this.state.selectedCurrency}</Text>
                 </View>
               </TouchableOpacity>
             )
@@ -159,7 +206,7 @@ export default class TripTotal extends Component {
                   <Text>{payment[0][2]} - {payment[0][0]}:</Text>
                 </View >
                 <View style={styles.paymentsAmount} key={index + "amount"}>
-                  <Text style={styles.recieves}>+{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                  <Text style={styles.recieves}>+{parseFloat(payment[1]).toFixed(2)} {this.state.selectedCurrency}</Text>
                 </View>
               </TouchableOpacity>
             )
@@ -189,6 +236,19 @@ export default class TripTotal extends Component {
         let result = []
 
         return this.state.payments.map((payment, index) => {
+
+          let currentRate = 1;
+            for (currency of this.state.rates) {
+              if (currency.name == this.state.selectedCurrency) {
+                currentRate = currency.value;
+              }
+              if (currency.name == this.state.selectedCurrency) {
+                currentRate = currency.value;
+              }
+            }
+
+            payment[1] = payment[1] * currentRate;
+
           if (payment[0][1] === this.state.activeUser) {
 
             return (
@@ -197,7 +257,7 @@ export default class TripTotal extends Component {
                   <Text>{payment[0][0]} - {payment[0][2]}:</Text>
                 </View >
                 <View style={styles.paymentsAmount} key={index + "amount"}>
-                  <Text style={styles.owes}>-{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                  <Text style={styles.owes}>-{parseFloat(payment[1]).toFixed(2)} {this.state.selectedCurrency}</Text>
                 </View>
               </View>
             )
@@ -208,7 +268,7 @@ export default class TripTotal extends Component {
                   <Text>{payment[0][2]} - {payment[0][0]}:</Text>
                 </View >
                 <View style={styles.paymentsAmount} key={index + "amount"}>
-                  <Text style={styles.recieves}>+{parseFloat(payment[1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                  <Text style={styles.recieves}>+{parseFloat(payment[1]).toFixed(2)} {this.state.selectedCurrency}</Text>
                 </View>
               </View>
             )
@@ -217,6 +277,7 @@ export default class TripTotal extends Component {
       }
     }
   }
+  
   renderUserPicker() {
     let isAdmin = false;
     for (participant of this.state.participants) {
@@ -240,6 +301,21 @@ export default class TripTotal extends Component {
     } else return null;
   }
 
+  renderCurrencyPicker() {
+    if (this.state.expenses.length > 0) {
+        return (
+            <Picker
+                style={styles.userPicker}
+                selectedValue={this.state.selectedCurrency}
+                onValueChange={(itemValue, itemIndex) => this.updateCurrency(itemValue)}>
+                {this.state.rates.map((item, index) => {
+                    return (<Picker.Item label={item.name} value={item.name} key={index} />)
+                })}
+            </Picker>
+        )
+    } else return null;
+}
+
   renderTable() {
     if (this.state.isLoading) {
       return (
@@ -252,7 +328,14 @@ export default class TripTotal extends Component {
       for (payerKey of Object.keys(this.state.overview)) {
         let payerData = [];
         payerData.push(payerKey);
+        let currentRate = 1;
+          for (currency of this.state.rates) {
+            if (currency.name == this.state.selectedCurrency) {
+              currentRate = currency.value;
+            }
+          }
         for (amount of this.state.overview[payerKey]) {
+          amount = amount * currentRate;
           payerData.push(amount.toString());
         }
         data.push(payerData);
@@ -276,7 +359,7 @@ export default class TripTotal extends Component {
                             <Text key={i + "paidText"} style={styles.label}>{I18n.t('amountpaid')} </Text>
                           </View>
                           <View key={i + "paidrRghtFlexView"} style={styles.rightFlexView}>
-                            <Text key={i + "paidAmount"}>{parseFloat(data[i][1]).toFixed(2)} {this.state.baseCurrency}</Text>
+                            <Text key={i + "paidAmount"}>{parseFloat(data[i][1]).toFixed(2)} {this.state.selectedCurrency}</Text>
                           </View>
                         </View>
 
@@ -285,7 +368,7 @@ export default class TripTotal extends Component {
                             <Text key={i + "consumedText"} style={styles.label}>{I18n.t('amountconsumed')} </Text>
                           </View>
                           <View key={i + "consumedRightFlexView"} style={styles.rightFlexView}>
-                            <Text key={i + "consumedAmount"}>{parseFloat(data[i][2]).toFixed(2)} {this.state.baseCurrency}</Text>
+                            <Text key={i + "consumedAmount"}>{parseFloat(data[i][2]).toFixed(2)} {this.state.selectedCurrency}</Text>
                           </View>
                         </View>
 
@@ -294,7 +377,7 @@ export default class TripTotal extends Component {
                             <Text key={i + "balanceText"} style={styles.label}>{I18n.t('balans')} </Text>
                           </View>
                           <View key={i + "balanceRightFlexView"} style={styles.rightFlexView}>
-                            <Text key={i + "balanceAmount"}>{parseFloat(data[i][3]).toFixed(2)} {this.state.baseCurrency}</Text>
+                            <Text key={i + "balanceAmount"}>{parseFloat(data[i][3]).toFixed(2)} {this.state.selectedCurrency}</Text>
                           </View>
                         </View>
                       </View>
@@ -326,6 +409,7 @@ export default class TripTotal extends Component {
 
         <View style={styles.container}>
           {this.renderUserPicker()}
+          {this.renderCurrencyPicker()}
           {tableData}
 
           <View style={styles.separator}>
