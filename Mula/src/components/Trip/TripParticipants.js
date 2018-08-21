@@ -83,6 +83,8 @@ export default class TripParticipants extends Component {
         } else {
             this.clearFields()
         }
+
+
     }
 
     addParticipant() {
@@ -96,6 +98,7 @@ export default class TripParticipants extends Component {
             console.log(this.props.navigation.state.params.trip.id)
         var url = "http://193.191.177.73:8080/karafinREST/addPersonToTripFromEmail/" + this.state.email + "/" + this.props.navigation.state.params.trip.id
         console.log(url);
+        alert(this.state.firstName + " " + this.state.lastName + " toegevoegd");
         return fetch(url, {
             method: 'POST',
             header: {
@@ -111,7 +114,9 @@ export default class TripParticipants extends Component {
         }
     } catch (error) {
         alert("Email bestaat niet")
-    }
+        }
+
+        
     }
 
     clearFields() {

@@ -94,10 +94,11 @@ export default class AddTrip extends Component {
         //if(this.isValid()){
         // if (this.state.connectionMode == "online") {
         //     console.log("ONLINE")
-        if (this.state.title.length != 0 ) {
-            
+        if (this.state.title.length != 0 && this.state.selectedStartDate < this.state.selectedEndDate) {
             
 
+           
+           
             
             
             let trip = {
@@ -295,6 +296,7 @@ export default class AddTrip extends Component {
             this.state.errors.push("please add a valid endDate ")
             res = false;
         }
+       
         
 
         // if (this.state.startDate == null) {
