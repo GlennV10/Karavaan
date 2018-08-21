@@ -21,7 +21,7 @@ export default class TripExpenses extends Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         AsyncStorage.getItem('userName').then((username) => {
             this.setState({ username });
             this.setState({ originalExpenses: this.props.expenses });
@@ -89,7 +89,7 @@ export default class TripExpenses extends Component {
         })
         .then((res) => res.json())
         .then((userTrip) => {
-            console.log("refreshing expenses")
+            console.log("refreshing expenses"+ userTrip.participants +" "+userTrip.expenseList+" "+userTrip.expenseList);
             this.setState({participants: userTrip.participants});
             this.setState({expenses: userTrip.expenseList});
             this.setState({originalExpenses: userTrip.expenseList});

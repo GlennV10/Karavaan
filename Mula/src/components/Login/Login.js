@@ -21,11 +21,12 @@ export default class Login extends Component{
         this._handleFirstConnectivityChange = this._handleFirstConnectivityChange.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
 
     }
 
     componentDidMount() {
+        console.disableYellowBox = true;
         this.props.navigation.addListener("didFocus", () => this.componentOnFocus());
         this.props.navigation.addListener("willBlur", () => this.componentOnBlur());
     }
@@ -76,7 +77,7 @@ export default class Login extends Component{
                 })
             })
             .then((response) => {
-                if(response._bodyText === "true"){
+                if(response.ok){
                     this.setState({autheticated: true});
                     this.moveOn();
                 } else {

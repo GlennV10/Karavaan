@@ -8,7 +8,8 @@ export default class Splashscreen extends React.Component {
         super(props);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
+        console.disableYellowBox = true;
           this.checkSettings();
           this.checkIfLoggedIn();
     }

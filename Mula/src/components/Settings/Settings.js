@@ -22,7 +22,7 @@ export default class Settings extends Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         AsyncStorage.getItem('userName').then((username) => {
             this.setUser(username);
             this.setState({ username });

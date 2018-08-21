@@ -19,7 +19,7 @@ export default class TripParticipants extends Component {
         this._handleFirstConnectivityChange = this._handleFirstConnectivityChange.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
 
     }
 
@@ -86,6 +86,7 @@ export default class TripParticipants extends Component {
     }
 
     addParticipant() {
+        console.log("addParticipant");
         try {
         if (this.state.firstName === null || this.state.firstName === "") {
             alert("Firstname cannot be empty")
@@ -94,6 +95,7 @@ export default class TripParticipants extends Component {
         } else {
             console.log(this.props.navigation.state.params.trip.id)
         var url = "http://193.191.177.73:8080/karafinREST/addPersonToTripFromEmail/" + this.state.email + "/" + this.props.navigation.state.params.trip.id
+        console.log(url);
         return fetch(url, {
             method: 'POST',
             header: {
@@ -103,6 +105,7 @@ export default class TripParticipants extends Component {
         })
             .then((response) => {
                 this.checkError(response._bodyText)
+                
 
             }).catch(error => console.log("network/rest error"));
         }

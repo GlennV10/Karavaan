@@ -25,7 +25,7 @@ export default class TripTotal extends Component {
     }
   }
 
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     this.getExpenses();
 
     await AsyncStorage.getItem('userName').then((username) => {

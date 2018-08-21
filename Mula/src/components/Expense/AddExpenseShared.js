@@ -17,7 +17,7 @@ export default class AddExpenseShared extends Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let count = 0;
         let total = 0;
         let consumers = this.props.navigation.state.params.expense.consumers.slice();

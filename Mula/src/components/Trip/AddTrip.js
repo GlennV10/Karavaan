@@ -94,7 +94,12 @@ export default class AddTrip extends Component {
         //if(this.isValid()){
         // if (this.state.connectionMode == "online") {
         //     console.log("ONLINE")
-        if (this.state.title.length != 0) {
+        if (this.state.title.length != 0 ) {
+            
+            
+
+            
+            
             let trip = {
                 tripName: this.state.title,
                 startDate: {
@@ -171,9 +176,10 @@ export default class AddTrip extends Component {
             // }
 
 
-        }
-        alert("Velden mogen niet leeg zijn");
-
+        
+       
+    }
+        alert("Velden mogen niet leeg zijn en start datum moet voor eind datum zijn");
     }
 
     //////////////////////////////////////////////////////////
@@ -289,6 +295,7 @@ export default class AddTrip extends Component {
             this.state.errors.push("please add a valid endDate ")
             res = false;
         }
+        
 
         // if (this.state.startDate == null) {
         //

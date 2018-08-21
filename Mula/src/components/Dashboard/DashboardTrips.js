@@ -8,6 +8,7 @@ const green = '#4F9628';
 const yellow = '#D6A024';
 
 export default class DashboardTrips extends Component {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -22,13 +23,14 @@ export default class DashboardTrips extends Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // AsyncStorage.setItem('trips', JSON.stringify(trips))
     //   .then(res => console.log('Trips stored in AsyncStorage'))
     //   .catch(error => console.log('Error storing trips'));
   }
 
   componentDidMount() {
+    console.disableYellowBox = true;
       AsyncStorage.getItem('userName').then((username)=>{
         console.log(username);
         this.setState({username});

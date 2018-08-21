@@ -18,7 +18,7 @@ export default class TripDashboard extends React.Component {
     this._handleFirstConnectivityChange = this._handleFirstConnectivityChange.bind(this);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({ expenses: this.props.navigation.state.params.trip.expenseList });
   }
 

@@ -330,7 +330,7 @@ export default class TripSettings extends Component {
 
     getExchangeRatesWithBase(baseCurrency) {
         console.log("Rates met base wordt uitgevoerd " + baseCurrency)
-        var url = "https://api.fixer.io/latest?base=" + baseCurrency;
+        var url = "http://api.openrates.io/latest?base=" + baseCurrency;
         //if (this.state.loadRates) {
         return fetch(url)
             .then((resp) => resp.json())
